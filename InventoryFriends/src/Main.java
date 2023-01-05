@@ -1,19 +1,23 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.plaf.*;
+import javax.swing.table.*;
 
 public class Main extends JFrame{
-    JPanel jpMain, jpLU, jpLD, jpRU, jpRD, jpBottom;
+    JPanel jpMain, jpLU, jpLD, jpRU, jpRD, jpBottom, jpOrderConsolidation, jpOCSearch, jpOCTable;
     JMenuBar jmbMenuBar;
     JMenu jmFileMenu;
-    JButton btnSignOut, btnInventoryManagement, btnOrderConsolidation, btnAlarm, btnIMopt1, btnIMopt2;
+    JButton btnSignOut, btnInventoryManagement, btnOrderConsolidation, btnAlarm, btnIMopt1, btnIMopt2,
+            btnSearch;
     JSplitPane jspCenter, jspLeft, jspRight;
     JLabel jlUserName, jlCalendar;
-    JTabbedPane jtpMainTab, jtpMainTab2;
+    JTabbedPane jtpMainTab, jtpSubTab;
+    JTextField jtfOrderNum, jtfProductCode, jtfOrderer, jtfPhoneNum, jtfInvoiceNum, jtfOrderDate;
+    JComboBox jcbMarket;
+    JTable jtOrderCon;
     ImageIcon imgIM1, imgIM2, imgOC1, imgOC2, imgSO1, imgSO2, imgAlarm1, imgAlarm2, imgCal,
-            imgIMopt1_1, imgIMopt1_2, imgIMopt2_1, imgIMopt2_2;
+            imgIMopt1_1, imgIMopt1_2, imgIMopt2_1, imgIMopt2_2, imgSearch1, imgSearch2;
     MenuAction menuAct;
     Font font1, font2;
     private int sizeWidth = 1280;
@@ -31,9 +35,6 @@ public class Main extends JFrame{
     private void createMenu() {
         jmbMenuBar = new JMenuBar(); // MenuBar 컴포넌트 생성
         jmFileMenu = new JMenu("File"); // "파일" 메뉴 컴포넌트 생성
-
-        JTextArea tmp = new JTextArea();
-
 
         JMenuItem[] menuItems = new JMenuItem[3];
         String[] items = {"Debug Button", "Open", "Close"};
@@ -84,11 +85,11 @@ public class Main extends JFrame{
     }
     private void createPanel(){
         // 폰트 설정
-//        font1 = new Font("돋움", Font.BOLD, 20);   // 왼쪽 하위메뉴 라벨 폰트
+        font1 = new Font("돋움", Font.PLAIN, 12);   // 왼쪽 하위메뉴 라벨 폰트
         font2 = new Font("SansSerif", Font.BOLD, 14);   // 탭 타이틀 폰트
 
         jtpMainTab = new JTabbedPane();
-        jtpMainTab2 = new JTabbedPane();
+        jtpSubTab = new JTabbedPane();
 
         jpMain = new JPanel();
         jpLU = new JPanel();
@@ -97,6 +98,7 @@ public class Main extends JFrame{
         jpRD = new JPanel();
         jpBottom = new JPanel();
         jpBottom.setLayout(new BorderLayout());
+        jpOrderConsolidation = new JPanel();
 
         jspCenter = new JSplitPane();
         jspLeft = new JSplitPane();
@@ -113,7 +115,8 @@ public class Main extends JFrame{
         imgIMopt1_2 = new ImageIcon("./img/img_IMopt1_2.jpg");
         imgIMopt2_1 = new ImageIcon("./img/img_IMopt2_1.jpg");
         imgIMopt2_2 = new ImageIcon("./img/img_IMopt2_2.jpg");
-
+        imgSearch1 = new ImageIcon("./img/img_Search1.jpg");
+        imgSearch2 = new ImageIcon("./img/img_Search2.jpg");
 
         jpLU.setBackground(Color.WHITE);
         jpLD.setBackground(Color.WHITE);
@@ -150,7 +153,6 @@ public class Main extends JFrame{
         jlCalendar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         jlCalendar.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 
-
         // 재고 관리 버튼
         btnInventoryManagement.setRolloverIcon(imgIM2); // 버튼에 마우스가 올라갈떄 이미지 변환
         btnInventoryManagement.setBorderPainted(false); // 버튼 테두리 제거
@@ -172,7 +174,7 @@ public class Main extends JFrame{
             }
         });
 
-        // 개별 등록 라벨
+        // 개별 등록 버튼
         btnIMopt1.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e){
                 String opt1Title = new String("재고 관리(개별 등록)");
@@ -186,7 +188,7 @@ public class Main extends JFrame{
             }
         });
 
-        // 일괄 등록 라벨
+        // 일괄 등록 버튼
         btnIMopt2.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e){
                 String opt2Title = new String("재고 관리(일괄 등록)");
@@ -199,6 +201,88 @@ public class Main extends JFrame{
 
             }
         });
+
+        // 주문 통합 패널
+        String market[] = {"마켓 1", "마켓 2", "정말 긴 마켓 이름"};
+        jcbMarket = new JComboBox<String>(market);
+        jcbMarket.setBackground(Color.WHITE);
+        jcbMarket.setFont(font1);
+        btnSearch = new JButton(imgSearch1);
+        btnSearch.setRolloverIcon(imgSearch2); // 버튼에 마우스가 올라갈떄 이미지 변환
+        btnSearch.setBorderPainted(false); // 버튼 테두리 제거
+        btnSearch.setFocusPainted(false);
+        btnSearch.setContentAreaFilled(false);
+        btnSearch.setPreferredSize(new Dimension(56, 24)); // 버튼 크기 지정
+
+        jtfOrderNum = new HintTextField("주문 번호");
+        jtfOrderNum.setColumns(10);
+        jtfProductCode = new HintTextField("상품 코드");
+        jtfProductCode.setColumns(10);
+        jtfOrderer = new HintTextField("주문자");
+        jtfOrderer.setColumns(10);
+        jtfPhoneNum = new HintTextField("전화번호");
+        jtfPhoneNum.setColumns(10);
+        jtfInvoiceNum = new HintTextField("송장 번호");
+        jtfInvoiceNum.setColumns(10);
+        jtfOrderDate = new HintTextField("주문일");
+        jtfOrderDate.setColumns(10);
+
+        jpOCSearch = new JPanel();
+        jpOCSearch.setLayout(new FlowLayout());
+
+        jpOCTable = new JPanel();
+//        jpOCTable.setBackground(Color.WHITE);
+
+        jpOrderConsolidation.setLayout(new BorderLayout());
+        jpOrderConsolidation.add(jpOCSearch, BorderLayout.NORTH);
+        jpOrderConsolidation.add(jpOCTable, BorderLayout.CENTER);
+
+        // 검색 패널
+        jpOCSearch.add(jtfOrderNum);
+        jpOCSearch.add(jtfProductCode);
+        jpOCSearch.add(jtfOrderer);
+        jpOCSearch.add(jtfPhoneNum);
+        jpOCSearch.add(jtfInvoiceNum);
+        jpOCSearch.add(jtfOrderDate);
+        jpOCSearch.add(jcbMarket);
+        jpOCSearch.add(btnSearch);
+
+        //테이블 패널
+        String header[] = {"주문 번호", "상품 코드", "주문 수량", "주문자", "전화번호", "주소", "송장 번호", "주문일", "마켓"};
+        String contents[][] = {
+                {"01", "couch-01-08-beige", "1", "황용운", "010-9574-****", "서울시 강서구 공항대로60길", "EG033025977JA", "230104", "쿠팡"},
+                {"02", "couch-03-01-black", "2", "김만조", "010-4313-****", "서울시 강서구 공항대로60길", "EG033025977JA", "230104", "쿠팡"},
+                {"03", "chair-03-03-blue", "5", "권순용", "010-4109-****", "서울시 강서구 공항대로60길", "EG033025977JA", "230104", "쿠팡"}
+        };
+
+        jtOrderCon = new JTable();
+        // 테이블 속성 오버라이드
+        DefaultTableModel model = new DefaultTableModel(contents, header){
+            @Override
+            public boolean isCellEditable(int row, int col){
+                return false;
+            }
+        };
+        jtOrderCon.setModel(model);
+        resizeColumnWidth(jtOrderCon);
+        jtOrderCon.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String ODTitle = new String("주문 상세");
+                if (e.getClickCount() == 2) {
+                    System.out.println(jtOrderCon.getSelectedRow());
+                    if (findTabByName(ODTitle, jtpSubTab) != -1) {
+                        jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));
+                    } else {
+                        jtpSubTab.addTab(ODTitle, new JPanel());
+                        jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));
+                    }
+
+                }
+            }
+        });
+        jpOCTable.setLayout(new BorderLayout());
+        jpOCTable.add(new JScrollPane(jtOrderCon), BorderLayout.CENTER);
 
         // 주문 통합 버튼
         btnOrderConsolidation.setRolloverIcon(imgOC2); // 버튼에 마우스가 올라갈떄 이미지 변환
@@ -214,12 +298,13 @@ public class Main extends JFrame{
                 if (findTabByName(OCTitle, jtpMainTab) != -1) {
                     jtpMainTab.setSelectedIndex(findTabByName(OCTitle, jtpMainTab));
                 } else {
-                    jtpMainTab.addTab(OCTitle, new JPanel());
+                    jtpMainTab.addTab(OCTitle, jpOrderConsolidation);
                     jtpMainTab.setSelectedIndex(findTabByName(OCTitle, jtpMainTab));
                 }
             }
-        });
-
+        });   
+        
+        // 알림 버튼
         btnAlarm = new JButton(imgAlarm1);
         btnAlarm.setRolloverIcon(imgAlarm2); // 버튼에 마우스가 올라갈떄 이미지 변환
         btnAlarm.setPreferredSize(new Dimension(74, 29)); // 버튼 크기 지정
@@ -228,24 +313,23 @@ public class Main extends JFrame{
         btnAlarm.setContentAreaFilled(false);
         btnAlarm.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
 
-        jtpMainTab.addTab("tab1", new JPanel());
-        jtpMainTab.addTab("tab2", new JPanel());
+        jtpMainTab.addTab("재고 목록", new JPanel());
 
-        jtpMainTab2.addTab("tab1", new JPanel());
-        jtpMainTab2.addTab("tab2", new JPanel());
+        jtpSubTab.addTab("tab1", new JPanel());
+        jtpSubTab.addTab("tab2", new JPanel());
 
         // jtp 스타일 지정
         jtpMainTab.setFont(font2);
-        jtpMainTab2.setFont(font2);
+        jtpSubTab.setFont(font2);
         jtpMainTab.setBackground(Color.LIGHT_GRAY);
-        jtpMainTab2.setBackground(Color.LIGHT_GRAY);
+        jtpSubTab.setBackground(Color.LIGHT_GRAY);
         UIManager.put("TabbedPane.tabInsets", new Insets(3, 3, 3, 40));
         UIManager.put("TabbedPane.contentAreaColor", new ColorUIResource(new Color(238, 238, 238)));
         UIManager.put("TabbedPane.selected", new ColorUIResource(new Color(238, 238, 238)));
         UIManager.put("TabbedPane.focus", new ColorUIResource(Color.LIGHT_GRAY));
         UIManager.put("TabbedPane.borderHightlightColor", new ColorUIResource(Color.DARK_GRAY));
         SwingUtilities.updateComponentTreeUI(jtpMainTab);
-        SwingUtilities.updateComponentTreeUI(jtpMainTab2);
+        SwingUtilities.updateComponentTreeUI(jtpSubTab);
 
 
         // 좌상단 패널
@@ -266,7 +350,7 @@ public class Main extends JFrame{
         jpRD.setLayout(new BorderLayout());
 
         jpRD.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        jpRD.add(new JLayer<JTabbedPane>(jtpMainTab2, new CloseableTabbedPaneLayerUI()));
+        jpRD.add(new JLayer<JTabbedPane>(jtpSubTab, new CloseableTabbedPaneLayerUI()));
 
         jspLeft.setOrientation(JSplitPane.VERTICAL_SPLIT);
         jspRight.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -339,8 +423,10 @@ public class Main extends JFrame{
         @Override protected void processMouseEvent(MouseEvent e, JLayer<? extends JTabbedPane> l) {
             if (e.getID() == MouseEvent.MOUSE_CLICKED) {
                 pt.setLocation(e.getPoint());
+                final Point mousePos = l.getMousePosition();
                 JTabbedPane tabbedPane = (JTabbedPane) l.getView();
-                int index = tabbedPane.indexAtLocation(pt.x, pt.y);
+//                int index = tabbedPane.indexAtLocation(pt.x, pt.y);
+                int index = tabbedPane.indexAtLocation(mousePos.x, mousePos.y);
                 if (index >= 1) {
                     Rectangle rect = tabbedPane.getBoundsAt(index);
                     Dimension d = button.getPreferredSize();
@@ -348,6 +434,8 @@ public class Main extends JFrame{
                     int y = rect.y + (rect.height - d.height) / 2;
                     Rectangle r = new Rectangle(x, y, d.width, d.height);
                     if (r.contains(pt)) {
+                        System.out.println(x);
+                        System.out.println(y);
                         tabbedPane.removeTabAt(index);
                     }
                 }
@@ -409,8 +497,10 @@ public class Main extends JFrame{
         @Override protected void processMouseEvent(MouseEvent e, JLayer<? extends JTabbedPane> l) {
             if (e.getID() == MouseEvent.MOUSE_CLICKED) {
                 pt.setLocation(e.getPoint());
+                final Point mousePos = l.getMousePosition();
                 JTabbedPane tabbedPane = (JTabbedPane) l.getView();
-                int index = tabbedPane.indexAtLocation(pt.x, pt.y);
+//                int index = tabbedPane.indexAtLocation(pt.x, pt.y);
+                int index = tabbedPane.indexAtLocation(mousePos.x, mousePos.y);
                 if (index >= 0) {
                     Rectangle rect = tabbedPane.getBoundsAt(index);
                     Dimension d = button.getPreferredSize();
@@ -420,11 +510,11 @@ public class Main extends JFrame{
                     if (r.contains(pt)) {
                         tabbedPane.removeTabAt(index);
                         try{
-                            jtpMainTab2.isEnabledAt(0);
+                            jtpSubTab.isEnabledAt(0);
                         } catch (Exception exception){
                             jspRight.setDividerSize(0);
                             jspRight.setDividerLocation(jspRight.getLocation().y + jspRight.getSize().width + 1);
-                            jtpMainTab2.setVisible(false);
+                            jtpSubTab.setVisible(false);
                         };
                     }
                 }
@@ -451,9 +541,9 @@ public class Main extends JFrame{
                 case "Debug Button":
                     jspRight.setDividerSize(7);
                     jspRight.setDividerLocation(360);
-                    if (jtpMainTab2.isVisible() == false) {
-                        jtpMainTab2.setVisible(true);
-                        jtpMainTab2.addTab("tab1", new JPanel());
+                    if (jtpSubTab.isVisible() == false) {
+                        jtpSubTab.setVisible(true);
+                        jtpSubTab.addTab("tab1", new JPanel());
                     }
                     break;
                 case "Open":
@@ -472,6 +562,19 @@ public class Main extends JFrame{
             if (tabTitle.equals(title)) return i;
         }
         return -1;
+    }
+    // 테이블 너비를 내용에 맞춰주는 함수
+    public void resizeColumnWidth(JTable table) {
+        final TableColumnModel columnModel = table.getColumnModel();
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            int width = 50; // Min width
+            for (int row = 0; row < table.getRowCount(); row++) {
+                TableCellRenderer renderer = table.getCellRenderer(row, column);
+                Component comp = table.prepareRenderer(renderer, row, column);
+                width = Math.max(comp.getPreferredSize().width +1 , width);
+            }
+            columnModel.getColumn(column).setPreferredWidth(width);
+        }
     }
 
     public static void main(String[] args) {
