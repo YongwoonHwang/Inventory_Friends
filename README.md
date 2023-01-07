@@ -1,4 +1,4 @@
-##### Inventory_Friends
+#### Inventory_Friends
 재고관리 프로젝트
 
 ## 프로젝트 기획 의도
