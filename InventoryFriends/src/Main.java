@@ -167,6 +167,7 @@ public class Main extends JFrame{
 
         TextFields1 = new JPanel();
         TextFields2 = new JPanel();
+        String Markets[] = {"쿠팡", "네이버", "11번가", "위메프", "옥션", "G마켓", "티몬"};
 
 
         jTextField1 = new JTextField();
@@ -178,7 +179,7 @@ public class Main extends JFrame{
         jTextField3 = new JTextField();
         jTextField3.setBounds(140,75,700,25);
 
-        dropdown4 = new JComboBox();
+        dropdown4 = new JComboBox(Markets);
         dropdown4.setBounds(140, 105, 700, 25);
 
         jTextField5 = new JTextField();
