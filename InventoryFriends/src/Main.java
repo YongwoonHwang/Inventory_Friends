@@ -5,7 +5,7 @@ import javax.swing.plaf.*;
 import javax.swing.table.*;
 
 public class Main extends JFrame{
-    JPanel jpMain, jpLU, jpLD, jpRU, jpRD, jpBottom, jpOrderConsolidation, jpOCSearch, jpOCTable;
+    JPanel jpMain, jpLU, jpLD, jpRU, jpRD, jpBottom, jpOrderConsolidation, jpOCSearch, jpOCTable, jpItemList;
     JMenuBar jmbMenuBar;
     JMenu jmFileMenu;
     JButton btnSignOut, btnInventoryManagement, btnOrderConsolidation, btnAlarm, btnIMopt1, btnIMopt2,
@@ -13,13 +13,17 @@ public class Main extends JFrame{
     JSplitPane jspCenter, jspLeft, jspRight;
     JLabel jlUserName, jlCalendar;
     JTabbedPane jtpMainTab, jtpSubTab;
-    JTextField jtfOrderNum, jtfProductCode, jtfOrderer, jtfPhoneNum, jtfInvoiceNum, jtfOrderDate;
+    MemoTab memoTab;
+    MemoWindow memoWindow;
+    JTextField jtfOrderNum, jtfItemCode, jtfOrderer, jtfPhoneNum, jtfInvoiceNum, jtfOrderDate;
     JComboBox jcbMarket;
-    JTable jtOrderCon;
+    JTable jtOrderCon, jtItemList;
+    CalendarWindow windowCal;
     ImageIcon imgIM1, imgIM2, imgOC1, imgOC2, imgSO1, imgSO2, imgAlarm1, imgAlarm2, imgCal,
             imgIMopt1_1, imgIMopt1_2, imgIMopt2_1, imgIMopt2_2, imgSearch1, imgSearch2;
     MenuAction menuAct;
     Font font1, font2;
+
     private int sizeWidth = 1280;
     private int sizeHeight = 720;
     public Main() {
@@ -30,6 +34,16 @@ public class Main extends JFrame{
         setLocationRelativeTo(null);        // 화면 가운데에 창 배치
 //        setResizable(false);                // 화면 크기 고정
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                windowCal.setLocation(jlCalendar.getLocationOnScreen().x+1, jlCalendar.getLocationOnScreen().y-181);
+            }
+            @Override
+            public void componentResized(ComponentEvent e) {
+                windowCal.setLocation(jlCalendar.getLocationOnScreen().x+1, jlCalendar.getLocationOnScreen().y-181);
+            }
+        });
         setVisible(true);
     }
     private void createMenu() {
@@ -90,6 +104,8 @@ public class Main extends JFrame{
 
         jtpMainTab = new JTabbedPane();
         jtpSubTab = new JTabbedPane();
+        memoTab = new MemoTab();
+        memoWindow = new MemoWindow();
 
         jpMain = new JPanel();
         jpLU = new JPanel();
@@ -99,6 +115,7 @@ public class Main extends JFrame{
         jpBottom = new JPanel();
         jpBottom.setLayout(new BorderLayout());
         jpOrderConsolidation = new JPanel();
+        jpItemList = new JPanel();
 
         jspCenter = new JSplitPane();
         jspLeft = new JSplitPane();
@@ -152,6 +169,22 @@ public class Main extends JFrame{
         jlCalendar = new JLabel(imgCal);
         jlCalendar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         jlCalendar.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        windowCal = new CalendarWindow();
+        windowCal.setMemoWindow(memoWindow);
+        memoTab.setMemoWindow(memoWindow);
+        windowCal.setMemoTab(memoTab);
+        jlCalendar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(windowCal.isVisible()){
+                    windowCal.setVisible(false);
+                    System.out.println(windowCal.selectDate);
+                }else{
+                    windowCal.setVisible(true);
+                    System.out.println(windowCal.selectDate);
+                }
+            }
+        });
 
         // 재고 관리 버튼
         btnInventoryManagement.setRolloverIcon(imgIM2); // 버튼에 마우스가 올라갈떄 이미지 변환
@@ -202,7 +235,7 @@ public class Main extends JFrame{
             }
         });
 
-        // 주문 통합 패널
+        // 주문 통합 탭
         String market[] = {"마켓 1", "마켓 2", "정말 긴 마켓 이름"};
         jcbMarket = new JComboBox<String>(market);
         jcbMarket.setBackground(Color.WHITE);
@@ -216,8 +249,8 @@ public class Main extends JFrame{
 
         jtfOrderNum = new HintTextField("주문 번호");
         jtfOrderNum.setColumns(10);
-        jtfProductCode = new HintTextField("상품 코드");
-        jtfProductCode.setColumns(10);
+        jtfItemCode = new HintTextField("상품 코드");
+        jtfItemCode.setColumns(10);
         jtfOrderer = new HintTextField("주문자");
         jtfOrderer.setColumns(10);
         jtfPhoneNum = new HintTextField("전화번호");
@@ -231,7 +264,6 @@ public class Main extends JFrame{
         jpOCSearch.setLayout(new FlowLayout());
 
         jpOCTable = new JPanel();
-//        jpOCTable.setBackground(Color.WHITE);
 
         jpOrderConsolidation.setLayout(new BorderLayout());
         jpOrderConsolidation.add(jpOCSearch, BorderLayout.NORTH);
@@ -239,7 +271,7 @@ public class Main extends JFrame{
 
         // 검색 패널
         jpOCSearch.add(jtfOrderNum);
-        jpOCSearch.add(jtfProductCode);
+        jpOCSearch.add(jtfItemCode);
         jpOCSearch.add(jtfOrderer);
         jpOCSearch.add(jtfPhoneNum);
         jpOCSearch.add(jtfInvoiceNum);
@@ -247,24 +279,26 @@ public class Main extends JFrame{
         jpOCSearch.add(jcbMarket);
         jpOCSearch.add(btnSearch);
 
-        //테이블 패널
-        String header[] = {"주문 번호", "상품 코드", "주문 수량", "주문자", "전화번호", "주소", "송장 번호", "주문일", "마켓"};
-        String contents[][] = {
+        // 주문 통합 테이블 패널
+        Object headerOrderCon[] = {"주문 번호", "상품 코드", "주문 수량", "주문자", "전화번호", "주소", "송장 번호", "주문일", "마켓"};
+        Object contentsOrderCon[][] = {
                 {"01", "couch-01-08-beige", "1", "황용운", "010-9574-****", "서울시 강서구 공항대로60길", "EG033025977JA", "230104", "쿠팡"},
                 {"02", "couch-03-01-black", "2", "김만조", "010-4313-****", "서울시 강서구 공항대로60길", "EG033025977JA", "230104", "쿠팡"},
                 {"03", "chair-03-03-blue", "5", "권순용", "010-4109-****", "서울시 강서구 공항대로60길", "EG033025977JA", "230104", "쿠팡"}
         };
 
         jtOrderCon = new JTable();
-        // 테이블 속성 오버라이드
-        DefaultTableModel model = new DefaultTableModel(contents, header){
+        DefaultTableModel modelOrderCon = new DefaultTableModel(contentsOrderCon, headerOrderCon){
             @Override
             public boolean isCellEditable(int row, int col){
                 return false;
             }
         };
-        jtOrderCon.setModel(model);
+        jtOrderCon.setModel(modelOrderCon);
         resizeColumnWidth(jtOrderCon);
+        jtOrderCon.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);   // 다중 선택 안되게
+        jtOrderCon.setRowSorter(new TableRowSorter<>(modelOrderCon));   // 테이블 정렬 기능 추가
+        jtOrderCon.getTableHeader().setReorderingAllowed(false);    // 테이블 열 이동 안되게
         jtOrderCon.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -312,17 +346,68 @@ public class Main extends JFrame{
         btnAlarm.setFocusPainted(false);
         btnAlarm.setContentAreaFilled(false);
         btnAlarm.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+        
+        // 재고 목록 탭
+        Object headerItemList[] = {"", "코드", "품명", "수량", "마켓", "카테고리", "재고 위치", "최근 입고일", "다음 입고 예정일"};
+        Object contentsItemList[][] = {
+                {false, "couch-01-08-beige", "쿠션 A형 선인장 베이지", "117EA", "쿠팡", "", "A rack 2번 선반", "230101", "230104"},
+                {false, "couch-01-09-beige", "쿠션 B형 선인장 베이지", "118EA", "쿠팡", "", "B rack 2번 선반", "230102", "230105"},
+                {false, "couch-01-10-beige", "쿠션 C형 선인장 베이지", "112EA", "쿠팡", "", "B rack 3번 선반", "230103", "230106"}
+        };
 
-        jtpMainTab.addTab("재고 목록", new JPanel());
+        jtItemList = new JTable();
+        DefaultTableModel modelItemList = new DefaultTableModel(contentsItemList, headerItemList){
+            @Override
+            public boolean isCellEditable(int row, int col){
+                if (col == 0){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+//                return true;
+            }
+        };
+        DefaultTableCellRenderer dcr = new DefaultTableCellRenderer()
+        {
+            public Component getTableCellRendererComponent  // 셀렌더러
+            (JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+            {
+                JCheckBox box= new JCheckBox();
+                box.setSelected(((Boolean)value).booleanValue());
+                box.setHorizontalAlignment(JLabel.CENTER);
+                return box;
+            }
+        };
+
+        jtItemList.setModel(modelItemList);
+//        jtItemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);   // 다중 선택 안되게
+        jtItemList.setRowSorter(new TableRowSorter<>(modelItemList));   // 테이블 정렬 기능 추가
+        jtItemList.getTableHeader().setReorderingAllowed(false);    // 테이블 열 이동 안되게
+        jtItemList.getColumn("").setCellRenderer(dcr);
+
+        JCheckBox box = new JCheckBox();
+        box.setHorizontalAlignment(JLabel.CENTER);
+        jtItemList.getColumn("").setCellEditor(new DefaultCellEditor(box));
+        resizeColumnWidth(jtItemList);
+        jtItemList.getColumn("").setPreferredWidth(1);
+
+
+        jpItemList.setLayout(new BorderLayout());
+        jpItemList.add(new JScrollPane(jtItemList), BorderLayout.CENTER);
+
+
+        jtpMainTab.addTab("재고 목록", jpItemList);
 
         jtpSubTab.addTab("tab1", new JPanel());
-        jtpSubTab.addTab("tab2", new JPanel());
 
         // jtp 스타일 지정
         jtpMainTab.setFont(font2);
         jtpSubTab.setFont(font2);
+        memoTab.setFont(font2);
         jtpMainTab.setBackground(Color.LIGHT_GRAY);
         jtpSubTab.setBackground(Color.LIGHT_GRAY);
+        memoTab.setBackground(Color.LIGHT_GRAY);
         UIManager.put("TabbedPane.tabInsets", new Insets(3, 3, 3, 40));
         UIManager.put("TabbedPane.contentAreaColor", new ColorUIResource(new Color(238, 238, 238)));
         UIManager.put("TabbedPane.selected", new ColorUIResource(new Color(238, 238, 238)));
@@ -330,7 +415,7 @@ public class Main extends JFrame{
         UIManager.put("TabbedPane.borderHightlightColor", new ColorUIResource(Color.DARK_GRAY));
         SwingUtilities.updateComponentTreeUI(jtpMainTab);
         SwingUtilities.updateComponentTreeUI(jtpSubTab);
-
+        SwingUtilities.updateComponentTreeUI(memoTab);
 
         // 좌상단 패널
         jpLU.setLayout(new BoxLayout(jpLU,BoxLayout.Y_AXIS));
@@ -339,6 +424,10 @@ public class Main extends JFrame{
         jpLU.add(btnIMopt1);
         jpLU.add(btnIMopt2);
         jpLU.add(btnOrderConsolidation);
+
+        // 좌하단 패널
+        jpLD.setLayout(new BorderLayout());
+        jpLD.add(memoTab);
         
         // 우상단 패널
         jpRU.setLayout(new BorderLayout());
@@ -350,7 +439,9 @@ public class Main extends JFrame{
         jpRD.setLayout(new BorderLayout());
 
         jpRD.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        jpRD.add(new JLayer<JTabbedPane>(jtpSubTab, new CloseableTabbedPaneLayerUI()));
+        CloseableTabbedPaneLayerUI tmp = new CloseableTabbedPaneLayerUI();
+        tmp.setComponent(jtpSubTab, jspRight);
+        jpRD.add(new JLayer<JTabbedPane>(jtpSubTab,tmp));
 
         jspLeft.setOrientation(JSplitPane.VERTICAL_SPLIT);
         jspRight.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -363,7 +454,7 @@ public class Main extends JFrame{
 
         jspLeft.setLeftComponent(jpLU);
         jspLeft.setRightComponent(jpLD);
-        jspLeft.setDividerLocation(sizeHeight/6*4);         // 왼쪽 jsp의 높이 설정
+        jspLeft.setDividerLocation(sizeHeight/5*3+6);         // 왼쪽 jsp의 높이 설정
 
         jspRight.setLeftComponent(jpRU);
         jspRight.setRightComponent(jpRD);
@@ -380,158 +471,8 @@ public class Main extends JFrame{
     }
 
     // 탭 메뉴에 x버튼 추가하는 클래스(처음 탭은 x버튼 없음)
-    class CloseableTabbedPaneLayerUIuseDefault extends LayerUI<JTabbedPane> {
-        private final JPanel p = new JPanel();
-        private final Point pt = new Point(-100, -100);
-        private final JButton button = new JButton("x") {
-            @Override public Dimension getPreferredSize() {
-                return new Dimension(16, 16);
-            }
-        };
-        public CloseableTabbedPaneLayerUIuseDefault() {
-            super();
-            button.setBorder(BorderFactory.createEmptyBorder());
-            button.setFocusPainted(false);
-            button.setBorderPainted(false);
-            button.setContentAreaFilled(false);
-            button.setRolloverEnabled(false);
-        }
-        @Override public void paint(Graphics g, JComponent c) {
-            super.paint(g, c);
-            if (c instanceof JLayer) {
-                JLayer jlayer = (JLayer) c;
-                JTabbedPane tabPane = (JTabbedPane) jlayer.getView();
-                for (int i = 1; i < tabPane.getTabCount(); i++) {
-                    Rectangle rect = tabPane.getBoundsAt(i);
-                    Dimension d = button.getPreferredSize();
-                    int x = rect.x + rect.width - d.width - 2;
-                    int y = rect.y + (rect.height - d.height) / 2;
-                    Rectangle r = new Rectangle(x, y, d.width, d.height);
-//                    button.setForeground(r.contains(pt) ? Color.RED : Color.BLACK);
-                    SwingUtilities.paintComponent(g, button, p, r);
-                }
-            }
-        }
-        @Override public void installUI(JComponent c) {
-            super.installUI(c);
-            ((JLayer)c).setLayerEventMask(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
-        }
-        @Override public void uninstallUI(JComponent c) {
-            ((JLayer)c).setLayerEventMask(0);
-            super.uninstallUI(c);
-        }
-        @Override protected void processMouseEvent(MouseEvent e, JLayer<? extends JTabbedPane> l) {
-            if (e.getID() == MouseEvent.MOUSE_CLICKED) {
-                pt.setLocation(e.getPoint());
-                final Point mousePos = l.getMousePosition();
-                JTabbedPane tabbedPane = (JTabbedPane) l.getView();
-//                int index = tabbedPane.indexAtLocation(pt.x, pt.y);
-                int index = tabbedPane.indexAtLocation(mousePos.x, mousePos.y);
-                if (index >= 1) {
-                    Rectangle rect = tabbedPane.getBoundsAt(index);
-                    Dimension d = button.getPreferredSize();
-                    int x = rect.x + rect.width - d.width - 2;
-                    int y = rect.y + (rect.height - d.height) / 2;
-                    Rectangle r = new Rectangle(x, y, d.width, d.height);
-                    if (r.contains(pt)) {
-                        System.out.println(x);
-                        System.out.println(y);
-                        tabbedPane.removeTabAt(index);
-                    }
-                }
-                l.getView().repaint();
-            }
-        }
-        @Override protected void processMouseMotionEvent(MouseEvent e, JLayer<? extends JTabbedPane> l) {
-            pt.setLocation(e.getPoint());
-            JTabbedPane tabbedPane = (JTabbedPane) l.getView();
-            int index = tabbedPane.indexAtLocation(pt.x, pt.y);
-            if (index >= 1) {
-                tabbedPane.repaint(tabbedPane.getBoundsAt(index));
-            } else {
-                tabbedPane.repaint();
-            }
-        }
-    }
     // 탭 메뉴에 x버튼 추가하는 클래스
-    class CloseableTabbedPaneLayerUI extends LayerUI<JTabbedPane> {
-        private final JPanel p = new JPanel();
-        private final Point pt = new Point(-100, -100);
-        private final JButton button = new JButton("x") {
-            @Override public Dimension getPreferredSize() {
-                return new Dimension(16, 16);
-            }
-        };
-        public CloseableTabbedPaneLayerUI() {
-            super();
-            button.setBorder(BorderFactory.createEmptyBorder());
-            button.setFocusPainted(false);
-            button.setBorderPainted(false);
-            button.setContentAreaFilled(false);
-            button.setRolloverEnabled(false);
-        }
-        @Override public void paint(Graphics g, JComponent c) {
-            super.paint(g, c);
-            if (c instanceof JLayer) {
-                JLayer jlayer = (JLayer) c;
-                JTabbedPane tabPane = (JTabbedPane) jlayer.getView();
-                for (int i = 0; i < tabPane.getTabCount(); i++) {
-                    Rectangle rect = tabPane.getBoundsAt(i);
-                    Dimension d = button.getPreferredSize();
-                    int x = rect.x + rect.width - d.width - 2;
-                    int y = rect.y + (rect.height - d.height) / 2;
-                    Rectangle r = new Rectangle(x, y, d.width, d.height);
-//                    button.setForeground(r.contains(pt) ? Color.RED : Color.BLACK);
-                    SwingUtilities.paintComponent(g, button, p, r);
-                }
-            }
-        }
-        @Override public void installUI(JComponent c) {
-            super.installUI(c);
-            ((JLayer)c).setLayerEventMask(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
-        }
-        @Override public void uninstallUI(JComponent c) {
-            ((JLayer)c).setLayerEventMask(0);
-            super.uninstallUI(c);
-        }
-        @Override protected void processMouseEvent(MouseEvent e, JLayer<? extends JTabbedPane> l) {
-            if (e.getID() == MouseEvent.MOUSE_CLICKED) {
-                pt.setLocation(e.getPoint());
-                final Point mousePos = l.getMousePosition();
-                JTabbedPane tabbedPane = (JTabbedPane) l.getView();
-//                int index = tabbedPane.indexAtLocation(pt.x, pt.y);
-                int index = tabbedPane.indexAtLocation(mousePos.x, mousePos.y);
-                if (index >= 0) {
-                    Rectangle rect = tabbedPane.getBoundsAt(index);
-                    Dimension d = button.getPreferredSize();
-                    int x = rect.x + rect.width - d.width - 2;
-                    int y = rect.y + (rect.height - d.height) / 2;
-                    Rectangle r = new Rectangle(x, y, d.width, d.height);
-                    if (r.contains(pt)) {
-                        tabbedPane.removeTabAt(index);
-                        try{
-                            jtpSubTab.isEnabledAt(0);
-                        } catch (Exception exception){
-                            jspRight.setDividerSize(0);
-                            jspRight.setDividerLocation(jspRight.getLocation().y + jspRight.getSize().width + 1);
-                            jtpSubTab.setVisible(false);
-                        };
-                    }
-                }
-                l.getView().repaint();
-            }
-        }
-        @Override protected void processMouseMotionEvent(MouseEvent e, JLayer<? extends JTabbedPane> l) {
-            pt.setLocation(e.getPoint());
-            JTabbedPane tabbedPane = (JTabbedPane) l.getView();
-            int index = tabbedPane.indexAtLocation(pt.x, pt.y);
-            if (index >= 0) {
-                tabbedPane.repaint(tabbedPane.getBoundsAt(index));
-            } else {
-                tabbedPane.repaint();
-            }
-        }
-    }
+
 
     class MenuAction implements ActionListener {
         public void actionPerformed(ActionEvent e) {
