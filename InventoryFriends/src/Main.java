@@ -24,9 +24,10 @@ public class Main extends JFrame{
     //용운 변수 start //
     JPanel TextFields1, TextFields2;
     JButton btnSubmit1, btnSubmit2, btnSubmit3, btnSubmit4;
-    JLabel text1, text2, text3, text4, text5, text6, text7, text8, text9, text10, text11, text12;
-    HintTextField hint1, hint2, hint3, hint4, hint5, hint6;
+    JLabel text1, text2, text3, text4, text5, text6, text7, text8, text9, text10, text11, text12, jlCalendar2, jlCalendar3;
+    HintTextField hint1, hint2, hint3, hint5, hint6;
     JComboBox dropdown4;
+    ImageIcon imgSubmit, imgAttach;
     JTextField  jTextField1, jTextField2, jTextField3, jTextField5, jTextField6,
             jTextField7, jTextField8, jTextField9, jTextField10;
     //용운 변수 end //
@@ -165,10 +166,20 @@ public class Main extends JFrame{
 
         // 용운 code start //
 
+        imgSubmit = new ImageIcon("./img/img_submit.jpg");
+        imgAttach = new ImageIcon("./img/img_attach.jpg");
+
         TextFields1 = new JPanel();
         TextFields2 = new JPanel();
         String Markets[] = {"쿠팡", "네이버", "11번가", "위메프", "옥션", "G마켓", "티몬"};
 
+        jlCalendar2 = new JLabel(imgSubmit);
+        jlCalendar2.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        jlCalendar2.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+
+        jlCalendar3 = new JLabel(imgAttach);
+        jlCalendar3.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        jlCalendar3.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 
         jTextField1 = new JTextField();
         jTextField1.setBounds(140,15,700,25);
@@ -309,8 +320,10 @@ public class Main extends JFrame{
         TextFields1.add(hint6);
         TextFields1.add(jTextField6);
         TextFields1.add(text7);
+        TextFields1.add(jlCalendar2);
         TextFields1.add(jTextField7);
         TextFields1.add(text8);
+        TextFields1.add(jlCalendar3);
         TextFields1.add(jTextField8);
         TextFields1.add(text9);
         TextFields1.add(jTextField9);
