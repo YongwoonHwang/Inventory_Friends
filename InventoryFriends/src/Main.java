@@ -5,19 +5,16 @@ import javax.swing.plaf.*;
 import javax.swing.table.*;
 
 public class Main extends JFrame{
-    JPanel jpMain, jpLU, jpLD, jpRU, jpRD, jpBottom, jpOrderConsolidation, jpOCSearch, jpOCTable, jpItemList;
+    JPanel jpMain, jpLU, jpLD, jpRU, jpRD, jpBottom, jpItemList;
+    OrderConsolidationPanel jpOrderConsolidation;
     JMenuBar jmbMenuBar;
     JMenu jmFileMenu;
-    JButton btnSignOut, btnInventoryManagement, btnOrderConsolidation, btnAlarm, btnIMopt1, btnIMopt2,
-            btnSearch;
+    JButton btnSignOut, btnInventoryManagement, btnOrderConsolidation, btnAlarm, btnIMopt1, btnIMopt2;
     JSplitPane jspCenter, jspLeft, jspRight;
     JLabel jlUserName, jlCalendar;
     JTabbedPane jtpMainTab, jtpSubTab;
     MemoTab memoTab;
     MemoWindow memoWindow;
-    JTextField jtfOrderNum, jtfItemCode, jtfOrderer, jtfPhoneNum, jtfInvoiceNum, jtfOrderDate;
-    JComboBox jcbMarket;
-    JTable jtOrderCon, jtItemList;
     CalendarWindow windowCal;
     ImageIcon imgIM1, imgIM2, imgOC1, imgOC2, imgSO1, imgSO2, imgAlarm1, imgAlarm2, imgCal,
             imgIMopt1_1, imgIMopt1_2, imgIMopt2_1, imgIMopt2_2, imgSearch1, imgSearch2;
@@ -114,8 +111,8 @@ public class Main extends JFrame{
         jpRD = new JPanel();
         jpBottom = new JPanel();
         jpBottom.setLayout(new BorderLayout());
-        jpOrderConsolidation = new JPanel();
-        jpItemList = new JPanel();
+        jpOrderConsolidation = new OrderConsolidationPanel();
+        jpItemList = new ItemListPanel();
 
         jspCenter = new JSplitPane();
         jspLeft = new JSplitPane();
@@ -178,10 +175,10 @@ public class Main extends JFrame{
             public void mouseClicked(MouseEvent e) {
                 if(windowCal.isVisible()){
                     windowCal.setVisible(false);
-                    System.out.println(windowCal.selectDate);
+//                    System.out.println(windowCal.selectDate);
                 }else{
                     windowCal.setVisible(true);
-                    System.out.println(windowCal.selectDate);
+//                    System.out.println(windowCal.selectDate);
                 }
             }
         });
@@ -234,89 +231,8 @@ public class Main extends JFrame{
 
             }
         });
-
         // 주문 통합 탭
-        String market[] = {"마켓 1", "마켓 2", "정말 긴 마켓 이름"};
-        jcbMarket = new JComboBox<String>(market);
-        jcbMarket.setBackground(Color.WHITE);
-        jcbMarket.setFont(font1);
-        btnSearch = new JButton(imgSearch1);
-        btnSearch.setRolloverIcon(imgSearch2); // 버튼에 마우스가 올라갈떄 이미지 변환
-        btnSearch.setBorderPainted(false); // 버튼 테두리 제거
-        btnSearch.setFocusPainted(false);
-        btnSearch.setContentAreaFilled(false);
-        btnSearch.setPreferredSize(new Dimension(56, 24)); // 버튼 크기 지정
-
-        jtfOrderNum = new HintTextField("주문 번호");
-        jtfOrderNum.setColumns(10);
-        jtfItemCode = new HintTextField("상품 코드");
-        jtfItemCode.setColumns(10);
-        jtfOrderer = new HintTextField("주문자");
-        jtfOrderer.setColumns(10);
-        jtfPhoneNum = new HintTextField("전화번호");
-        jtfPhoneNum.setColumns(10);
-        jtfInvoiceNum = new HintTextField("송장 번호");
-        jtfInvoiceNum.setColumns(10);
-        jtfOrderDate = new HintTextField("주문일");
-        jtfOrderDate.setColumns(10);
-
-        jpOCSearch = new JPanel();
-        jpOCSearch.setLayout(new FlowLayout());
-
-        jpOCTable = new JPanel();
-
-        jpOrderConsolidation.setLayout(new BorderLayout());
-        jpOrderConsolidation.add(jpOCSearch, BorderLayout.NORTH);
-        jpOrderConsolidation.add(jpOCTable, BorderLayout.CENTER);
-
-        // 검색 패널
-        jpOCSearch.add(jtfOrderNum);
-        jpOCSearch.add(jtfItemCode);
-        jpOCSearch.add(jtfOrderer);
-        jpOCSearch.add(jtfPhoneNum);
-        jpOCSearch.add(jtfInvoiceNum);
-        jpOCSearch.add(jtfOrderDate);
-        jpOCSearch.add(jcbMarket);
-        jpOCSearch.add(btnSearch);
-
-        // 주문 통합 테이블 패널
-        Object headerOrderCon[] = {"주문 번호", "상품 코드", "주문 수량", "주문자", "전화번호", "주소", "송장 번호", "주문일", "마켓"};
-        Object contentsOrderCon[][] = {
-                {"01", "couch-01-08-beige", "1", "황용운", "010-9574-****", "서울시 강서구 공항대로60길", "EG033025977JA", "230104", "쿠팡"},
-                {"02", "couch-03-01-black", "2", "김만조", "010-4313-****", "서울시 강서구 공항대로60길", "EG033025977JA", "230104", "쿠팡"},
-                {"03", "chair-03-03-blue", "5", "권순용", "010-4109-****", "서울시 강서구 공항대로60길", "EG033025977JA", "230104", "쿠팡"}
-        };
-
-        jtOrderCon = new JTable();
-        DefaultTableModel modelOrderCon = new DefaultTableModel(contentsOrderCon, headerOrderCon){
-            @Override
-            public boolean isCellEditable(int row, int col){
-                return false;
-            }
-        };
-        jtOrderCon.setModel(modelOrderCon);
-        resizeColumnWidth(jtOrderCon);
-        jtOrderCon.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);   // 다중 선택 안되게
-        jtOrderCon.setRowSorter(new TableRowSorter<>(modelOrderCon));   // 테이블 정렬 기능 추가
-        jtOrderCon.getTableHeader().setReorderingAllowed(false);    // 테이블 열 이동 안되게
-        jtOrderCon.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                String ODTitle = new String("주문 상세");
-                if (e.getClickCount() == 2) {
-                    System.out.println(jtOrderCon.getSelectedRow());
-                    if (findTabByName(ODTitle, jtpSubTab) != -1) {
-                        jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));
-                    } else {
-                        jtpSubTab.addTab(ODTitle, new JPanel());
-                        jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));
-                    }
-
-                }
-            }
-        });
-        jpOCTable.setLayout(new BorderLayout());
-        jpOCTable.add(new JScrollPane(jtOrderCon), BorderLayout.CENTER);
+        jpOrderConsolidation.setJtpSubTab(jtpSubTab);
 
         // 주문 통합 버튼
         btnOrderConsolidation.setRolloverIcon(imgOC2); // 버튼에 마우스가 올라갈떄 이미지 변환
@@ -348,57 +264,7 @@ public class Main extends JFrame{
         btnAlarm.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
         
         // 재고 목록 탭
-        Object headerItemList[] = {"", "코드", "품명", "수량", "마켓", "카테고리", "재고 위치", "최근 입고일", "다음 입고 예정일"};
-        Object contentsItemList[][] = {
-                {false, "couch-01-08-beige", "쿠션 A형 선인장 베이지", "117EA", "쿠팡", "", "A rack 2번 선반", "230101", "230104"},
-                {false, "couch-01-09-beige", "쿠션 B형 선인장 베이지", "118EA", "쿠팡", "", "B rack 2번 선반", "230102", "230105"},
-                {false, "couch-01-10-beige", "쿠션 C형 선인장 베이지", "112EA", "쿠팡", "", "B rack 3번 선반", "230103", "230106"}
-        };
-
-        jtItemList = new JTable();
-        DefaultTableModel modelItemList = new DefaultTableModel(contentsItemList, headerItemList){
-            @Override
-            public boolean isCellEditable(int row, int col){
-                if (col == 0){
-                    return true;
-                }
-                else{
-                    return false;
-                }
-//                return true;
-            }
-        };
-        DefaultTableCellRenderer dcr = new DefaultTableCellRenderer()
-        {
-            public Component getTableCellRendererComponent  // 셀렌더러
-            (JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
-            {
-                JCheckBox box= new JCheckBox();
-                box.setSelected(((Boolean)value).booleanValue());
-                box.setHorizontalAlignment(JLabel.CENTER);
-                return box;
-            }
-        };
-
-        jtItemList.setModel(modelItemList);
-//        jtItemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);   // 다중 선택 안되게
-        jtItemList.setRowSorter(new TableRowSorter<>(modelItemList));   // 테이블 정렬 기능 추가
-        jtItemList.getTableHeader().setReorderingAllowed(false);    // 테이블 열 이동 안되게
-        jtItemList.getColumn("").setCellRenderer(dcr);
-
-        JCheckBox box = new JCheckBox();
-        box.setHorizontalAlignment(JLabel.CENTER);
-        jtItemList.getColumn("").setCellEditor(new DefaultCellEditor(box));
-        resizeColumnWidth(jtItemList);
-        jtItemList.getColumn("").setPreferredWidth(1);
-
-
-        jpItemList.setLayout(new BorderLayout());
-        jpItemList.add(new JScrollPane(jtItemList), BorderLayout.CENTER);
-
-
         jtpMainTab.addTab("재고 목록", jpItemList);
-
         jtpSubTab.addTab("tab1", new JPanel());
 
         // jtp 스타일 지정

@@ -1,32 +1,67 @@
-import java.awt.*;
-import javax.swing.*;
+import javax.swing.JButton;
 
-public class Test
-{
-    public static void main(String[] args)
-    {
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBackground(Color.pink);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.NORTH;
-        gbc.insets = new Insets(0,0,0,0);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        for(int j = 0; j < 1; j++)
-        {
-            JLabel label = new JLabel("label 1111111111" + (j + 1), JLabel.CENTER);
-            label.setHorizontalAlignment(JLabel.LEFT);
-            label.setPreferredSize(new Dimension(100,40));
-            label.setBorder(BorderFactory.createEtchedBorder());
-            panel.add(label, gbc);
-        }
-        JFrame f = new JFrame();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.add(new JScrollPane(panel));
-        f.setSize(400,400);
-        f.setLocation(200,200);
-        f.setVisible(true);
+import javax.swing.JFrame;
+
+import javax.swing.JPanel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+
+class MyFrame6 extends JFrame {
+
+    public MyFrame6() {
+
+        setSize(400, 100);
+
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        setTitle("MyFrameTest4");
+
+        JPanel j = new JPanel();
+
+        ArrayList<JButton> btnList = new ArrayList<>();
+
+        JButton btn1 = new JButton("1");
+
+        JButton btn2 = new JButton("2");
+
+        j.add(btn1);
+        btnList.add(btn1);
+        j.add(btn2);
+        btnList.add(btn2);
+
+        btn2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(btnList.size());
+                j.remove(btn1);
+                btnList.remove(0);
+                j.validate();
+                j.repaint();
+                System.out.println(btnList.size());
+            }
+        });
+
+        add(j);
+
+        setVisible(true);
+
+
     }
+
+}
+
+
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        MyFrame6 f = new MyFrame6();
+
+    }
+
+
+
 }

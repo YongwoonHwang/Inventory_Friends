@@ -10,10 +10,11 @@ import java.text.SimpleDateFormat;
 
 public class MemoWindow extends JFrame{
     JPanel jpMemoWinDate, jpMemoWin, jpMemoWinBtn;
-    JLabel jlDate;
+    static JLabel jlDate;
     JButton btnSave, btnCancle, btnDelete;
     JTextArea jtaMemoWin;
     JScrollPane jspMemoWin;
+    static Integer selectIndex;
     static MemoTab memoTab;
     static String seleteDate;
 
@@ -26,6 +27,7 @@ public class MemoWindow extends JFrame{
         jpMemoWinDate = new JPanel();
         jtaMemoWin = new JTextArea();
         jspMemoWin = new JScrollPane(jtaMemoWin);
+        jtaMemoWin.setLineWrap(true);           //자동 줄바꿈
         jlDate = new JLabel();
         jpMemoWinBtn.setLayout(new BoxLayout(jpMemoWinBtn, BoxLayout.LINE_AXIS));
         jpMemoWinDate.setBackground(Color.WHITE);
@@ -35,19 +37,36 @@ public class MemoWindow extends JFrame{
         jtaMemoWin.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         btnDelete = new JButton("삭제");
+        btnDelete.setEnabled(false);
         btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                System.out.println(LocalDate.now());
+                if (selectIndex != null){
+                    int input = JOptionPane.showConfirmDialog(null, "이 메모를 삭제하시겠습니까?",
+                            "삭제 확인", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+                    if(input == JOptionPane.OK_OPTION){
+                        deleteMemo(memoTab);
+                        setVisible(false);
+                        selectIndex = null;
+                    }
+                }
             }
         });
         btnSave = new JButton("저장");
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveMemo(memoTab, jlDate.getText()+" || "+jtaMemoWin.getText());
-                setVisible(false);
-                dispose();
+                if (selectIndex != null){
+                    changeMemo(memoTab, jtaMemoWin.getText(), jlDate.getText());
+                    setVisible(false);
+                    dispose();
+                } else {
+                    saveMemo(memoTab, jtaMemoWin.getText(), jlDate.getText());
+                    setVisible(false);
+                    dispose();
+                }
+                selectIndex = null;
 //                System.out.println(memoCont);
             }
         });
@@ -81,20 +100,34 @@ public class MemoWindow extends JFrame{
         });
     }
 
-    public static void saveMemo(MemoTab mt, String memoCont){
-        mt.addMemo(memoCont);
+    public void saveMemo(MemoTab mt, String memoCont, String date){
+        mt.addMemo(memoCont, date);
         mt.revalidate();
         mt.repaint();
-//        System.out.println("Saved");
-//        System.out.println(memoCont);
     }
-    public static void setMemoTab(MemoTab mt){
+    public void changeMemo(MemoTab mt, String memoCont, String date){
+        mt.changeMemo(selectIndex, memoCont, date);
+        mt.revalidate();
+        mt.repaint();
+    }
+    public void deleteMemo(MemoTab mt){
+        mt.deleteMemo(selectIndex);
+    }
+    public void setMemoTab(MemoTab mt){
         memoTab = mt;
+    }
+    public void setIndex(int idx){
+        selectIndex = idx;
     }
     public void setDate(LocalDate date){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         seleteDate = date.format(formatter);
         jlDate.setText(seleteDate);
+//        jlDate.repaint();
+    }
+    public void setDate(String date){
+        jlDate.setText(date);
+//        jlDate.repaint();
     }
     public void setDate(Object date){
         SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");

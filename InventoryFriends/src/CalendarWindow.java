@@ -27,10 +27,12 @@ public class CalendarWindow extends JWindow {
             @Override
             public void actionPerformed(ActionEvent e) {
                 selectDate = datePanel.getModel().getValue();
-                System.out.println(selectDate.getClass().getName());
+//                System.out.println(selectDate.getClass().getName());
                 setVisible(false);
                 memoWindow.jtaMemoWin.setText("");
                 memoWindow.setDate(selectDate);
+                memoWindow.btnDelete.setEnabled(false);
+                memoWindow.btnSave.setText("저장");
                 memoWindow.setVisible(true);
             }
         });
