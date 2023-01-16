@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th = "http//www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>DATABASE 테스트</title>
+</head>
+<body>
+<div>
+  <ul>
+    <li th:each="item : ${list}">
+      <dl>
+        <dd><span th:text = "${ item.company }"></span>"</dd>
+        <dt><a href="#"><span th:text="${item.id }"></span></a> </dt>
+<!--        <dd><span th:text="{ item.no }"></span></dd>-->
+      </dl>
+    </li>
+  </ul>
+</div>
+</body>
+</html>
