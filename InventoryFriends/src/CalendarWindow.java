@@ -12,7 +12,7 @@ import net.sourceforge.jdatepicker.impl.*;
 
 public class CalendarWindow extends JWindow {
     JDatePanelImpl datePanel;
-    JDatePickerImpl datePicker;
+//    JDatePickerImpl datePicker;
     static MemoWindow memoWindow;
     static Object selectDate;
 
@@ -21,19 +21,23 @@ public class CalendarWindow extends JWindow {
         setSize(200, 180);
         UtilDateModel model = new UtilDateModel();
         datePanel = new JDatePanelImpl(model);
-        datePicker = new JDatePickerImpl(datePanel);
+//        datePicker = new JDatePickerImpl(datePanel);
         add(datePanel);
         datePanel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 selectDate = datePanel.getModel().getValue();
-//                System.out.println(selectDate.getClass().getName());
-                setVisible(false);
-                memoWindow.jtaMemoWin.setText("");
-                memoWindow.setDate(selectDate);
-                memoWindow.btnDelete.setEnabled(false);
-                memoWindow.btnSave.setText("저장");
-                memoWindow.setVisible(true);
+                if (selectDate == null){
+                    setVisible(false);
+                }
+                else {
+                    setVisible(false);
+                    memoWindow.jtaMemoWin.setText("");
+                    memoWindow.setDate(selectDate);
+                    memoWindow.btnDelete.setEnabled(false);
+                    memoWindow.btnSave.setText("저장");
+                    memoWindow.setVisible(true);
+                }
             }
         });
     }

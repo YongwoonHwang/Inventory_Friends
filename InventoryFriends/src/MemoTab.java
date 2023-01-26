@@ -12,14 +12,18 @@ public class MemoTab extends JTabbedPane{
     JScrollPane jspMemoTab;
     JButton btnAdd;
     GridBagConstraints gbc;
+    static GroupLayout.ParallelGroup hGroup;
+    static GroupLayout.SequentialGroup vGroup;
     static MemoWindow memoWindow;
-    static ArrayList<MemoLabel> jlList = new ArrayList<>();
+    static ArrayList<JLabel> jlList = new ArrayList<>();
+    static ArrayList<JPanel> jpList = new ArrayList<>();
     public MemoTab(){
-        jpMemoTab = new JPanel(new GridBagLayout());
-        jspMemoTab = new JScrollPane(jpMemoTab);
         jpMemoTabBorder = new JPanel(new BorderLayout());
+        jpMemoTab = new JPanel();
         jpMemoTabBtn = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        btnAdd =new JButton("등록");
+        jspMemoTab = new JScrollPane(jpMemoTab);
+        jspMemoTab.setBorder(BorderFactory.createEmptyBorder());
+        btnAdd = new JButton("등록");
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -31,64 +35,61 @@ public class MemoTab extends JTabbedPane{
             }
         });
         jpMemoTabBtn.add(btnAdd);
-        jspMemoTab.setBorder(BorderFactory.createEmptyBorder());
-        gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.NORTH;
-        gbc.insets = new Insets(5,5,5,5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
         jpMemoTabBorder.add(jspMemoTab, BorderLayout.CENTER);
         jpMemoTabBorder.add(jpMemoTabBtn, BorderLayout.SOUTH);
+        GroupLayout gLayout = new GroupLayout(jpMemoTab);
+        jpMemoTab.setLayout(gLayout);
+        hGroup = gLayout.createParallelGroup();
+        gLayout.setHorizontalGroup(hGroup);
+        vGroup = gLayout.createSequentialGroup();
+        gLayout.setVerticalGroup(vGroup);
+
         addTab("메모", jpMemoTabBorder);
     }
 
     public void setMemoWindow(MemoWindow mw){ memoWindow = mw; }
 
     public void addMemo(String contents, String date){
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         MemoLabel label = new MemoLabel(contents, date);
-        label.setPreferredSize(new Dimension(100,25));
-        label.setOpaque(true);
-        label.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        label.setBackground(Color.YELLOW);
         label.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount()==2){
                     System.out.println(jlList.indexOf(label));
-//                    System.out.println(label.getDate());
-                    memoWindow.jtaMemoWin.setText(label.getContents());
-                    memoWindow.btnDelete.setEnabled(true);
-                    memoWindow.setIndex(jlList.indexOf(label));
-                    memoWindow.btnSave.setText("수정");
-                    memoWindow.setDate(label.getDate());
-                    memoWindow.setVisible(true);
-//                    jlList.indexOf(0);
+                    if(label.date != null){
+                        memoWindow.jtaMemoWin.setText(label.getContents());
+                        memoWindow.btnDelete.setEnabled(true);
+                        memoWindow.setIndex(jlList.indexOf(label));
+                        memoWindow.btnSave.setText("수정");
+                        memoWindow.setDate(label.getDate());
+                        memoWindow.setVisible(true);
+                    }
                 }
             }
         });
-//            label.setBorder(BorderFactory.createEtchedBorder());  // 테두리 설정
+        panel.add(label,BorderLayout.CENTER);
+        hGroup.addComponent(panel);
+        vGroup.addComponent(panel, GroupLayout.PREFERRED_SIZE,
+                GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE);
+//        label.setBorder(BorderFactory.createEtchedBorder());  // 테두리 설정
         jlList.add(label);
-        showMemo();
+        jpList.add(panel);
+
+        jspMemoTab.validate();
+        jspMemoTab.repaint();
     }
     public void changeMemo(Integer idx, String contents, String date){
         jlList.get(idx).setText(contents);
-//        showMemo();
     }
     public void deleteMemo(Integer idx){
-        jpMemoTab.remove(jlList.get(idx));
-        jpMemoTab.validate();
-        jpMemoTab.repaint();
+        jpMemoTab.remove(jpList.get(idx));
         int idx2 = idx;
         jlList.remove(idx2);
-//        showMemo();
-    }
-    public void showMemo(){
-        for(int i = 0; i<jlList.size(); i++){
-            jpMemoTab.add(jlList.get(i), gbc);
-        }
-//        System.out.println(jlList.size());
+        jpList.remove(idx2);
+        jspMemoTab.validate();
+        jspMemoTab.repaint();
     }
 
     public static void main(String[] args)

@@ -2,22 +2,22 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.plaf.*;
-import javax.swing.table.*;
 
 public class Main extends JFrame{
-    JPanel jpMain, jpLU, jpLD, jpRU, jpRD, jpBottom, jpItemList;
+    JPanel jpMain, jpLD, jpRU, jpRD, jpBottom, jpItemList;
+    MenuBtnPanel jpLU;
     OrderConsolidationPanel jpOrderConsolidation;
     JMenuBar jmbMenuBar;
     JMenu jmFileMenu;
-    JButton btnSignOut, btnInventoryManagement, btnOrderConsolidation, btnAlarm, btnIMopt1, btnIMopt2;
+    JButton btnSignOut, btnAlarm;
     JSplitPane jspCenter, jspLeft, jspRight;
     JLabel jlUserName, jlCalendar;
     JTabbedPane jtpMainTab, jtpSubTab;
     MemoTab memoTab;
     MemoWindow memoWindow;
     CalendarWindow windowCal;
-    ImageIcon imgIM1, imgIM2, imgOC1, imgOC2, imgSO1, imgSO2, imgAlarm1, imgAlarm2, imgCal,
-            imgIMopt1_1, imgIMopt1_2, imgIMopt2_1, imgIMopt2_2, imgSearch1, imgSearch2;
+    AlarmWindow windowAlarm;
+    ImageIcon imgSO1, imgSO2, imgAlarm1, imgAlarm2, imgCal;
     MenuAction menuAct;
     Font font1, font2;
 
@@ -35,10 +35,12 @@ public class Main extends JFrame{
             @Override
             public void componentMoved(ComponentEvent e) {
                 windowCal.setLocation(jlCalendar.getLocationOnScreen().x+1, jlCalendar.getLocationOnScreen().y-181);
+                windowAlarm.setLocation(btnAlarm.getLocationOnScreen().x-326, btnAlarm.getLocationOnScreen().y-300);
             }
             @Override
             public void componentResized(ComponentEvent e) {
                 windowCal.setLocation(jlCalendar.getLocationOnScreen().x+1, jlCalendar.getLocationOnScreen().y-181);
+                windowAlarm.setLocation(btnAlarm.getLocationOnScreen().x-326, btnAlarm.getLocationOnScreen().y-300);
             }
         });
         setVisible(true);
@@ -47,8 +49,8 @@ public class Main extends JFrame{
         jmbMenuBar = new JMenuBar(); // MenuBar 컴포넌트 생성
         jmFileMenu = new JMenu("File"); // "파일" 메뉴 컴포넌트 생성
 
-        JMenuItem[] menuItems = new JMenuItem[3];
-        String[] items = {"Debug Button", "Open", "Close"};
+        JMenuItem[] menuItems = new JMenuItem[4];
+        String[] items = {"Debug Button", "Alarm Debug Button", "Open", "Close"};
 
         menuAct = new MenuAction();
 
@@ -57,7 +59,7 @@ public class Main extends JFrame{
             menuItems[i].addActionListener(menuAct); // 리스너 등록
             jmFileMenu.add(menuItems[i]);
 
-            if(i == 1)
+            if(i == 2)
                 jmFileMenu.addSeparator(); // 숨기기와 닫기 사이에 구분선 추가
         }
 
@@ -105,7 +107,7 @@ public class Main extends JFrame{
         memoWindow = new MemoWindow();
 
         jpMain = new JPanel();
-        jpLU = new JPanel();
+        jpLU = new MenuBtnPanel();
         jpLD = new JPanel();
         jpRU = new JPanel();
         jpRD = new JPanel();
@@ -118,19 +120,9 @@ public class Main extends JFrame{
         jspLeft = new JSplitPane();
         jspRight = new JSplitPane();
 
-        imgIM1 = new ImageIcon("./img/img_IM1.jpg");
-        imgIM2 = new ImageIcon("./img/img_IM2.jpg");
-        imgOC1 = new ImageIcon("./img/img_OC1.jpg");
-        imgOC2 = new ImageIcon("./img/img_OC2.jpg");
         imgAlarm1 = new ImageIcon("./img/img_Alarm1.jpg");
         imgAlarm2 = new ImageIcon("./img/img_Alarm2.jpg");
         imgCal = new ImageIcon("./img/img_Cal.jpg");
-        imgIMopt1_1 = new ImageIcon("./img/img_IMopt1_1.jpg");
-        imgIMopt1_2 = new ImageIcon("./img/img_IMopt1_2.jpg");
-        imgIMopt2_1 = new ImageIcon("./img/img_IMopt2_1.jpg");
-        imgIMopt2_2 = new ImageIcon("./img/img_IMopt2_2.jpg");
-        imgSearch1 = new ImageIcon("./img/img_Search1.jpg");
-        imgSearch2 = new ImageIcon("./img/img_Search2.jpg");
 
         jpLU.setBackground(Color.WHITE);
         jpLD.setBackground(Color.WHITE);
@@ -141,28 +133,6 @@ public class Main extends JFrame{
         jspLeft.setDividerSize(7);
         jspRight.setDividerSize(7);
 
-        btnInventoryManagement = new JButton(imgIM1);
-        btnInventoryManagement.setBorder(BorderFactory.createEmptyBorder(5, 5, 5,5));
-        btnOrderConsolidation = new JButton(imgOC1);
-        btnOrderConsolidation.setBorder(BorderFactory.createEmptyBorder(5, 5, 5,5));
-        btnIMopt1 = new JButton(imgIMopt1_1);
-        btnIMopt1.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-//        jlIMopt1.setFont(font1);
-        btnIMopt1.setRolloverIcon(imgIMopt1_2); // 버튼에 마우스가 올라갈떄 이미지 변환
-        btnIMopt1.setBorderPainted(false); // 버튼 테두리 제거
-        btnIMopt1.setFocusPainted(false);
-        btnIMopt1.setContentAreaFilled(false);
-
-        btnIMopt2 = new JButton(imgIMopt2_1);
-        btnIMopt2.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-//        jlIMopt2.setFont(font1);
-        btnIMopt2.setRolloverIcon(imgIMopt2_2); // 버튼에 마우스가 올라갈떄 이미지 변환
-        btnIMopt2.setBorderPainted(false); // 버튼 테두리 제거
-        btnIMopt2.setFocusPainted(false);
-        btnIMopt2.setContentAreaFilled(false);
-
-        btnIMopt1.setVisible(false);
-        btnIMopt2.setVisible(false);
         jlCalendar = new JLabel(imgCal);
         jlCalendar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         jlCalendar.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
@@ -170,89 +140,21 @@ public class Main extends JFrame{
         windowCal.setMemoWindow(memoWindow);
         memoTab.setMemoWindow(memoWindow);
         windowCal.setMemoTab(memoTab);
+
+        windowAlarm = new AlarmWindow();
         jlCalendar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(windowCal.isVisible()){
                     windowCal.setVisible(false);
-//                    System.out.println(windowCal.selectDate);
                 }else{
                     windowCal.setVisible(true);
-//                    System.out.println(windowCal.selectDate);
                 }
             }
         });
 
-        // 재고 관리 버튼
-        btnInventoryManagement.setRolloverIcon(imgIM2); // 버튼에 마우스가 올라갈떄 이미지 변환
-        btnInventoryManagement.setBorderPainted(false); // 버튼 테두리 제거
-        btnInventoryManagement.setFocusPainted(false);
-        btnInventoryManagement.setContentAreaFilled(false);
-
-        btnInventoryManagement.setPreferredSize(new Dimension(242, 45)); // 버튼 크기 지정
-        btnInventoryManagement.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (btnIMopt1.isVisible()) {
-                    btnIMopt1.setVisible(false);
-                    btnIMopt2.setVisible(false);
-                }
-                else {
-                    btnIMopt1.setVisible(true);
-                    btnIMopt2.setVisible(true);
-                }
-            }
-        });
-
-        // 개별 등록 버튼
-        btnIMopt1.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e){
-                String opt1Title = new String("재고 관리(개별 등록)");
-                if (findTabByName(opt1Title, jtpMainTab) != -1) {
-                    jtpMainTab.setSelectedIndex(findTabByName(opt1Title, jtpMainTab));
-                } else {
-                    jtpMainTab.addTab(opt1Title, new JPanel());
-                    jtpMainTab.setSelectedIndex(findTabByName(opt1Title, jtpMainTab));
-                }
-
-            }
-        });
-
-        // 일괄 등록 버튼
-        btnIMopt2.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e){
-                String opt2Title = new String("재고 관리(일괄 등록)");
-                if (findTabByName(opt2Title, jtpMainTab) != -1) {
-                    jtpMainTab.setSelectedIndex(findTabByName(opt2Title, jtpMainTab));
-                } else {
-                    jtpMainTab.addTab(opt2Title, new JPanel());
-                    jtpMainTab.setSelectedIndex(findTabByName(opt2Title, jtpMainTab));
-                }
-
-            }
-        });
         // 주문 통합 탭
         jpOrderConsolidation.setJtpSubTab(jtpSubTab);
-
-        // 주문 통합 버튼
-        btnOrderConsolidation.setRolloverIcon(imgOC2); // 버튼에 마우스가 올라갈떄 이미지 변환
-        btnOrderConsolidation.setBorderPainted(false); // 버튼 테두리 제거
-        btnOrderConsolidation.setFocusPainted(false);
-        btnOrderConsolidation.setContentAreaFilled(false);
-
-        btnOrderConsolidation.setPreferredSize(new Dimension(242, 45)); // 버튼 크기 지정
-        btnOrderConsolidation.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String OCTitle = new String("주문 통합");
-                if (findTabByName(OCTitle, jtpMainTab) != -1) {
-                    jtpMainTab.setSelectedIndex(findTabByName(OCTitle, jtpMainTab));
-                } else {
-                    jtpMainTab.addTab(OCTitle, jpOrderConsolidation);
-                    jtpMainTab.setSelectedIndex(findTabByName(OCTitle, jtpMainTab));
-                }
-            }
-        });   
         
         // 알림 버튼
         btnAlarm = new JButton(imgAlarm1);
@@ -262,6 +164,18 @@ public class Main extends JFrame{
         btnAlarm.setFocusPainted(false);
         btnAlarm.setContentAreaFilled(false);
         btnAlarm.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+        btnAlarm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                windowAlarm.setAlarmLocate();
+
+                if(windowAlarm.isVisible()){
+                    windowAlarm.setVisible(false);
+                } else {
+                    windowAlarm.setVisible(true);
+                }
+            }
+        });
         
         // 재고 목록 탭
         jtpMainTab.addTab("재고 목록", jpItemList);
@@ -284,12 +198,8 @@ public class Main extends JFrame{
         SwingUtilities.updateComponentTreeUI(memoTab);
 
         // 좌상단 패널
-        jpLU.setLayout(new BoxLayout(jpLU,BoxLayout.Y_AXIS));
-
-        jpLU.add(btnInventoryManagement);    // 재고 관리 버튼 추가
-        jpLU.add(btnIMopt1);
-        jpLU.add(btnIMopt2);
-        jpLU.add(btnOrderConsolidation);
+        jpLU.setJtpMainTab(jtpMainTab);
+        jpLU.setJpOrderConsolidation(jpOrderConsolidation);
 
         // 좌하단 패널
         jpLD.setLayout(new BorderLayout());
@@ -336,10 +246,6 @@ public class Main extends JFrame{
         getContentPane().add(jpMain);
     }
 
-    // 탭 메뉴에 x버튼 추가하는 클래스(처음 탭은 x버튼 없음)
-    // 탭 메뉴에 x버튼 추가하는 클래스
-
-
     class MenuAction implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
@@ -352,6 +258,11 @@ public class Main extends JFrame{
                         jtpSubTab.setVisible(true);
                         jtpSubTab.addTab("tab1", new JPanel());
                     }
+                    break;
+                case "Alarm Debug Button":
+                    windowAlarm.addAlarm();
+                    windowAlarm.revalidate();
+                    windowAlarm.repaint();
                     break;
                 case "Open":
                     break;
@@ -370,20 +281,6 @@ public class Main extends JFrame{
         }
         return -1;
     }
-    // 테이블 너비를 내용에 맞춰주는 함수
-    public void resizeColumnWidth(JTable table) {
-        final TableColumnModel columnModel = table.getColumnModel();
-        for (int column = 0; column < table.getColumnCount(); column++) {
-            int width = 50; // Min width
-            for (int row = 0; row < table.getRowCount(); row++) {
-                TableCellRenderer renderer = table.getCellRenderer(row, column);
-                Component comp = table.prepareRenderer(renderer, row, column);
-                width = Math.max(comp.getPreferredSize().width +1 , width);
-            }
-            columnModel.getColumn(column).setPreferredWidth(width);
-        }
-    }
-
     public static void main(String[] args) {
         new Main();
     }
