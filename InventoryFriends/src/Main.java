@@ -272,15 +272,6 @@ public class Main extends JFrame{
             }
         }
     }
-    // 탭 타이틀 이름을 찾아 인덱스를 반환하는 함수
-    public int findTabByName(String title, JTabbedPane tab) {
-        int tabCount = tab.getTabCount();
-        for (int i=0; i < tabCount; i++) {
-            String tabTitle = tab.getTitleAt(i);
-            if (tabTitle.equals(title)) return i;
-        }
-        return -1;
-    }
     public static void main(String[] args) {
         new Main();
     }

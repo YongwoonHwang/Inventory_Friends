@@ -4,9 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.text.SimpleDateFormat;
+import java.util.Scanner;
 
 public class MemoWindow extends JFrame{
     JPanel jpMemoWinDate, jpMemoWin, jpMemoWinBtn;
@@ -17,6 +19,8 @@ public class MemoWindow extends JFrame{
     static Integer selectIndex;
     static MemoTab memoTab;
     static String seleteDate;
+    static String path = "Memo.txt";
+    String endMemo = ">->end<-<";
 
 
     public MemoWindow(){
@@ -104,19 +108,103 @@ public class MemoWindow extends JFrame{
         mt.addMemo(memoCont, date);
         mt.revalidate();
         mt.repaint();
+
+        try (FileWriter fw = new FileWriter(path, true)){
+            fw.write( date + "\r\n" + memoCont + "\r\n" + endMemo +"\r\n");
+            System.out.println("Successfully wrote to the file.");
+        } catch (Exception e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
     }
     public void changeMemo(MemoTab mt, String memoCont, String date){
         mt.changeMemo(selectIndex, memoCont, date);
         mt.revalidate();
         mt.repaint();
+
+        File file = new File(path);
+        String dummy = "";
+
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            //BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+            //1. 삭제하고자 하는 position 이전까지는 이동하며 dummy에 저장
+            String line;
+            for(int i=0; i<selectIndex; i++) {
+                while(!(line = br.readLine()).equals(endMemo)){
+                    dummy += (line + "\r\n");
+                    System.out.println("1");
+                    System.out.println(line);
+                }
+                dummy += (endMemo + "\r\n");
+            }
+
+            //2. 삭제하고자 하는 데이터는 건너뛰기
+            line = br.readLine();
+//            System.out.println(line);
+            dummy += (line + "\r\n" );
+            dummy += (memoCont + "\r\n" + endMemo + "\r\n");
+            while(!(line = br.readLine()).equals(endMemo)){
+                continue;
+            }
+            //3. 삭제하고자 하는 position 이후부터 dummy에 저장
+            while((line = br.readLine())!=null) {
+                dummy += (line + "\r\n" );
+            }
+            //4. FileWriter를 이용해서 덮어쓰기
+            FileWriter fw = new FileWriter(path);
+            fw.write(dummy);
+            fw.close();
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     public void deleteMemo(MemoTab mt){
         mt.deleteMemo(selectIndex);
+
+        File file = new File(path);
+        String dummy = "";
+
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            //BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+            //1. 삭제하고자 하는 position 이전까지는 이동하며 dummy에 저장
+            String line;
+            for(int i=0; i<selectIndex; i++) {
+                while(!(line = br.readLine()).equals(endMemo)){
+                    dummy += (line + "\r\n");
+                    System.out.println("1");
+                    System.out.println(line);
+                }
+                dummy += (endMemo + "\r\n");
+            }
+
+            //2. 삭제하고자 하는 데이터는 건너뛰기
+            while(!(line = br.readLine()).equals(endMemo)){
+                continue;
+            }
+            //3. 삭제하고자 하는 position 이후부터 dummy에 저장
+            while((line = br.readLine())!=null) {
+                dummy += (line + "\r\n" );
+            }
+            //4. FileWriter를 이용해서 덮어쓰기
+            FileWriter fw = new FileWriter(path);
+            fw.write(dummy);
+            fw.close();
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     public void setMemoTab(MemoTab mt){
         memoTab = mt;
     }
     public void setIndex(int idx){
+        selectIndex = idx;
+    }
+    public void setIndex(Integer idx){
         selectIndex = idx;
     }
     public void setDate(LocalDate date){

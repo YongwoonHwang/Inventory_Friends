@@ -8,9 +8,10 @@ public class HintTextField extends JTextField {
 
     Font gainFont = new Font("맑은 고딕", Font.PLAIN, 12);
     Font lostFont = new Font("맑은 고딕", Font.ITALIC, 12);
+    final String hintText;
 
     public HintTextField(final String hint) {
-
+        hintText = hint;
         setText(hint);
         setFont(lostFont);
         setForeground(Color.GRAY);
@@ -22,9 +23,11 @@ public class HintTextField extends JTextField {
                 if (getText().equals(hint)) {
                     setText("");
                     setFont(gainFont);
+                    setForeground(Color.BLACK);
                 } else {
                     setText(getText());
                     setFont(gainFont);
+                    setForeground(Color.BLACK);
                 }
             }
 
@@ -41,5 +44,17 @@ public class HintTextField extends JTextField {
                 }
             }
         });
+    }
+
+    public String getHint(){
+        return hintText;
+    }
+
+    public boolean getLostFocus(){
+        if(getForeground() == Color.BLACK){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

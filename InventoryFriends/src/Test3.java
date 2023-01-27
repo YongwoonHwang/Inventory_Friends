@@ -1,49 +1,42 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.*;
 
+public class Test3
+{
+    public static void main(String[] args)
+    {
+        String path = "test.txt";
+        File file = new File(path);
+        String dummy = "";
 
-public class Test3 {
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        JSplitPane jsp = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        jsp.setDividerSize(0);
-        JPanel content = new JPanel();
-        JScrollPane jScrollPane = new JScrollPane(jsp);
-        JPanel top = new JPanel();
-        JButton btn = new JButton("123");
-        btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(jsp.getMaximumDividerLocation());
-                jsp.setDividerLocation(jsp.getMaximumDividerLocation());
-                jsp.setDividerSize(0);
-                jsp.setEnabled(false);
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            //BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+            //1. 삭제하고자 하는 position 이전까지는 이동하며 dummy에 저장
+            String line;
+            for(int i=0; i<2; i++) {
+                line = br.readLine(); //읽으며 이동
+                dummy += (line + "\r\n" );
             }
-        });
-        top.add(btn);
-        jsp.setTopComponent(top);
-        jsp.setBottomComponent(content);
-        frame.setContentPane(jScrollPane);
-        frame.setSize(400, 300);
-        GroupLayout gLayout = new GroupLayout(content);
-        content.setLayout(gLayout);
-        GroupLayout.ParallelGroup hGroup = gLayout.createParallelGroup();
-        gLayout.setHorizontalGroup(hGroup);
-        GroupLayout.SequentialGroup vGroup = gLayout.createSequentialGroup();
-        gLayout.setVerticalGroup(vGroup);
-        for (int i = 0; i < 3; i++) {
-            JPanel panel = new JPanel();
-            panel.add(new JLabel("label"+String.valueOf(i+1)));
 
-            panel.setBorder(BorderFactory.createLineBorder(Color.red));
-            hGroup.addComponent(panel);
-            vGroup.addComponent(panel, GroupLayout.PREFERRED_SIZE,
-                    GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE);
-            vGroup.addGap(5);
+            //2. 삭제하고자 하는 데이터는 건너뛰기
+            for(int i=0; i<2; i++) {
+                br.readLine(); //읽으며 이동
+            }
+
+            //3. 삭제하고자 하는 position 이후부터 dummy에 저장
+            while((line = br.readLine())!=null) {
+                dummy += (line + "\r\n" );
+            }
+            //4. FileWriter를 이용해서 덮어쓰기
+            FileWriter fw = new FileWriter(path);
+            fw.write(dummy);
+            //bw.close();
+            fw.close();
+            br.close();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
 
-        frame.setVisible(true);
     }
 }

@@ -1,21 +1,32 @@
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class OrderConsolidationPanel extends JPanel {
-    String market[] = {"마켓 1", "마켓 2", "정말 긴 마켓 이름"};
+    String market[] = {"", "마켓 1", "마켓 2", "정말 긴 마켓 이름"};
     ImageIcon imgSearch1 = new ImageIcon("./img/img_Search1.jpg");
     ImageIcon imgSearch2 = new ImageIcon("./img/img_Search2.jpg");
     JComboBox jcbMarket;
     JButton btnSearch;
-    JTextField jtfOrderNum, jtfItemCode, jtfOrderer, jtfPhoneNum, jtfInvoiceNum, jtfOrderDate;
+    HintTextField jtfOrderNum, jtfItemCode, jtfOrderer, jtfPhoneNum, jtfInvoiceNum, jtfOrderDate;
     JPanel jpOCSearch;
     OrderConsolidationTable jtOrderCon;
+    TableRowSorter<TableModel> rowSorter;
+    ArrayList<RowFilter<Object, Object>> filters;
     public OrderConsolidationPanel(){
         Font font1 = new Font("돋움", Font.PLAIN, 12);
+        filters = new ArrayList<>();
 
+        setLayout(new BorderLayout());
         jtOrderCon = new OrderConsolidationTable();
+        rowSorter = new TableRowSorter<>(jtOrderCon.getModel());
+        jtOrderCon.setRowSorter(rowSorter);
 
         jcbMarket = new JComboBox<String>(market);
         jcbMarket.setBackground(Color.WHITE);
@@ -26,6 +37,35 @@ public class OrderConsolidationPanel extends JPanel {
         btnSearch.setFocusPainted(false);
         btnSearch.setContentAreaFilled(false);
         btnSearch.setPreferredSize(new Dimension(56, 24)); // 버튼 크기 지정
+        btnSearch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!jtfOrderNum.getLostFocus()){
+                    filters.add(RowFilter.regexFilter("(?i)" + jtfOrderNum.getText(),0));
+                }
+                if(!jtfItemCode.getLostFocus()){
+                    filters.add(RowFilter.regexFilter("(?i)" + jtfItemCode.getText(),1));
+                }
+                if(!jtfOrderer.getLostFocus()){
+                    filters.add(RowFilter.regexFilter("(?i)" + jtfOrderer.getText(),3));
+                }
+                if(!jtfPhoneNum.getLostFocus()){
+                    filters.add(RowFilter.regexFilter("(?i)" + jtfPhoneNum.getText(),4));
+                }
+                if(!jtfInvoiceNum.getLostFocus()){
+                    filters.add(RowFilter.regexFilter("(?i)" + jtfInvoiceNum.getText(),6));
+                }
+                if(!jtfOrderDate.getLostFocus()){
+                    filters.add(RowFilter.regexFilter("(?i)" + jtfOrderDate.getText(),7));
+                }
+                if(jcbMarket.getSelectedIndex() != 0){
+                    filters.add(RowFilter.regexFilter("(?i)" + jcbMarket.getSelectedItem(),8));
+                }
+
+                rowSorter.setRowFilter(RowFilter.andFilter(filters));
+                filters.clear();
+            }
+        });
 
         jtfOrderNum = new HintTextField("주문 번호");
         jtfOrderNum.setColumns(10);
@@ -54,7 +94,6 @@ public class OrderConsolidationPanel extends JPanel {
 
         resizeColumnWidth(jtOrderCon);
 
-        setLayout(new BorderLayout());
         add(jpOCSearch, BorderLayout.NORTH);
         add(new JScrollPane(jtOrderCon), BorderLayout.CENTER);
     }
