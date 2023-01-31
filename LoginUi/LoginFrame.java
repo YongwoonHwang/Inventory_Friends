@@ -1,23 +1,26 @@
-package LoginUi;
+package com.localapp.localtest.LoginUi;
 
 
-
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.*;
-import java.net.*;
-import java.io.*;
+import com.localapp.localtest.MainFrame.Main;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import MainFrame.Main;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
-
+@RequiredArgsConstructor
 public class LoginFrame extends JFrame {
+    
+    
 
     private JPanel contentPane;
     private JTextField tfUsername;
@@ -25,7 +28,18 @@ public class LoginFrame extends JFrame {
     private JPasswordField tfPassword;
     private JButton loginBtn;
 
+    Connection con = null;
+    Statement stmt = null;
+
+    String url = "jdbc:mysql://inventoryfriends.cxtfsxnxj3jt.ap-northeast-1.rds.amazonaws.com/kmj?characterEncoding=utf8&useUnicode=true&mysqlEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul";
+    String user = "admin";
+    String passwd = "admin1470";
+
     Operator o = null;
+    
+
+    
+
 
 
 
@@ -153,9 +167,11 @@ public class LoginFrame extends JFrame {
         }
     }
 
+
     /**
      * Create the frame.
      */
+    
     public LoginFrame(Operator _o) {
 
         o = _o;
@@ -238,10 +254,12 @@ public class LoginFrame extends JFrame {
         loginBtn.setBounds(101, 500, 400, 45);
         contentPane.add(loginBtn);
 
+
         tfPassword = new HintPassField("비밀번호를 입력해주세요");
         tfPassword.setColumns(20);
         tfPassword.setBounds(101, 350, 400, 45);
         contentPane.add(tfPassword);
+
 
         //Enter키 입력시 발생 이벤트
 
@@ -257,6 +275,7 @@ public class LoginFrame extends JFrame {
         tfPassword.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter,"Enter");
         tfUsername.getActionMap().put("Enter",Enter);
         tfPassword.getActionMap().put("Enter",Enter);
+        
 
 
 
@@ -276,14 +295,18 @@ public class LoginFrame extends JFrame {
 
         //로그인 액션
 
+
         loginBtn.addActionListener(new ActionListener() {
+            
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 String uid = tfUsername.getText();
                 String upass = "";
                 for (int i = 0; i < tfPassword.getPassword().length; i++) {
                     upass = upass + tfPassword.getPassword()[i];
                 }
+               
                 if(uid.equals("") || upass.equals("")) {
                     JOptionPane.showMessageDialog(null,"아이디와 비밀번호 모두 입력해주세요."
                             ,"로그인 실패",JOptionPane.ERROR_MESSAGE);
@@ -298,13 +321,13 @@ public class LoginFrame extends JFrame {
                     }
                     else{
                         System.out.println("로그인 실패 > 로그인 정보 불일치");
-//                        System.out.println(upass);
+                        System.out.println(upass);
 //                        System.out.println(uid);
                         JOptionPane.showMessageDialog(null,"로그인에 실패했습니다");
                     }
                 }
             }
         });
-
     }
 }
+
