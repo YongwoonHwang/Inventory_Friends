@@ -1,9 +1,10 @@
-package LoginUi;
+package com.localapp.localtest.LoginUi;
 
 
 public class Operator {
+
+    com.localapp.localtest.LoginUi.LoginFrame lf = null;
     Database db = null;
-    LoginUi.LoginFrame lf = null;
 
     public static void main(String[] args) {
         Operator opt = new Operator();
