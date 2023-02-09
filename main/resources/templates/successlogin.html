@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login access</title>
+</head>
+
+<body>
+
+<div class="container">
+    <h1> 로그인 성공</h1>
+    <form method="post" th:action="@{/logout}">
+        <div th:text="${info}"></div>
+        <button type="submit" class="btn btn-primary">로그아웃</button>
+        <button type="button" class="btn btn-primary" onClick="location.href='/'">메인 화면</button>
+    </form>
+</div>
+</body>
+</html>

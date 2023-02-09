@@ -1,0 +1,54 @@
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>로그인 페이지</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>로그인 페이지</h1>-->
+<!--<hr/>-->
+<!--&lt;!&ndash; formLogin을 이용한 시큐리티는 인증 시 x-www-form-url-encoded 타입만 인식 &ndash;&gt;-->
+<!--<form action="/loginProc" method="post">-->
+<!--    <input type="text" name="userID" />-->
+<!--    <input type="password" name="password" />-->
+<!--    <button>로그인</button>-->
+<!--</form>-->
+<!--</body>-->
+<!--</html>-->
+
+
+<!DOCTYPE html>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div class="container">
+    <h1>로그인</h1>
+    <form th:action="@{/loginProc}" method="post">
+        <div class="form-group">
+            <label th:for="userID">아이디</label>
+            <input type="text" name="userID" class="form-control" placeholder="아이디 입력해주세요">
+        </div>
+        <div class="form-group">
+            <label th:for="password">비밀번호</label>
+            <input type="password" class="form-control" name="password" placeholder="비밀번호 입력해주세요">
+        </div>
+
+        <button type="submit" class="btn btn-primary">로그인</button>
+        <button type="button" class="btn btn-primary" onClick="location.href='join'">회원 가입</button>
+    </form>
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="rememberMe" name="remember-me" checked>
+        <label class="form-check-label" for="rememberMe" aria-describedby="rememberMeHelp">자동 로그인</label>
+    </div>
+    <div th:if="error">
+        <p id="valid" style="color: red; font-size:12px;"><a th:text="${exception}"></a></p>
+    </div>
+    <br/>
+</div>
+</body>
+</html>
