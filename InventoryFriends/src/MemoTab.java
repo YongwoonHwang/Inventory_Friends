@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +13,7 @@ public class MemoTab extends JTabbedPane{
     JPanel jpMemoTab, jpMemoTabBorder, jpMemoTabBtn;
     JScrollPane jspMemoTab;
     JButton btnAdd;
-    GridBagConstraints gbc;
+    ImageIcon imgAdd1, imgAdd2, imgChange1, imgChange2, imgSave1, imgSave2;
     static GroupLayout.ParallelGroup hGroup;
     static GroupLayout.SequentialGroup vGroup;
     static MemoWindow memoWindow;
@@ -20,20 +21,50 @@ public class MemoTab extends JTabbedPane{
     static ArrayList<JPanel> jpList = new ArrayList<>();
     static String path = "Memo.txt";
     String endMemo = ">->end<-<";
+
+    Font font;
     public MemoTab(){
+
+        font = new Font("SansSerif", Font.BOLD, 14);   // 탭 타이틀 폰트
+
+        imgAdd1 = new ImageIcon("./img/img_Add1.jpg");
+        imgAdd2 = new ImageIcon("./img/img_Add2.jpg");
+        imgChange1 = new ImageIcon("./img/img_Change1.jpg");
+        imgChange2 = new ImageIcon("./img/img_Change2.jpg");
+        imgSave1 = new ImageIcon("./img/img_Save1.jpg");
+        imgSave2 = new ImageIcon("./img/img_Save2.jpg");
+
+        setFont(font);
+        setBackground(Color.LIGHT_GRAY);
+
+        UIManager.put("TabbedPane.tabInsets", new Insets(3, 3, 3, 40));
+        UIManager.put("TabbedPane.contentAreaColor", new ColorUIResource(new Color(238, 238, 238)));
+        UIManager.put("TabbedPane.selected", new ColorUIResource(new Color(238, 238, 238)));
+        UIManager.put("TabbedPane.focus", new ColorUIResource(Color.LIGHT_GRAY));
+        UIManager.put("TabbedPane.borderHightlightColor", new ColorUIResource(Color.DARK_GRAY));
+        SwingUtilities.updateComponentTreeUI(this);
+
         jpMemoTabBorder = new JPanel(new BorderLayout());
         jpMemoTab = new JPanel();
         jpMemoTabBtn = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         jspMemoTab = new JScrollPane(jpMemoTab);
         jspMemoTab.setBorder(BorderFactory.createEmptyBorder());
-        btnAdd = new JButton("등록");
+
+        btnAdd = new JButton(imgAdd1);
+        btnAdd.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnAdd.setRolloverIcon(imgAdd2); // 버튼에 마우스가 올라갈떄 이미지 변환
+        btnAdd.setBorderPainted(false); // 버튼 테두리 제거
+        btnAdd.setFocusPainted(false);
+        btnAdd.setContentAreaFilled(false);
+        btnAdd.setPreferredSize(new Dimension(48, 24));
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 memoWindow.jtaMemoWin.setText("");
                 memoWindow.setDate(LocalDate.now());
                 memoWindow.btnDelete.setEnabled(false);
-                memoWindow.btnSave.setText("저장");
+                memoWindow.btnSave.setIcon(imgSave1);
+                memoWindow.btnSave.setRolloverIcon(imgSave2);
                 memoWindow.setIndex(null);
                 memoWindow.setVisible(true);
             }
@@ -104,7 +135,8 @@ public class MemoTab extends JTabbedPane{
                         memoWindow.jtaMemoWin.setText(label.getContents());
                         memoWindow.btnDelete.setEnabled(true);
                         memoWindow.setIndex(jlList.indexOf(label));
-                        memoWindow.btnSave.setText("수정");
+                        memoWindow.btnSave.setIcon(imgChange1);
+                        memoWindow.btnSave.setRolloverIcon(imgChange2);
                         memoWindow.setDate(label.getDate());
                         memoWindow.setVisible(true);
                     }

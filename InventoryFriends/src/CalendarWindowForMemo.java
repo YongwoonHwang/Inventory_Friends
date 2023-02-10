@@ -1,23 +1,20 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 /*
 jdatepicker
 출처 https://mvnrepository.com/artifact/net.sourceforge.jdatepicker/jdatepicker/1.3.2
 */
 import net.sourceforge.jdatepicker.impl.*;
 
-public class CalendarWindow extends JWindow {
+public class CalendarWindowForMemo extends JWindow {
     JDatePanelImpl datePanel;
-//    JDatePickerImpl datePicker;
+    //    JDatePickerImpl datePicker;
     static MemoWindow memoWindow;
     static Object selectDate;
 
 
-    public CalendarWindow() {
+    public CalendarWindowForMemo() {
         setSize(200, 180);
         UtilDateModel model = new UtilDateModel();
         datePanel = new JDatePanelImpl(model);
@@ -49,7 +46,8 @@ public class CalendarWindow extends JWindow {
     public Object getDate(){
         return datePanel.getModel().getValue();
     }
+
     public static void main(String[] args) {
-        new CalendarWindow();
+        new CalendarWindowForMemo();
     }
 }

@@ -47,20 +47,36 @@ public class CloseableTabbedPaneLayerUIuseDefault extends LayerUI<JTabbedPane> {
     @Override protected void processMouseEvent(MouseEvent e, JLayer<? extends JTabbedPane> l) {
         if (e.getID() == MouseEvent.MOUSE_CLICKED) {
             pt.setLocation(e.getPoint());
-            final Point mousePos = l.getMousePosition();
             JTabbedPane tabbedPane = (JTabbedPane) l.getView();
 //                int index = tabbedPane.indexAtLocation(pt.x, pt.y);
-            int index = tabbedPane.indexAtLocation(mousePos.x, mousePos.y);
-            if (index >= 1) {
-                Rectangle rect = tabbedPane.getBoundsAt(index);
-                Dimension d = button.getPreferredSize();
-                int x = rect.x + rect.width - d.width - 2;
-                int y = rect.y + (rect.height - d.height) / 2;
-                Rectangle r = new Rectangle(x, y, d.width, d.height);
-                if (r.contains(pt)) {
-                    tabbedPane.removeTabAt(index);
+            try{
+                final Point mousePos = l.getMousePosition();
+                int index = tabbedPane.indexAtLocation(mousePos.x, mousePos.y);
+
+                if (index >= 1) {
+                    Rectangle rect = tabbedPane.getBoundsAt(index);
+                    Dimension d = button.getPreferredSize();
+                    int x = rect.x + rect.width - d.width - 2;
+                    int y = rect.y + (rect.height - d.height) / 2;
+                    Rectangle r = new Rectangle(x, y, d.width, d.height);
+                    if (r.contains(pt)) {
+                        tabbedPane.removeTabAt(index);
+                    }
                 }
             }
+            catch(Exception ex){
+                System.out.println(ex);
+            }
+//            if (index >= 1) {
+//                Rectangle rect = tabbedPane.getBoundsAt(index);
+//                Dimension d = button.getPreferredSize();
+//                int x = rect.x + rect.width - d.width - 2;
+//                int y = rect.y + (rect.height - d.height) / 2;
+//                Rectangle r = new Rectangle(x, y, d.width, d.height);
+//                if (r.contains(pt)) {
+//                    tabbedPane.removeTabAt(index);
+//                }
+//            }
             l.getView().repaint();
         }
     }

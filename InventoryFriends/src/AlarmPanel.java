@@ -31,7 +31,7 @@ public class AlarmPanel extends JPanel {
         top.add(new JLabel(LocalDate.now().toString()), BorderLayout.WEST);
         add(top, BorderLayout.NORTH);
 
-        JLabel label = new JLabel("내용내용내용내용내용내용내용용내용내용내용내용내용내용용alarmWinScroll내용내내setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));");
+        JLabel label = new JLabel("내용");
         add(label, BorderLayout.CENTER);
     }
 

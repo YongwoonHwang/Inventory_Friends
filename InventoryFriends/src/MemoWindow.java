@@ -14,6 +14,7 @@ public class MemoWindow extends JFrame{
     JPanel jpMemoWinDate, jpMemoWin, jpMemoWinBtn;
     static JLabel jlDate;
     JButton btnSave, btnCancle, btnDelete;
+    ImageIcon imgDelete1, imgDelete2, imgCancel1, imgCancel2, imgSave1, imgSave2;
     JTextArea jtaMemoWin;
     JScrollPane jspMemoWin;
     static Integer selectIndex;
@@ -39,8 +40,20 @@ public class MemoWindow extends JFrame{
 
         jspMemoWin.setBorder(BorderFactory.createEmptyBorder());
         jtaMemoWin.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        imgDelete1 = new ImageIcon("./img/img_Del1.jpg");
+        imgDelete2 = new ImageIcon("./img/img_Del2.jpg");
+        imgCancel1 = new ImageIcon("./img/img_Cancel1.jpg");
+        imgCancel2 = new ImageIcon("./img/img_Cancel2.jpg");
+        imgSave1 = new ImageIcon("./img/img_Save1.jpg");
+        imgSave2 = new ImageIcon("./img/img_Save2.jpg");
 
-        btnDelete = new JButton("삭제");
+        btnDelete = new JButton(imgDelete1);
+        btnDelete.setBorder(BorderFactory.createEmptyBorder(0, 2, 2, 0));
+        btnDelete.setRolloverIcon(imgDelete2); // 버튼에 마우스가 올라갈떄 이미지 변환
+        btnDelete.setBorderPainted(false); // 버튼 테두리 제거
+        btnDelete.setFocusPainted(false);
+        btnDelete.setContentAreaFilled(false);
+        btnDelete.setPreferredSize(new Dimension(48, 26));
         btnDelete.setEnabled(false);
         btnDelete.addActionListener(new ActionListener() {
             @Override
@@ -57,7 +70,13 @@ public class MemoWindow extends JFrame{
                 }
             }
         });
-        btnSave = new JButton("저장");
+        btnSave = new JButton(imgSave1);
+        btnSave.setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 2));
+        btnSave.setRolloverIcon(imgSave2); // 버튼에 마우스가 올라갈떄 이미지 변환
+        btnSave.setBorderPainted(false); // 버튼 테두리 제거
+        btnSave.setFocusPainted(false);
+        btnSave.setContentAreaFilled(false);
+        btnSave.setPreferredSize(new Dimension(48, 26));
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -74,7 +93,13 @@ public class MemoWindow extends JFrame{
 //                System.out.println(memoCont);
             }
         });
-        btnCancle = new JButton("취소");
+        btnCancle = new JButton(imgCancel1);
+        btnCancle.setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 2));
+        btnCancle.setRolloverIcon(imgCancel2); // 버튼에 마우스가 올라갈떄 이미지 변환
+        btnCancle.setBorderPainted(false); // 버튼 테두리 제거
+        btnCancle.setFocusPainted(false);
+        btnCancle.setContentAreaFilled(false);
+        btnCancle.setPreferredSize(new Dimension(48, 26));
         btnCancle.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

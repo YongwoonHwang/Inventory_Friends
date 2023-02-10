@@ -20,6 +20,7 @@ public class OrderConsolidationPanel extends JPanel {
     TableRowSorter<TableModel> rowSorter;
     ArrayList<RowFilter<Object, Object>> filters;
     public OrderConsolidationPanel(){
+        JPanel panel1 = new JPanel();
         Font font1 = new Font("돋움", Font.PLAIN, 12);
         filters = new ArrayList<>();
 

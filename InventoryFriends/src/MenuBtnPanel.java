@@ -10,10 +10,12 @@ public class MenuBtnPanel extends JPanel {
     ImageIcon imgIM1, imgIM2, imgOC1, imgOC2, imgIMopt1_1, imgIMopt1_2, imgIMopt2_1, imgIMopt2_2;
     JTabbedPane jtpMainTab;
     OrderConsolidationPanel jpOrderConsolidation;
+    IndividualRegistrationPanel jpIndividualRegistration;
+    BatchRegistrationPanel jpBatchRegistration;
 
     public MenuBtnPanel(){
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-
+        setBackground(Color.WHITE);
         imgIM1 = new ImageIcon("./img/img_IM1.jpg");
         imgIM2 = new ImageIcon("./img/img_IM2.jpg");
         imgOC1 = new ImageIcon("./img/img_OC1.jpg");
@@ -29,7 +31,6 @@ public class MenuBtnPanel extends JPanel {
         btnInventoryManagement.setBorderPainted(false); // 버튼 테두리 제거
         btnInventoryManagement.setFocusPainted(false);
         btnInventoryManagement.setContentAreaFilled(false);
-
         btnInventoryManagement.setPreferredSize(new Dimension(242, 45)); // 버튼 크기 지정
         btnInventoryManagement.addActionListener(new ActionListener() {
             @Override
@@ -59,7 +60,7 @@ public class MenuBtnPanel extends JPanel {
                 if (findTabByName(opt1Title, jtpMainTab) != -1) {
                     jtpMainTab.setSelectedIndex(findTabByName(opt1Title, jtpMainTab));
                 } else {
-                    jtpMainTab.addTab(opt1Title, new JPanel());
+                    jtpMainTab.addTab(opt1Title, jpIndividualRegistration);
                     jtpMainTab.setSelectedIndex(findTabByName(opt1Title, jtpMainTab));
                 }
 
@@ -80,7 +81,7 @@ public class MenuBtnPanel extends JPanel {
                 if (findTabByName(opt2Title, jtpMainTab) != -1) {
                     jtpMainTab.setSelectedIndex(findTabByName(opt2Title, jtpMainTab));
                 } else {
-                    jtpMainTab.addTab(opt2Title, new JPanel());
+                    jtpMainTab.addTab(opt2Title, jpBatchRegistration);
                     jtpMainTab.setSelectedIndex(findTabByName(opt2Title, jtpMainTab));
                 }
 
@@ -121,6 +122,14 @@ public class MenuBtnPanel extends JPanel {
 
     public void  setJpOrderConsolidation(OrderConsolidationPanel OrderConsolidation){
         jpOrderConsolidation = OrderConsolidation;
+    }
+
+    public void  setJpIndividualRegistration(IndividualRegistrationPanel IndividualRegistration){
+        jpIndividualRegistration = IndividualRegistration;
+    }
+
+    public void setJpBatchRegistration(BatchRegistrationPanel Batchregistration){
+        jpBatchRegistration = Batchregistration;
     }
 
     // 탭 타이틀 이름을 찾아 인덱스를 반환하는 함수

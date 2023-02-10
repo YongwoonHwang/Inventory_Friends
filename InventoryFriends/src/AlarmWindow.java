@@ -33,9 +33,7 @@ public class AlarmWindow extends JWindow {
         gLayout.setHorizontalGroup(hGroup);
         vGroup = gLayout.createSequentialGroup();
         gLayout.setVerticalGroup(vGroup);
-        for(int i = 0; i<8; i++){
-            addAlarm();
-        }
+        addAlarm();
 
         // getMaximumDividerLocation()의 값을 제대로 불러오기 위해 창을 한번 띄워줌
         setVisible(true);
