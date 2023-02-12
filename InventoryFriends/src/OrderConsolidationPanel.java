@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class OrderConsolidationPanel extends JPanel {
-    String market[] = {"", "마켓 1", "마켓 2", "정말 긴 마켓 이름"};
+    String market[] = {"", "11번가", "G마켓", "네이버", "옥션", "위메프", "쿠팡", "티몬"};
     ImageIcon imgSearch1 = new ImageIcon("./img/img_Search1.jpg");
     ImageIcon imgSearch2 = new ImageIcon("./img/img_Search2.jpg");
     JComboBox jcbMarket;

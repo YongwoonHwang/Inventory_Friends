@@ -5,7 +5,7 @@ import java.awt.event.*;
 
 public class MallInformationWindow extends JFrame {
     JPanel jpNorth, jpCenter, jpInput, jpCenterTmp, jpInputBtn;
-    String[] mallName = {"쿠팡", "네이버", "11번가", "위메프", "옥션", "G마켓", "티몬"};
+    String[] mallName = {"11번가", "G마켓", "네이버", "옥션", "위메프", "쿠팡", "티몬"};
     JLabel jLabel1, jLabel2;
     String userID;
     Font font1, font2;

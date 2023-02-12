@@ -1,249 +1,360 @@
-///*
-//출처 : https://github.com/aterai/java-swing-tips/blob/master/CheckedComboBox/src/java/example/MainPanel.java
-// */
-//
-//import java.awt.*;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
-//import java.awt.event.KeyEvent;
-//import java.awt.event.MouseAdapter;
-//import java.awt.event.MouseEvent;
-//import java.util.Objects;
-//import java.util.stream.Collectors;
-//import java.util.stream.IntStream;
-//import javax.accessibility.Accessible;
-//import javax.swing.*;
-//import javax.swing.plaf.basic.ComboPopup;
-//
-//public final class Test extends JPanel {
-//    private Test() {
-//        super(new BorderLayout());
-//        JPanel p = new JPanel(new GridLayout(0, 1));
-//        p.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
-//        p.add(new JLabel("Default:"));
-//        p.add(new JComboBox<>(makeModel()));
-//        p.add(Box.createVerticalStrut(20));
-//        p.add(new JLabel("CheckedComboBox:"));
-//        p.add(new CheckedComboBox<>(makeModel()));
-//        // p.add(new CheckedComboBox<>(new CheckableComboBoxModel<>(m)));
-//        p.add(Box.createVerticalStrut(20));
-//        p.add(new JLabel("CheckedComboBox(Windows):"));
-//        p.add(new WindowsCheckedComboBox<>(makeModel()));
-//        add(p, BorderLayout.NORTH);
-//        setPreferredSize(new Dimension(320, 240));
-//    }
-//
-//    private static ComboBoxModel<CheckableItem> makeModel() {
-//        CheckableItem[] m = {
-//                new CheckableItem("aaa", false),
-//                new CheckableItem("bb", true),
-//                new CheckableItem("111", false),
-//                new CheckableItem("33333", true),
-//                new CheckableItem("2222", true),
-//                new CheckableItem("c", false)
-//        };
-//        return new DefaultComboBoxModel<>(m);
-//    }
-//
-//    public static void main(String[] args) {
-////        EventQueue.invokeLater(Test::createAndShowGui);
-//        JFrame frame = new JFrame("@title@");
-//        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-////        frame.getContentPane().add(new Test());
-//        frame.pack();
-//        frame.setLocationRelativeTo(null);
-//        frame.setVisible(true);
-//    }
-//
-//    private static void createAndShowGui() {
-//        try {
-//            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//        } catch (UnsupportedLookAndFeelException ignored) {
-//            Toolkit.getDefaultToolkit().beep();
-//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-//            ex.printStackTrace();
-//            return;
+/*
+참조 : https://chaengstory.tistory.com/47
+ */
+import java.awt.*;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+public class Test implements ActionListener, KeyListener {
+    private ArrayList<JButton> btnList;
+    private JLabel label;
+    private JLabel label1, label2, label3;
+    private JPanel panel, jpNorth;
+
+    double num1, num2;
+    String func = "";
+    String nInput = "";
+    String dummy = "";
+    static double result;
+    boolean state = false;
+
+    Test() {
+        view();
+    }
+
+    public JComponent getView() {  // 컴퍼넌트 base
+        return panel;              // 메인 패널 반환
+    }
+
+    public void view() {
+
+        panel = new JPanel(new BorderLayout());  // 메인 페널
+        btnList = new ArrayList<JButton>();
+        jpNorth = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+        JPanel view = new JPanel(new BorderLayout());  // 연산 및 결과창 설정
+
+        panel.add(view, BorderLayout.CENTER);
+        label = new JLabel("0");
+        label.setHorizontalAlignment(SwingConstants.RIGHT);
+        label.setFont(new Font("Serif", Font.BOLD, 48));
+        label1 = new JLabel("");
+        label2 = new JLabel(" ");
+        label3 = new JLabel("");
+        label1.setHorizontalAlignment(SwingConstants.RIGHT);
+        label2.setHorizontalAlignment(SwingConstants.RIGHT);
+        label3.setHorizontalAlignment(SwingConstants.RIGHT);
+
+        jpNorth.setBackground(Color.WHITE);
+        view.setBackground(Color.WHITE);
+        view.add(label, BorderLayout.CENTER);
+        view.add(jpNorth, BorderLayout.NORTH);
+        jpNorth.add(label1);
+        jpNorth.add(label2);
+        jpNorth.add(label3);
+
+        JPanel btnView = new JPanel(new GridLayout(5, 4, 2, 2)); //버튼 설정
+        panel.add(btnView, BorderLayout.SOUTH);
+        String[] buttons = { "←", "C", "%", "x²", "7", "8", "9", "÷", "4", "5", "6", "×", "1", "2", "3", "-", ".", "0",
+                "=", "+" };
+
+        for (String btn : buttons) {
+            buttonFunc(btnView, btn);
+        }
+
+    }
+
+    private void buttonFunc(JComponent cp, String btn) {
+        JButton jb = new JButton(btn);
+
+        jb.setFont(new Font("Serif", Font.BOLD, 20));
+        jb.addActionListener(this); //버튼 이벤트 추가
+        jb.addKeyListener(this);    //key 이벤트 추가
+        btnList.add(jb);            //리스트에 저장
+        cp.add(jb);                 //base에 저장
+        jb.setBackground(Color.WHITE);
+
+        if (btn == "←" || btn == "C"){    // 기능별 색 지정
+            jb.setBackground(Color.RED);
+            jb.setForeground(Color.WHITE);
+        }
+        if (btn == "÷" || btn == "×" || btn == "-" || btn == "+" || btn == "="){
+            jb.setBackground(Color.GRAY);
+            jb.setForeground(Color.WHITE);
+        }
+        if (btn == "%" || btn == "x²"){
+            jb.setBackground(Color.BLUE);
+            jb.setForeground(Color.WHITE);
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
+    @Override
+    public void keyReleased(KeyEvent e) {}
+
+    @Override
+    public void keyPressed(KeyEvent ke) {
+
+        switch (ke.getKeyCode()) {
+            case KeyEvent.VK_0:              //가상 키 코드
+            case KeyEvent.VK_NUMPAD0:
+                btnList.get(17).doClick();   // 리스트 index 번호를 가져옴
+                break;
+
+            case KeyEvent.VK_NUMPAD1:
+            case KeyEvent.VK_1:
+                btnList.get(12).doClick();
+                break;
+
+            case KeyEvent.VK_2:
+            case KeyEvent.VK_NUMPAD2:
+                btnList.get(13).doClick();
+                break;
+
+            case KeyEvent.VK_3:
+            case KeyEvent.VK_NUMPAD3:
+                btnList.get(14).doClick();
+                break;
+
+            case KeyEvent.VK_4:
+            case KeyEvent.VK_NUMPAD4:
+                btnList.get(8).doClick();
+                break;
+
+            case KeyEvent.VK_5:
+            case KeyEvent.VK_NUMPAD5:
+                btnList.get(9).doClick();
+                break;
+
+            case KeyEvent.VK_6:
+            case KeyEvent.VK_NUMPAD6:
+                btnList.get(10).doClick();
+                break;
+
+            case KeyEvent.VK_7:
+            case KeyEvent.VK_NUMPAD7:
+                btnList.get(4).doClick();
+                break;
+
+            case KeyEvent.VK_8:
+            case KeyEvent.VK_NUMPAD8:
+                btnList.get(5).doClick();
+                break;
+
+            case KeyEvent.VK_9:
+            case KeyEvent.VK_NUMPAD9:
+                btnList.get(6).doClick();
+                break;
+
+            case KeyEvent.VK_PERIOD :
+            case KeyEvent.VK_DECIMAL :
+                btnList.get(16).doClick();
+                break;
+
+            case KeyEvent.VK_ENTER :
+                btnList.get(18).doClick();
+                break;
+
+            case KeyEvent.VK_MINUS :
+            case KeyEvent.VK_SUBTRACT :
+                btnList.get(15).doClick();
+                break;
+
+            case KeyEvent.VK_ESCAPE :
+                btnList.get(1).doClick();
+                break;
+
+            case KeyEvent.VK_ADD :
+                btnList.get(19).doClick();
+                break;
+
+            case KeyEvent.VK_MULTIPLY :
+                btnList.get(11).doClick();
+                break;
+
+            case KeyEvent.VK_DIVIDE :
+            case KeyEvent.VK_SLASH :
+                btnList.get(7).doClick();
+                break;
+
+            case KeyEvent.VK_BACK_SPACE :
+                btnList.get(0).doClick();
+                break;
+        }
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String input = e.getActionCommand(); // 이벤트를 발생시킨 객체의 문자열을 가져와서 input에 저장
+        if (state){
+            num1 = result;
+            num2 = 0;
+        }
+
+        if (input.equals("+")) {
+//            num1 = num2;
+            num2 = 0;
+            func = "+";
+            dummy = func;
+            nInput = ""; // 마지막에 누른 연산자 저장
+
+        } else if (input.equals("-")) {
+//            num1 = num2;
+            num2 = 0;
+            func = "-";
+            dummy = func;
+            nInput = "";
+
+        } else if (input.equals("×")) {
+//            num1 = num2;
+            num2 = 0;
+            func = "×";
+            dummy = func;
+            nInput = "";
+
+        } else if (input.equals("÷")) {
+//            num1 = num2;
+            num2 = 0;
+            func = "÷";
+            dummy = func;
+            nInput = "";
+
+        } else if (input.equals("%")) {
+//            num1 = num2;
+            num2 = 0;
+            func = "%";
+            dummy = func;
+            nInput = "";
+            result = num1 / 100;
+            label.setText(String.valueOf(result)); // 결과값을 문자열로 반환하여 결과창에 출력
+
+        } else if (input.equals("x²")) {
+//            num1 = num2;
+            num2 = 0;
+            func = "x²";
+            dummy = func;
+            nInput = "";
+            result = num1 * num1;
+            label.setText(String.valueOf(result));
+            state = true;
+
+        } else if (input.equals("C")) { // Clear
+            nInput = "";
+            num2 = 0;
+            num1 = 0;
+            func = "";
+            state = false;
+            dummy = "";
+            label.setText("0");
+
+            // substring(start, end) - start부터 end 전까지 문자열 자르기
+        } else if (input.equals("←")) { // 왼쪽부터 순차적으로 지워지도록 함
+            setBackSpace(getBackSpace().substring(0, getBackSpace().length() - 1));
+            try{
+                num2 = Double.parseDouble(label.getText());
+            } catch (Exception ex){
+                System.out.println(ex);
+            }
+            if (getBackSpace().length() < 1) { // 더 이상 지울 숫자가 없으면, 0으로 clear
+                nInput = "";
+                num2 = 0;
+                num1 = 0;
+                label.setText("0");
+            }
+
+        } else if (input.equals("=")) {
+            if (func.equals("+")) {
+                result = num1 + num2;
+                label.setText(String.valueOf(result)); // 결과값을 문자열로 반환하여 결과창에 출력
+                state = true; // 결과 값이 나온 후 다음 입력이 들어왔을 때 화면에 표시된 결과 값을 지운다.
+
+            } else if (func.equals("-")) {
+                result = num1 - num2;
+                label.setText(String.valueOf(result));
+                state = true;
+
+            } else if (func.equals("×")) {
+                result = num1 * num2;
+                label.setText(String.valueOf(result));
+                state = true;
+
+            } else if (func.equals("÷")) {
+                result = num1 / num2;
+                label.setText(String.valueOf(result));
+                state = true;
+
+            }
+
+            func = "";
+
+        } else {
+            if (state) {
+                label.setText("0");
+                state = false;
+                num1 = result;
+                num2 = 0;
+                nInput = "";
+            }
+
+            nInput += e.getActionCommand();
+            label.setText(nInput);
+            if(func.equals("")){
+                num1 = Double.parseDouble(nInput);
+            } else {
+                num2 = Double.parseDouble(nInput); // 문자열에서 double형 변
+            }
+
+        }
+        if (num1 != 0){
+            label1.setText(String.valueOf(num1));
+        } else{
+            label1.setText("");
+        }
+        label2.setText(dummy);
+        if (num2 != 0){
+            label3.setText(String.valueOf(num2));
+        } else{
+            label3.setText("");
+        }
+
+//        if (state){
+//            label1.setText(String.valueOf(result));
 //        }
-//        JFrame frame = new JFrame("@title@");
-//        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        frame.getContentPane().add(new Test());
-//        frame.pack();
-//        frame.setLocationRelativeTo(null);
-//        frame.setVisible(true);
-//    }
-//}
-//
-//class CheckableItem {
-//    private final String text;
-//    private boolean selected;
-//
-//    protected CheckableItem(String text, boolean selected) {
-//        this.text = text;
-//        this.selected = selected;
-//    }
-//
-//    public boolean isSelected() {
-//        return selected;
-//    }
-//
-//    public void setSelected(boolean selected) {
-//        this.selected = selected;
-//    }
-//
-//    @Override public String toString() {
-//        return text;
-//    }
-//}
-//
-//class CheckedComboBox<E extends CheckableItem> extends JComboBox<E> {
-//    protected boolean keepOpen;
-//    private final JPanel panel = new JPanel(new BorderLayout());
-//
-//    //  protected CheckedComboBox() {
-//    //    super();
-//    //  }
-//
-//    protected CheckedComboBox(ComboBoxModel<E> model) {
-//        super(model);
-//    }
-//
-//    // protected CheckedComboBox(E[] m) {
-//    //   super(m);
-//    // }
-//
-//    @Override public Dimension getPreferredSize() {
-//        return new Dimension(200, 20);
-//    }
-//
-//    @Override public void updateUI() {
-//        setRenderer(null);
-//        super.updateUI();
-//
-//        Accessible a = getAccessibleContext().getAccessibleChild(0);
-//        if (a instanceof ComboPopup) {
-//            ((ComboPopup) a).getList().addMouseListener(new MouseAdapter() {
-//                @Override public void mousePressed(MouseEvent e) {
-//                    JList<?> list = (JList<?>) e.getComponent();
-//                    if (SwingUtilities.isLeftMouseButton(e)) {
-//                        keepOpen = true;
-//                        updateItem(list.locationToIndex(e.getPoint()));
-//                    }
-//                }
-//            });
-//        }
-//
-//        DefaultListCellRenderer renderer = new DefaultListCellRenderer();
-//        JCheckBox check = new JCheckBox();
-//        check.setOpaque(false);
-//        setRenderer((list, value, index, isSelected, cellHasFocus) -> {
-//            panel.removeAll();
-//            Component c = renderer.getListCellRendererComponent(
-//                    list, value, index, isSelected, cellHasFocus);
-//            if (index < 0) {
-//                String txt = getCheckedItemString(list.getModel());
-//                JLabel l = (JLabel) c;
-//                l.setText(txt.isEmpty() ? " " : txt);
-//                l.setOpaque(false);
-//                l.setForeground(list.getForeground());
-//                panel.setOpaque(false);
-//            } else {
-//                check.setSelected(value.isSelected());
-//                panel.add(check, BorderLayout.WEST);
-//                panel.setOpaque(true);
-//                panel.setBackground(c.getBackground());
-//            }
-//            panel.add(c);
-//            return panel;
-//        });
-//        initActionMap();
-//    }
-//
-//    protected void initActionMap() {
-//        KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0);
-//        getInputMap(JComponent.WHEN_FOCUSED).put(ks, "checkbox-select");
-//        getActionMap().put("checkbox-select", new AbstractAction() {
-//            @Override public void actionPerformed(ActionEvent e) {
-//                Accessible a = getAccessibleContext().getAccessibleChild(0);
-//                if (a instanceof ComboPopup) {
-//                    updateItem(((ComboPopup) a).getList().getSelectedIndex());
-//                }
-//            }
-//        });
-//    }
-//
-//    protected void updateItem(int index) {
-//        if (isPopupVisible() && index >= 0) {
-//            E item = getItemAt(index);
-//            item.setSelected(!item.isSelected());
-//            // item.selected ^= true;
-//            // ComboBoxModel m = getModel();
-//            // if (m instanceof CheckableComboBoxModel) {
-//            //   ((CheckableComboBoxModel) m).fireContentsChanged(index);
-//            // }
-//            // removeItemAt(index);
-//            // insertItemAt(item, index);
-//            setSelectedIndex(-1);
-//            setSelectedItem(item);
-//        }
-//    }
-//
-//    @Override public void setPopupVisible(boolean v) {
-//        if (keepOpen) {
-//            keepOpen = false;
-//        } else {
-//            super.setPopupVisible(v);
-//        }
-//    }
-//
-//    protected static <E extends CheckableItem> String getCheckedItemString(ListModel<E> model) {
-//        return IntStream.range(0, model.getSize())
-//                .mapToObj(model::getElementAt)
-//                .filter(CheckableItem::isSelected)
-//                .map(Objects::toString)
-//                .sorted()
-//                .collect(Collectors.joining(", "));
-//    }
-//}
-//
-//class WindowsCheckedComboBox<E extends CheckableItem> extends CheckedComboBox<E> {
-//    private transient ActionListener listener;
-//
-//    protected WindowsCheckedComboBox(ComboBoxModel<E> model) {
-//        super(model);
-//    }
-//
-//    @Override public void updateUI() {
-//        setRenderer(null);
-//        removeActionListener(listener);
-//        super.updateUI();
-//        listener = e -> {
-//            if ((e.getModifiers() & AWTEvent.MOUSE_EVENT_MASK) != 0) {
-//                keepOpen = true;
-//                updateItem(getSelectedIndex());
-//            }
-//        };
-//        addActionListener(listener);
-//
-//        JLabel label = new JLabel(" ");
-//        JCheckBox check = new JCheckBox(" ");
-//        setRenderer((list, value, index, isSelected, cellHasFocus) -> {
-//            if (index < 0) {
-//                String txt = getCheckedItemString(list.getModel());
-//                label.setText(txt.isEmpty() ? " " : txt);
-//                return label;
-//            } else {
-//                check.setText(Objects.toString(value, ""));
-//                check.setSelected(value.isSelected());
-//                if (isSelected) {
-//                    check.setBackground(list.getSelectionBackground());
-//                    check.setForeground(list.getSelectionForeground());
-//                } else {
-//                    check.setBackground(list.getBackground());
-//                    check.setForeground(list.getForeground());
-//                }
-//                return check;
-//            }
-//        });
-//        initActionMap();
-//    }
-//}
+//        label1.setText(String.valueOf(num1));
+
+
+    }
+
+    private void setBackSpace(String bs) {
+        label.setText(bs);
+    }
+
+    private String getBackSpace() {
+        return label.getText();
+    }
+
+    public static void main(String[] args) {
+
+        Test calc = new Test();
+        JFrame frame = new JFrame("계산기");
+
+        frame.setResizable(true);  // 프레임 크기 사용자 지정
+        frame.setContentPane(calc.getView()); // 프레임에 컴포넌트 삽입
+        frame.setBounds(100, 100, 300, 350); // 프레임의 크기 지정
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // X버튼을 누르면 닫히는 설정
+        frame.setVisible(true);
+
+    }
+}

@@ -17,7 +17,8 @@ public class IndividualRegistrationPanel extends JPanel {
             jlCalendar2, jlCalendar3;
     HintTextField htfCategory, htfItemCode, htfItemName, htfItemQuantity, htfItemLocation;
     CheckableComboBox chkcomMarket;
-    String market[] = {"11번가", "G마켓", "네이버", "옥션", "위메프", "쿠팡", "티몬" };
+    CalculatorWindow winCalc;
+    String market[] = {"11번가", "G마켓", "네이버", "옥션", "위메프", "쿠팡", "티몬"};
     ImageIcon imgSubmit, imgAttach1, imgAttach2, imgCalc, imgCal, imgAdd1, imgAdd2, imgFile1, imgFile2;
     JTextField jtfLastReceivingDate, jtfNextReceivingDate, jtfImg;
     JFileChooser imgfilechooser;
@@ -43,7 +44,7 @@ public class IndividualRegistrationPanel extends JPanel {
         winCalendar1 = new CalendarWindowForChoose();
         winCalendar2 = new CalendarWindowForChoose();
 
-
+        winCalc = new CalculatorWindow();
 
         jpInventoryStatus = new JPanel();
         setLayout(null);
@@ -66,11 +67,11 @@ public class IndividualRegistrationPanel extends JPanel {
 
 
         //테이블 패널
-        String header2[] = {"카테고리", "코드", "상품 이름", "수량", "마켓", "재고 위치", "최근 입고일", "다음 입고 예정일", "이미지"};
+        String header[] = {"카테고리", "코드", "상품 이름", "수량", "마켓", "재고 위치", "최근 입고일", "다음 입고 예정일", "이미지"};
 
         jtInventoryStatus = new JTable();
         // 테이블 속성 오버라이드
-        DefaultTableModel model2 = new DefaultTableModel(header2,0){
+        DefaultTableModel model2 = new DefaultTableModel(header,0){
             @Override
             public boolean isCellEditable(int row, int col){
                 return false;
@@ -149,14 +150,14 @@ public class IndividualRegistrationPanel extends JPanel {
         htfItemName.setBounds(140,75,700,25);
         add(htfItemName);
 
-        htfItemQuantity = new HintTextField("수량은 필수 입력 항목입니다.(ex. 10EA");
+        htfItemQuantity = new HintTextField("수량은 필수 입력 항목입니다.(ex. 10EA)");
         htfItemQuantity.setBounds(140,105,678,25);
         add(htfItemQuantity);
+        winCalc.setTextField(htfItemQuantity);
 
         htfItemLocation = new HintTextField("ex.Rack-01-A-05");
         htfItemLocation.setBounds(140,165,700,25);
         add(htfItemLocation);
-
 
         btnSubmit1 = new JButton(imgFile1);
         btnSubmit1.setRolloverIcon(imgFile2); // 버튼에 마우스가 올라갈떄 이미지 변환
@@ -313,7 +314,7 @@ public class IndividualRegistrationPanel extends JPanel {
 
         winCalendar1.setTextField(jtfLastReceivingDate);
         btnCal1 = new JButton(imgCal);
-        btnCal1.setBounds(815, 195, 23, 23);
+        btnCal1.setBounds(815, 195, 23, 24);
         btnCal1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -329,14 +330,14 @@ public class IndividualRegistrationPanel extends JPanel {
 
         winCalendar2.setTextField(jtfNextReceivingDate);
         btnCal2 = new JButton(imgCal);
-        btnCal2.setBounds(815, 225, 23, 23);
+        btnCal2.setBounds(815, 225, 23, 24);
         btnCal2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (winCalendar2.isVisible()){
                     winCalendar2.setVisible(false);
                 }else{
-                    winCalendar2.setLocation(btnCal2.getLocationOnScreen().x, btnCal2.getLocationOnScreen().y+23);
+                    winCalendar2.setLocation(btnCal2.getLocationOnScreen().x, btnCal2.getLocationOnScreen().y+24);
                     winCalendar2.setVisible(true);
                 }
             }
@@ -344,11 +345,16 @@ public class IndividualRegistrationPanel extends JPanel {
         add(btnCal2);
 
         btnCalc = new JButton(imgCalc);
-        btnCalc.setBounds(818, 105, 20, 23);
+        btnCalc.setBounds(818, 105, 22, 24);
         btnCalc.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                JCalc.setLocation(jlCalc.getLocationOnScreen().x+1, jlCalc.getLocationOnScreen().y-181);
+                if(winCalc.isVisible())
+                    winCalc.setVisible(false);
+                else{
+                    winCalc.setLocation(btnCalc.getLocationOnScreen().x, btnCalc.getLocationOnScreen().y+24);
+                    winCalc.setVisible(true);
+                }
             }
         });
         add(btnCalc);
@@ -363,6 +369,9 @@ public class IndividualRegistrationPanel extends JPanel {
     }
     public void setLocationCalendar2(int x, int y){
         winCalendar2.setLocation(x, y);
+    }
+    public void setLocationCalc(int x, int y) {
+        winCalc.setLocation(x, y);
     }
 
     // 탭 타이틀 이름을 찾아 인덱스를 반환하는 함수

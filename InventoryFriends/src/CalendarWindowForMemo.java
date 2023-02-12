@@ -20,6 +20,7 @@ public class CalendarWindowForMemo extends JWindow {
         datePanel = new JDatePanelImpl(model);
 //        datePicker = new JDatePickerImpl(datePanel);
         add(datePanel);
+        setAlwaysOnTop(true);
         datePanel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

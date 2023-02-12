@@ -42,7 +42,10 @@ public class MainWindow extends JFrame {
                             jpIndividualRegistration.btnCal1.getLocationOnScreen().y-180);
                     jpIndividualRegistration.setLocationCalendar2(
                             jpIndividualRegistration.btnCal2.getLocationOnScreen().x,
-                            jpIndividualRegistration.btnCal2.getLocationOnScreen().y+23);
+                            jpIndividualRegistration.btnCal2.getLocationOnScreen().y+24);
+                    jpIndividualRegistration.setLocationCalc(
+                            jpIndividualRegistration.btnCalc.getLocationOnScreen().x,
+                            jpIndividualRegistration.btnCalc.getLocationOnScreen().y+24);
                 }
             }
             @Override
@@ -55,7 +58,7 @@ public class MainWindow extends JFrame {
                             jpIndividualRegistration.btnCal1.getLocationOnScreen().y-180);
                     jpIndividualRegistration.setLocationCalendar2(
                             jpIndividualRegistration.btnCal2.getLocationOnScreen().x,
-                            jpIndividualRegistration.btnCal2.getLocationOnScreen().y+23);
+                            jpIndividualRegistration.btnCal2.getLocationOnScreen().y+24);
                 }
             }
         });

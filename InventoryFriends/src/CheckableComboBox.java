@@ -51,7 +51,11 @@ public final class CheckableComboBox extends JPanel {
                 items = items + m[i].toString() + ", ";
             }
         }
-        items = items.substring(0, items.length()-2);
+        try{
+            items = items.substring(0, items.length()-2);
+        } catch (Exception e){
+            System.out.println(e);
+        }
         return items;
     }
 

@@ -38,6 +38,7 @@ public class AlarmWindow extends JWindow {
         // getMaximumDividerLocation()의 값을 제대로 불러오기 위해 창을 한번 띄워줌
         setVisible(true);
         setVisible(false);
+        setAlwaysOnTop(true);
         setAlarmLocate();
     }
     public void setAlarmLocate(){
