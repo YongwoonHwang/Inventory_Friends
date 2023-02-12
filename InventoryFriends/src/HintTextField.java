@@ -8,7 +8,7 @@ public class HintTextField extends JTextField {
 
     Font gainFont = new Font("맑은 고딕", Font.PLAIN, 12);
     Font lostFont = new Font("맑은 고딕", Font.ITALIC, 12);
-    final String hintText;
+    String hintText;
 
     public HintTextField(final String hint) {
         hintText = hint;
@@ -48,6 +48,11 @@ public class HintTextField extends JTextField {
 
     public String getHint(){
         return hintText;
+    }
+    public void reset(){
+        setText(hintText);
+        setFont(lostFont);
+        setForeground(Color.GRAY);
     }
 
     public boolean getLostFocus(){

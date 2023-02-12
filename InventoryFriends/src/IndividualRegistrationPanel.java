@@ -16,7 +16,8 @@ public class IndividualRegistrationPanel extends JPanel {
     JLabel jlCategory, jlItemCode, jlItemName, jlItemQuantity, jlMarket, jlItemLocation, jlLastReceivingDate, jlNextReceivingDate, jlImage,
             jlCalendar2, jlCalendar3;
     HintTextField htfCategory, htfItemCode, htfItemName, htfItemQuantity, htfItemLocation;
-    JComboBox jcbMarketChoose;
+    CheckableComboBox chkcomMarket;
+    String market[] = {"11번가", "G마켓", "네이버", "옥션", "위메프", "쿠팡", "티몬" };
     ImageIcon imgSubmit, imgAttach1, imgAttach2, imgCalc, imgCal, imgAdd1, imgAdd2, imgFile1, imgFile2;
     JTextField jtfLastReceivingDate, jtfNextReceivingDate, jtfImg;
     JFileChooser imgfilechooser;
@@ -41,6 +42,8 @@ public class IndividualRegistrationPanel extends JPanel {
 
         winCalendar1 = new CalendarWindowForChoose();
         winCalendar2 = new CalendarWindowForChoose();
+
+
 
         jpInventoryStatus = new JPanel();
         setLayout(null);
@@ -79,19 +82,9 @@ public class IndividualRegistrationPanel extends JPanel {
         jpInventoryStatus.setLayout(new BorderLayout());
         jpInventoryStatus.add(new JScrollPane(jtInventoryStatus), BorderLayout.CENTER);
 
-        jcbMarketChoose = new JComboBox();
-        jcbMarketChoose.addItem("");
-        jcbMarketChoose.addItem("쿠팡");
-        jcbMarketChoose.addItem("네이버");
-        jcbMarketChoose.addItem("11번가");
-        jcbMarketChoose.addItem("위메프");
-        jcbMarketChoose.addItem("옥션");
-        jcbMarketChoose.addItem("G마켓");
-        jcbMarketChoose.addItem("티몬");
-        jcbMarketChoose.setBounds(140, 135, 700, 25);
-        jcbMarketChoose.setBackground(Color.WHITE);
-        jcbMarketChoose.setFont(font);
-        add(jcbMarketChoose);
+        chkcomMarket = new CheckableComboBox(market);
+        chkcomMarket.setBounds(140, 135, 700, 25);
+        add(chkcomMarket);
 
         jtfLastReceivingDate = new JTextField();
         jtfLastReceivingDate.setBounds(140,195,675,25);
@@ -186,6 +179,8 @@ public class IndividualRegistrationPanel extends JPanel {
 
                     //경로 출력
                     jtfImg.setText(selectedFile.getPath());
+                } else{
+                    jtfImg.setText("");
                 }
             }
         });
@@ -246,7 +241,7 @@ public class IndividualRegistrationPanel extends JPanel {
                         throw new SQLException();
                     }
 
-                    pstmt.setString(5, (String) jcbMarketChoose.getSelectedItem());
+                    pstmt.setString(5, (String) chkcomMarket.getSelectItems());
 
                     if (htfItemLocation.getForeground() != Color.GRAY){
                         pstmt.setString(6, htfItemLocation.getText());
@@ -259,6 +254,16 @@ public class IndividualRegistrationPanel extends JPanel {
 
                     int cnt = pstmt.executeUpdate();
                     System.out.println("SUCCESS");
+
+                    htfCategory.reset();
+                    htfItemCode.reset();
+                    htfItemLocation.reset();
+                    htfItemName.reset();
+                    htfItemQuantity.reset();
+                    jtfImg.setText("");
+                    jtfLastReceivingDate.setText("");
+                    jtfNextReceivingDate.setText("");
+                    chkcomMarket.Clear();
 
                     if (cnt == 1){
                         String STTitle = new String("재고 현황");

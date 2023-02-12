@@ -38,10 +38,10 @@ public class ItemListPanel extends JPanel {
         // 상단 검색 패널
         jpILSearch = new JPanel();
 
-        jcbMarket = new JComboBox<String>(market);
+        jcbMarket = new JComboBox(market);
         jcbMarket.setBackground(Color.WHITE);
         jcbMarket.setFont(font1);
-        jcbCategory = new JComboBox<String>(category);
+        jcbCategory = new JComboBox(category);
         jcbCategory.setBackground(Color.WHITE);
         jcbCategory.setFont(font1);
         btnSearch = new JButton(imgSearch1);

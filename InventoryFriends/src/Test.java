@@ -1,88 +1,249 @@
-import java.sql.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-
-public class Test {
-
-    // 프레임 객체 설정
-    Frame frame = new Frame("DB에서 데이터 불러오기");
-
-    // 버튼, 리스트 컨트롤 선언
-    JList hymnList = new JList();
-    JButton loadBtn = new JButton("로드");
-
-    public void createFrame()
-    {
-        // 레이아웃 매니저를 사용하지 않기
-        frame.setLayout(null);
-
-        // 프레임 크기 지정
-        frame.setSize(340, 400);
-
-        // 종료 버튼에 동작을 할당한다.
-        frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent windowEvent) {
-                System.exit(0);
-            }
-        });
-
-        // 컴포넌트 크기, 위치 설정
-        loadBtn.setBounds(20,30,300,40);
-//        Font font2 = new Font("SansSerif", Font.BOLD, 14);   // 탭 타이틀 폰트
-//        loadBtn.setFont(font2);
-        hymnList.setBounds(20,80,300,300);
-
-        // 버튼 이벤트 세팅
-        loadBtn.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-
-                hymnList.removeAll(); // 리스트 내용을 전부 제거한다.
-
-                try{
-                    Connection con = null;
-
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-
-                    con = DriverManager.getConnection("jdbc:mysql://inventoryfriends.cxtfsxnxj3jt.ap-northeast-1.rds.amazonaws.com:3306/","admin","admin1470");
-
-                    // Statement는 정적 SQL문을 실행하고 결과를 반환받기 위한 객체다.
-                    //Statement하나당 한개의 ResultSet 객체만을 열 수 있다.
-                    java.sql.Statement st = null;
-                    ResultSet result = null;
-                    st = con.createStatement();
-                    st.execute("use example"); // 사용할 DB를 선택한다.
-                    // executeQuery : 쿼리를 실행하고 결과를 ResultSet 객체로 반환한다.
-                    String sql = "INSERT INTO test (Email, Name) VALUES (1235544, \"권순용\")";
-                    st.executeUpdate(sql);
-
-//                    DefaultListModel listModel = new DefaultListModel();
-//                    // 결과를 하나씩 출력한다.
-//                    while (result.next()){
-//                        System.out.println(result.getString(1).getClass().getName());
-//                        String str = result.getString(1);
-//                        listModel.addElement(str);
-//                        hymnList.setModel(listModel); // 리스트에 데이터를 추가한다.
+///*
+//출처 : https://github.com/aterai/java-swing-tips/blob/master/CheckedComboBox/src/java/example/MainPanel.java
+// */
+//
+//import java.awt.*;
+//import java.awt.event.ActionEvent;
+//import java.awt.event.ActionListener;
+//import java.awt.event.KeyEvent;
+//import java.awt.event.MouseAdapter;
+//import java.awt.event.MouseEvent;
+//import java.util.Objects;
+//import java.util.stream.Collectors;
+//import java.util.stream.IntStream;
+//import javax.accessibility.Accessible;
+//import javax.swing.*;
+//import javax.swing.plaf.basic.ComboPopup;
+//
+//public final class Test extends JPanel {
+//    private Test() {
+//        super(new BorderLayout());
+//        JPanel p = new JPanel(new GridLayout(0, 1));
+//        p.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
+//        p.add(new JLabel("Default:"));
+//        p.add(new JComboBox<>(makeModel()));
+//        p.add(Box.createVerticalStrut(20));
+//        p.add(new JLabel("CheckedComboBox:"));
+//        p.add(new CheckedComboBox<>(makeModel()));
+//        // p.add(new CheckedComboBox<>(new CheckableComboBoxModel<>(m)));
+//        p.add(Box.createVerticalStrut(20));
+//        p.add(new JLabel("CheckedComboBox(Windows):"));
+//        p.add(new WindowsCheckedComboBox<>(makeModel()));
+//        add(p, BorderLayout.NORTH);
+//        setPreferredSize(new Dimension(320, 240));
+//    }
+//
+//    private static ComboBoxModel<CheckableItem> makeModel() {
+//        CheckableItem[] m = {
+//                new CheckableItem("aaa", false),
+//                new CheckableItem("bb", true),
+//                new CheckableItem("111", false),
+//                new CheckableItem("33333", true),
+//                new CheckableItem("2222", true),
+//                new CheckableItem("c", false)
+//        };
+//        return new DefaultComboBoxModel<>(m);
+//    }
+//
+//    public static void main(String[] args) {
+////        EventQueue.invokeLater(Test::createAndShowGui);
+//        JFrame frame = new JFrame("@title@");
+//        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+////        frame.getContentPane().add(new Test());
+//        frame.pack();
+//        frame.setLocationRelativeTo(null);
+//        frame.setVisible(true);
+//    }
+//
+//    private static void createAndShowGui() {
+//        try {
+//            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//        } catch (UnsupportedLookAndFeelException ignored) {
+//            Toolkit.getDefaultToolkit().beep();
+//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+//            ex.printStackTrace();
+//            return;
+//        }
+//        JFrame frame = new JFrame("@title@");
+//        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        frame.getContentPane().add(new Test());
+//        frame.pack();
+//        frame.setLocationRelativeTo(null);
+//        frame.setVisible(true);
+//    }
+//}
+//
+//class CheckableItem {
+//    private final String text;
+//    private boolean selected;
+//
+//    protected CheckableItem(String text, boolean selected) {
+//        this.text = text;
+//        this.selected = selected;
+//    }
+//
+//    public boolean isSelected() {
+//        return selected;
+//    }
+//
+//    public void setSelected(boolean selected) {
+//        this.selected = selected;
+//    }
+//
+//    @Override public String toString() {
+//        return text;
+//    }
+//}
+//
+//class CheckedComboBox<E extends CheckableItem> extends JComboBox<E> {
+//    protected boolean keepOpen;
+//    private final JPanel panel = new JPanel(new BorderLayout());
+//
+//    //  protected CheckedComboBox() {
+//    //    super();
+//    //  }
+//
+//    protected CheckedComboBox(ComboBoxModel<E> model) {
+//        super(model);
+//    }
+//
+//    // protected CheckedComboBox(E[] m) {
+//    //   super(m);
+//    // }
+//
+//    @Override public Dimension getPreferredSize() {
+//        return new Dimension(200, 20);
+//    }
+//
+//    @Override public void updateUI() {
+//        setRenderer(null);
+//        super.updateUI();
+//
+//        Accessible a = getAccessibleContext().getAccessibleChild(0);
+//        if (a instanceof ComboPopup) {
+//            ((ComboPopup) a).getList().addMouseListener(new MouseAdapter() {
+//                @Override public void mousePressed(MouseEvent e) {
+//                    JList<?> list = (JList<?>) e.getComponent();
+//                    if (SwingUtilities.isLeftMouseButton(e)) {
+//                        keepOpen = true;
+//                        updateItem(list.locationToIndex(e.getPoint()));
 //                    }
-                } catch (ClassNotFoundException cnfe) {
-                    System.out.println("DB 드라이버 로딩 실패 :" + cnfe.toString());
-                } catch (SQLException sqle) {
-                    System.out.println("DB 접속실패 : " + sqle.toString());
-                }
-            }
-        });
-
-        //프레임에 컴포넌트 추가
-        frame.add(loadBtn);
-        frame.add(hymnList);
-
-        //프레임 보이기
-        frame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        //프레임 열기
-        Test frm = new Test();
-        frm.createFrame();
-    }
-}
+//                }
+//            });
+//        }
+//
+//        DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+//        JCheckBox check = new JCheckBox();
+//        check.setOpaque(false);
+//        setRenderer((list, value, index, isSelected, cellHasFocus) -> {
+//            panel.removeAll();
+//            Component c = renderer.getListCellRendererComponent(
+//                    list, value, index, isSelected, cellHasFocus);
+//            if (index < 0) {
+//                String txt = getCheckedItemString(list.getModel());
+//                JLabel l = (JLabel) c;
+//                l.setText(txt.isEmpty() ? " " : txt);
+//                l.setOpaque(false);
+//                l.setForeground(list.getForeground());
+//                panel.setOpaque(false);
+//            } else {
+//                check.setSelected(value.isSelected());
+//                panel.add(check, BorderLayout.WEST);
+//                panel.setOpaque(true);
+//                panel.setBackground(c.getBackground());
+//            }
+//            panel.add(c);
+//            return panel;
+//        });
+//        initActionMap();
+//    }
+//
+//    protected void initActionMap() {
+//        KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0);
+//        getInputMap(JComponent.WHEN_FOCUSED).put(ks, "checkbox-select");
+//        getActionMap().put("checkbox-select", new AbstractAction() {
+//            @Override public void actionPerformed(ActionEvent e) {
+//                Accessible a = getAccessibleContext().getAccessibleChild(0);
+//                if (a instanceof ComboPopup) {
+//                    updateItem(((ComboPopup) a).getList().getSelectedIndex());
+//                }
+//            }
+//        });
+//    }
+//
+//    protected void updateItem(int index) {
+//        if (isPopupVisible() && index >= 0) {
+//            E item = getItemAt(index);
+//            item.setSelected(!item.isSelected());
+//            // item.selected ^= true;
+//            // ComboBoxModel m = getModel();
+//            // if (m instanceof CheckableComboBoxModel) {
+//            //   ((CheckableComboBoxModel) m).fireContentsChanged(index);
+//            // }
+//            // removeItemAt(index);
+//            // insertItemAt(item, index);
+//            setSelectedIndex(-1);
+//            setSelectedItem(item);
+//        }
+//    }
+//
+//    @Override public void setPopupVisible(boolean v) {
+//        if (keepOpen) {
+//            keepOpen = false;
+//        } else {
+//            super.setPopupVisible(v);
+//        }
+//    }
+//
+//    protected static <E extends CheckableItem> String getCheckedItemString(ListModel<E> model) {
+//        return IntStream.range(0, model.getSize())
+//                .mapToObj(model::getElementAt)
+//                .filter(CheckableItem::isSelected)
+//                .map(Objects::toString)
+//                .sorted()
+//                .collect(Collectors.joining(", "));
+//    }
+//}
+//
+//class WindowsCheckedComboBox<E extends CheckableItem> extends CheckedComboBox<E> {
+//    private transient ActionListener listener;
+//
+//    protected WindowsCheckedComboBox(ComboBoxModel<E> model) {
+//        super(model);
+//    }
+//
+//    @Override public void updateUI() {
+//        setRenderer(null);
+//        removeActionListener(listener);
+//        super.updateUI();
+//        listener = e -> {
+//            if ((e.getModifiers() & AWTEvent.MOUSE_EVENT_MASK) != 0) {
+//                keepOpen = true;
+//                updateItem(getSelectedIndex());
+//            }
+//        };
+//        addActionListener(listener);
+//
+//        JLabel label = new JLabel(" ");
+//        JCheckBox check = new JCheckBox(" ");
+//        setRenderer((list, value, index, isSelected, cellHasFocus) -> {
+//            if (index < 0) {
+//                String txt = getCheckedItemString(list.getModel());
+//                label.setText(txt.isEmpty() ? " " : txt);
+//                return label;
+//            } else {
+//                check.setText(Objects.toString(value, ""));
+//                check.setSelected(value.isSelected());
+//                if (isSelected) {
+//                    check.setBackground(list.getSelectionBackground());
+//                    check.setForeground(list.getSelectionForeground());
+//                } else {
+//                    check.setBackground(list.getBackground());
+//                    check.setForeground(list.getForeground());
+//                }
+//                return check;
+//            }
+//        });
+//        initActionMap();
+//    }
+//}
