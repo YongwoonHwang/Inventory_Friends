@@ -110,12 +110,6 @@ public class MenuBar extends JMenuBar {
                 case "1920x1050":
                     jFrame.setSize(1920, 1050);
                     jFrame.setLocation(0, 0);
-                    jspLeft.setDividerLocation(1050/5*3+6);
-                    if(jspRight.getDividerSize() == 0){
-                        jspRight.setDividerLocation(1051);
-                    } else {
-                        jspRight.setDividerLocation(1050/2);
-                    }
                     break;
                 case "닫기":
                     System.exit(0); // 시스템 종료

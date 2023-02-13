@@ -59,6 +59,16 @@ public class MainWindow extends JFrame {
                     jpIndividualRegistration.setLocationCalendar2(
                             jpIndividualRegistration.btnCal2.getLocationOnScreen().x,
                             jpIndividualRegistration.btnCal2.getLocationOnScreen().y+24);
+                    jpIndividualRegistration.setLocationCalc(
+                            jpIndividualRegistration.btnCalc.getLocationOnScreen().x,
+                            jpIndividualRegistration.btnCalc.getLocationOnScreen().y+24);
+                }
+
+                jspLeft.setDividerLocation(getSize().height/5*3+6);
+                if(jspRight.getDividerSize() == 0){
+                    jspRight.setDividerLocation(getSize().height);
+                } else {
+                    jspRight.setDividerLocation(getSize().height/2);
                 }
             }
         });
@@ -82,7 +92,6 @@ public class MainWindow extends JFrame {
         jpBottom.setLayout(new BorderLayout());
         jpOrderConsolidation = new OrderConsolidationPanel();
         jpIndividualRegistration = new IndividualRegistrationPanel();
-//        jpIndividualStatusTable = new InventoryStatusTable();
         jpBatchRegistration = new BatchRegistrationPanel();
 
         jspCenter = new JSplitPane();
@@ -166,6 +175,7 @@ public class MainWindow extends JFrame {
 
         //우상단 패널
         jpIndividualRegistration.setSubTab(jtpSubTab);
+        jpIndividualRegistration.setJspRight(jspRight);
 
         // 우하단 패널
         jpRD.setLayout(new BorderLayout());

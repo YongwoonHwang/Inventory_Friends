@@ -1,7 +1,10 @@
+import jdk.jfr.Category;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.sql.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -15,7 +18,10 @@ public class IndividualRegistrationPanel extends JPanel {
     JButton btnSubmit1, btnSubmit3, btnCal1, btnCal2, btnCalc;
     JLabel jlCategory, jlItemCode, jlItemName, jlItemQuantity, jlMarket, jlItemLocation, jlLastReceivingDate, jlNextReceivingDate, jlImage,
             jlCalendar2, jlCalendar3;
-    HintTextField htfCategory, htfItemCode, htfItemName, htfItemQuantity, htfItemLocation;
+    HintTextField htfItemCode, htfItemName, htfItemQuantity, htfItemLocation;
+    JComboBox jcbCategory;
+    ArrayList<String> categoryList =  new ArrayList();
+    JSplitPane jspRight;
     CheckableComboBox chkcomMarket;
     CalculatorWindow winCalc;
     String market[] = {"11번가", "G마켓", "네이버", "옥션", "위메프", "쿠팡", "티몬"};
@@ -138,9 +144,12 @@ public class IndividualRegistrationPanel extends JPanel {
         jlImage.setBounds(20,255, 120, 30);
         add(jlImage);
 
-        htfCategory = new HintTextField("카테고리는 필수 입력 항목입니다. (ex. Chair)");
-        htfCategory.setBounds(140,15,700,25);
-        add(htfCategory);
+
+        jcbCategory = new JComboBox();
+        jcbCategory.setEditable(true);
+        addItemsAtComboBox();
+        jcbCategory.setBounds(140,15,700,25);
+        add(jcbCategory);
 
         htfItemCode = new HintTextField("코드는 필수 입력 항목입니다. (ex. Cover-A-01-Black)");
         htfItemCode.setBounds(140,45,700,25);
@@ -200,7 +209,7 @@ public class IndividualRegistrationPanel extends JPanel {
         btnSubmit3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(e.getActionCommand());  //선택된 버튼의 테스트값 출력
+                System.out.println(categoryList);  //선택된 버튼의 테스트값 출력
                 Connection con = null;
                 PreparedStatement pstmt = null;
                 ResultSet result = null;
@@ -217,11 +226,21 @@ public class IndividualRegistrationPanel extends JPanel {
                     pstmt.execute("USE " + dbName); // 사용할 DB를 선택한다.
                     // executeQuery : 쿼리를 실행하고 결과를 ResultSet 객체로 반환한다.
 
-                    if (htfCategory.getForeground() != Color.GRAY){
-                        pstmt.setString(1, htfCategory.getText());
-                    } else {
-                        error = "카테고리는 필수 항목 입니다";
-                        throw new SQLException();
+                    if (jcbCategory.getForeground() != Color.GRAY){
+                        String str = jcbCategory.getSelectedItem().toString();
+                        boolean chk = false;
+                        pstmt.setString(1, str);
+                        for (int i = 0; i < categoryList.size();i++){
+                            if(!categoryList.get(i).equals(str))
+                                chk = true;
+                        }
+                        if(categoryList.size() == 0) {
+                            jcbCategory.addItem("");
+                            jcbCategory.addItem(str);
+                        }
+                        else if(chk)
+                            jcbCategory.addItem(str);
+
                     }
                     if (htfItemCode.getForeground() != Color.GRAY){
                         pstmt.setString(2, htfItemCode.getText());
@@ -256,7 +275,7 @@ public class IndividualRegistrationPanel extends JPanel {
                     int cnt = pstmt.executeUpdate();
                     System.out.println("SUCCESS");
 
-                    htfCategory.reset();
+                    jcbCategory.setSelectedIndex(0);
                     htfItemCode.reset();
                     htfItemLocation.reset();
                     htfItemName.reset();
@@ -273,6 +292,11 @@ public class IndividualRegistrationPanel extends JPanel {
                         } else {
                             jtpSubTab.addTab(STTitle, jpInventoryStatus);
                             jtpSubTab.setSelectedIndex(findTabByName(STTitle, jtpSubTab));
+                            if (jspRight.getDividerSize() == 0){
+                                jtpSubTab.setVisible(true);
+                                jspRight.setDividerLocation(jspRight.getSize().height/2);
+                                jspRight.setDividerSize(7);
+                            }
                         }
 
                         try{
@@ -360,6 +384,38 @@ public class IndividualRegistrationPanel extends JPanel {
         add(btnCalc);
     }
 
+    public void addItemsAtComboBox(){
+//        jcbCategory.addItem("");
+        boolean chk = false;
+        String sql2 = "SELECT DISTINCT Category FROM " + dbTableName + " ksy_test ORDER BY Category";
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet result = null;
+        try{
+            con = DriverManager.getConnection("jdbc:mysql://iftest.cn9z6e29xfig.ap-northeast-2.rds.amazonaws.com:3306/","admin","admin1470!");
+            pstmt = con.prepareStatement(sql2);
+            pstmt.execute("USE " + dbName); // 사용할 DB를 선택한다.
+            result = pstmt.executeQuery(); //리턴 받아와서 데이터를 사용할 객체 생성
+            while (result.next()){
+                String tmp = result.getString("Category");
+                if(!tmp.equals("") && !chk)
+                    jcbCategory.addItem("");
+                chk = true;
+                jcbCategory.addItem(tmp);
+                categoryList.add(tmp);
+            }
+
+        }catch(Exception cnfe){
+            System.out.println(cnfe.getMessage());
+        }finally {
+            try{
+                result.close();
+                pstmt.close();
+                con.close();
+            } catch (Exception e2) {}
+        }
+    }
+
     public void setSubTab(JTabbedPane SubTab){
         jtpSubTab = SubTab;
     }
@@ -373,6 +429,7 @@ public class IndividualRegistrationPanel extends JPanel {
     public void setLocationCalc(int x, int y) {
         winCalc.setLocation(x, y);
     }
+    public void setJspRight(JSplitPane jsp) { jspRight = jsp; }
 
     // 탭 타이틀 이름을 찾아 인덱스를 반환하는 함수
     public int findTabByName(String title, JTabbedPane tab) {
