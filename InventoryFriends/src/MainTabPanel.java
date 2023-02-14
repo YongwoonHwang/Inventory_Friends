@@ -3,7 +3,7 @@ import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 
 public class MainTabPanel extends JPanel {
-    JPanel jpItemList;
+    ItemListPanel jpItemList;
     JTabbedPane jtpMainTab;
     Font font;
     public MainTabPanel(){
@@ -26,6 +26,10 @@ public class MainTabPanel extends JPanel {
         UIManager.put("TabbedPane.borderHightlightColor", new ColorUIResource(Color.DARK_GRAY));
         SwingUtilities.updateComponentTreeUI(jtpMainTab);
         add(new JLayer<JTabbedPane>(jtpMainTab, new CloseableTabbedPaneLayerUIuseDefault()));
+    }
+
+    public void setSubTab(JTabbedPane SubTab){
+        jpItemList.setSubTab(SubTab);
     }
 
 }

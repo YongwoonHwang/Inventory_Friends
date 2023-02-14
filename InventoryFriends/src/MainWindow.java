@@ -87,6 +87,7 @@ public class MainWindow extends JFrame {
         jpMenuBtn = new MenuBtnPanel();
         jpMemoTab = new MemoTabPanel();
         jpMainTab = new MainTabPanel();
+        jpMainTab.setSubTab(jtpSubTab);
         jpRD = new JPanel();
         jpBottom = new JPanel();
         jpBottom.setLayout(new BorderLayout());

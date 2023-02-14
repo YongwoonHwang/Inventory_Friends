@@ -111,6 +111,10 @@ public class ItemListPanel extends JPanel {
         add(new JScrollPane(jtItemList), BorderLayout.CENTER);
     }
 
+    public void setSubTab(JTabbedPane SubTab){
+        jtItemList.setSubTab(SubTab);
+    }
+
     // 테이블 너비를 내용에 맞춰주는 함수
     public void resizeColumnWidth(JTable table) {
         final TableColumnModel columnModel = table.getColumnModel();
