@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
+import javax.swing.table.TableModel;
 import java.awt.*;
 
 public class MainTabPanel extends JPanel {
@@ -27,6 +28,7 @@ public class MainTabPanel extends JPanel {
         SwingUtilities.updateComponentTreeUI(jtpMainTab);
         add(new JLayer<JTabbedPane>(jtpMainTab, new CloseableTabbedPaneLayerUIuseDefault()));
     }
+
 
     public void setSubTab(JTabbedPane SubTab){
         jpItemList.setSubTab(SubTab);

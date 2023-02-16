@@ -12,8 +12,10 @@ public class OrderConsolidationPanel extends JPanel {
     String market[] = {"", "11번가", "G마켓", "네이버", "옥션", "위메프", "쿠팡", "티몬"};
     ImageIcon imgSearch1 = new ImageIcon("./img/img_Search1.jpg");
     ImageIcon imgSearch2 = new ImageIcon("./img/img_Search2.jpg");
+    ImageIcon imgClear1 = new ImageIcon("./img/img_X1.jpg");
+    ImageIcon imgClear2 = new ImageIcon("./img/img_X2.jpg");
     JComboBox jcbMarket;
-    JButton btnSearch;
+    JButton btnSearch, btnClear;
     HintTextField jtfOrderNum, jtfItemCode, jtfOrderer, jtfPhoneNum, jtfInvoiceNum, jtfOrderDate;
     JPanel jpOCSearch;
     OrderConsolidationTable jtOrderCon;
@@ -68,6 +70,29 @@ public class OrderConsolidationPanel extends JPanel {
             }
         });
 
+        btnClear = new JButton(imgClear1);
+        btnClear.setRolloverIcon(imgClear2); // 버튼에 마우스가 올라갈떄 이미지 변환
+        btnClear.setBorderPainted(false); // 버튼 테두리 제거
+        btnClear.setFocusPainted(false);
+        btnClear.setContentAreaFilled(false);
+        btnClear.setPreferredSize(new Dimension(23, 23)); // 버튼 크기 지정
+        btnClear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                rowSorter.setRowFilter(RowFilter.andFilter(filters));
+                filters.clear();
+
+                jtfOrderNum.reset();
+                jtfItemCode.reset();
+                jtfOrderer.reset();
+                jtfPhoneNum.reset();
+                jtfInvoiceNum.reset();
+                jtfOrderDate.reset();
+                jcbMarket.setSelectedIndex(0);
+            }
+        });
+
         jtfOrderNum = new HintTextField("주문 번호");
         jtfOrderNum.setColumns(10);
         jtfItemCode = new HintTextField("상품 코드");
@@ -92,6 +117,7 @@ public class OrderConsolidationPanel extends JPanel {
         jpOCSearch.add(jtfOrderDate);
         jpOCSearch.add(jcbMarket);
         jpOCSearch.add(btnSearch);
+        jpOCSearch.add(btnClear);
 
         resizeColumnWidth(jtOrderCon);
 

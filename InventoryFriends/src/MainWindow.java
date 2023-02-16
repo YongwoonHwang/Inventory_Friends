@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -177,6 +178,8 @@ public class MainWindow extends JFrame {
         //우상단 패널
         jpIndividualRegistration.setSubTab(jtpSubTab);
         jpIndividualRegistration.setJspRight(jspRight);
+        jpIndividualRegistration.setModelItemList((DefaultTableModel)jpMainTab.jpItemList.getTableModel());
+        jpMainTab.jpItemList.setComboboxModel(jpIndividualRegistration.getComboboxModle());
 
         // 우하단 패널
         jpRD.setLayout(new BorderLayout());

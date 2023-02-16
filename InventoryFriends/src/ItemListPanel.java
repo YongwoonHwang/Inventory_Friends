@@ -12,10 +12,12 @@ import java.util.ArrayList;
 
 public class ItemListPanel extends JPanel {
     String market[] = {"", "11번가", "G마켓", "네이버", "옥션", "위메프", "쿠팡", "티몬"};
-    String category[] = {"", "category1", "category2", "category3"};
+//    String category[] = {"", "category1", "category2", "category3"};
     ImageIcon imgSearch1 = new ImageIcon("./img/img_Search1.jpg");
     ImageIcon imgSearch2 = new ImageIcon("./img/img_Search2.jpg");
-    JButton btnSearch;
+    ImageIcon imgClear1 = new ImageIcon("./img/img_X1.jpg");
+    ImageIcon imgClear2 = new ImageIcon("./img/img_X2.jpg");
+    JButton btnSearch, btnClear;
     JComboBox jcbMarket, jcbCategory;
     JPanel jpILSearch;
     ItemListTable jtItemList;
@@ -24,12 +26,18 @@ public class ItemListPanel extends JPanel {
     TableRowSorter<TableModel> rowSorter;
     ArrayList<RowFilter<Object, Object>> filters;
 
+    ItemStatusPanel itemStatusPanel;
     public ItemListPanel(){
         Font font1 = new Font("돋움", Font.PLAIN, 12);
         filters = new ArrayList<>();
 
         setLayout(new BorderLayout());
         jtItemList = new ItemListTable();
+
+        itemStatusPanel = new ItemStatusPanel();
+        jtItemList.itemStatusPanel = itemStatusPanel;
+        itemStatusPanel.jtItemList = jtItemList;
+
         resizeColumnWidth(jtItemList);
         jtItemList.getColumn("").setPreferredWidth(1);  // 체크박스 컬럼 크기 줄이기
         rowSorter = new TableRowSorter<>(jtItemList.getModel());
@@ -41,9 +49,10 @@ public class ItemListPanel extends JPanel {
         jcbMarket = new JComboBox(market);
         jcbMarket.setBackground(Color.WHITE);
         jcbMarket.setFont(font1);
-        jcbCategory = new JComboBox(category);
+        jcbCategory = new JComboBox();
         jcbCategory.setBackground(Color.WHITE);
         jcbCategory.setFont(font1);
+
         btnSearch = new JButton(imgSearch1);
         btnSearch.setRolloverIcon(imgSearch2); // 버튼에 마우스가 올라갈떄 이미지 변환
         btnSearch.setBorderPainted(false); // 버튼 테두리 제거
@@ -83,6 +92,30 @@ public class ItemListPanel extends JPanel {
                 filters.clear();
             }
         });
+        
+        btnClear = new JButton(imgClear1);
+        btnClear.setRolloverIcon(imgClear2); // 버튼에 마우스가 올라갈떄 이미지 변환
+        btnClear.setBorderPainted(false); // 버튼 테두리 제거
+        btnClear.setFocusPainted(false);
+        btnClear.setContentAreaFilled(false);
+        btnClear.setPreferredSize(new Dimension(23, 23)); // 버튼 크기 지정
+        btnClear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                rowSorter.setRowFilter(RowFilter.andFilter(filters));
+                filters.clear();
+
+                jtfItemName.reset();
+                jtfItemCode.reset();
+                jtfItemQuantity.reset();
+                jtfItemLocation.reset();
+                jtfLastReceivingDate.reset();
+                jtfNextReceivingDate.reset();
+                jcbCategory.setSelectedIndex(0);
+                jcbMarket.setSelectedIndex(0);
+            }
+        });
 
         jtfItemCode = new HintTextField("상품 코드");
         jtfItemCode.setColumns(9);
@@ -106,6 +139,7 @@ public class ItemListPanel extends JPanel {
         jpILSearch.add(jtfNextReceivingDate);
         jpILSearch.add(jcbMarket);
         jpILSearch.add(btnSearch);
+        jpILSearch.add(btnClear);
 
         add(jpILSearch, BorderLayout.NORTH);
         add(new JScrollPane(jtItemList), BorderLayout.CENTER);
@@ -113,6 +147,14 @@ public class ItemListPanel extends JPanel {
 
     public void setSubTab(JTabbedPane SubTab){
         jtItemList.setSubTab(SubTab);
+    }
+
+    public TableModel getTableModel(){
+        return jtItemList.getModel();
+    }
+
+    public void setComboboxModel(ComboBoxModel model){
+        jcbCategory.setModel(model);
     }
 
     // 테이블 너비를 내용에 맞춰주는 함수

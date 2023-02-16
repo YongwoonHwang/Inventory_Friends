@@ -3,6 +3,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.sql.*;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.*;
 import javax.swing.table.*;
 
@@ -10,20 +11,29 @@ public class BatchRegistrationPanel extends JPanel {
 
     JButton btnSubmit2, btnSubmit4;
     JLabel text10, text11, text12;
-    JTextField jTextField10;
-    ImageIcon imgAdd1, imgAdd2;
+    JTextField jtfCSVpath;
+    ImageIcon imgAdd1, imgAdd2, imgFile1, imgFile2;
+    JFileChooser imgfilechooser;
 
     public BatchRegistrationPanel() {
 
         imgAdd1 = new ImageIcon("./img/img_Add1.jpg");
         imgAdd2 = new ImageIcon("./img/img_Add2.jpg");
+        imgFile1 = new ImageIcon("./img/img_File1.jpg");
+        imgFile2 = new ImageIcon("./img/img_File2.jpg");
+
+        imgfilechooser = new JFileChooser();
+//        jlfilechooser = new JLabel();
+        imgfilechooser.setAcceptAllFileFilterUsed(false);
+        imgfilechooser.setFileFilter(new FileNameExtensionFilter("Excel File(*.xls;*.xlsx;*.csv)", "xls", "xlsx", "csv"));
+        imgfilechooser.setMultiSelectionEnabled(false);
 
         setLayout(null);
 
-        jTextField10 = new JTextField();
-        jTextField10.setBounds(140, 100, 200, 30);
-        jTextField10.setEditable(false);
-        add(jTextField10);
+        jtfCSVpath = new JTextField();
+        jtfCSVpath.setBounds(140, 100, 200, 30);
+        jtfCSVpath.setEditable(false);
+        add(jtfCSVpath);
 
 
         text10 = new JLabel("일괄 등록 : ");
@@ -39,12 +49,29 @@ public class BatchRegistrationPanel extends JPanel {
         add(text12);
 
 
-        btnSubmit2 = new JButton("파일첨부");
+        btnSubmit2 = new JButton(imgFile1);
+        btnSubmit2.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnSubmit2.setRolloverIcon(imgFile2); // 버튼에 마우스가 올라갈떄 이미지 변환
+        btnSubmit2.setBorderPainted(false); // 버튼 테두리 제거
+        btnSubmit2.setFocusPainted(false);
+        btnSubmit2.setContentAreaFilled(false);
+        btnSubmit2.setPreferredSize(new Dimension(48, 24));
         btnSubmit2.setBounds(340, 100, 90, 30);
         btnSubmit2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //파일오픈 다이얼로그 를 띄움
+                int result = imgfilechooser.showOpenDialog(null);
 
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    //선택한 파일의 경로 반환
+                    File selectedFile = imgfilechooser.getSelectedFile();
+
+                    //경로 출력
+                    jtfCSVpath.setText(selectedFile.getPath());
+                } else{
+                    jtfCSVpath.setText("");
+                }
             }
         });
 

@@ -10,6 +10,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 public class IndividualRegistrationPanel extends JPanel {
     JPanel jpInventoryStatus;
@@ -29,9 +30,11 @@ public class IndividualRegistrationPanel extends JPanel {
     JTextField jtfLastReceivingDate, jtfNextReceivingDate, jtfImg;
     JFileChooser imgfilechooser;
     CalendarWindowForChoose winCalendar1, winCalendar2;
+    DefaultTableModel modelItemList;
     Font font;
     String dbName = "ifdb";
-    String dbTableName = "ksy_test";
+    String dbTableName = "ItemList";
+    String dbUserID = "1";
     static String error;
     public IndividualRegistrationPanel() {
         // 폰트 설정
@@ -209,11 +212,11 @@ public class IndividualRegistrationPanel extends JPanel {
         btnSubmit3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(categoryList);  //선택된 버튼의 테스트값 출력
+//                System.out.println(categoryList);  //선택된 버튼의 테스트값 출력
                 Connection con = null;
                 PreparedStatement pstmt = null;
                 ResultSet result = null;
-                String sql = "INSERT INTO " + dbTableName + " (CATEGORY, CODE, PRODUCT_NAME, QUANTITY, MARKET, PRODUCT_LOCATION, STOCKING_DATE, EDA, IMAGE) " + "VALUES (?,?,?,?,?,?,?,?,?)";
+                String sql = "INSERT INTO " + dbTableName + " (user_id, CATEGORY, CODE, PRODUCT_NAME, QUANTITY, MARKET, PRODUCT_LOCATION, STOCKING_DATE, EDA, IMAGE) VALUES (?,?,?,?,?,?,?,?,?,?)";
                 String sql2 = "SELECT * FROM " + dbTableName + " ORDER BY id DESC LIMIT 1";
 
                 try{
@@ -226,51 +229,52 @@ public class IndividualRegistrationPanel extends JPanel {
                     pstmt.execute("USE " + dbName); // 사용할 DB를 선택한다.
                     // executeQuery : 쿼리를 실행하고 결과를 ResultSet 객체로 반환한다.
 
-                    if (jcbCategory.getForeground() != Color.GRAY){
-                        String str = jcbCategory.getSelectedItem().toString();
-                        boolean chk = false;
-                        pstmt.setString(1, str);
-                        for (int i = 0; i < categoryList.size();i++){
-                            if(!categoryList.get(i).equals(str))
-                                chk = true;
-                        }
-                        if(categoryList.size() == 0) {
-                            jcbCategory.addItem("");
-                            jcbCategory.addItem(str);
-                        }
-                        else if(chk)
-                            jcbCategory.addItem(str);
+                    pstmt.setString(1, dbUserID);
 
+                    String str = jcbCategory.getSelectedItem().toString();
+                    boolean chk = false;
+                    pstmt.setString(2, str);
+                    for (int i = 0; i < categoryList.size();i++){
+                        if(!categoryList.get(i).equals(str))
+                            chk = true;
                     }
+                    if(categoryList.size() == 0) {
+                        jcbCategory.addItem("");
+                        jcbCategory.addItem(str);
+                    }
+                    else if(chk){
+                        jcbCategory.addItem(str);
+                    }
+
                     if (htfItemCode.getForeground() != Color.GRAY){
-                        pstmt.setString(2, htfItemCode.getText());
+                        pstmt.setString(3, htfItemCode.getText());
                     } else {
                         error = "코드는 필수 항목 입니다";
                         throw new SQLException();
                     }
                     if (htfItemName.getForeground() != Color.GRAY){
-                        pstmt.setString(3, htfItemName.getText());
+                        pstmt.setString(4, htfItemName.getText());
                     } else {
                         error = "품명은 필수 항목 입니다";
                         throw new SQLException();
                     }
                     if (htfItemQuantity.getForeground() != Color.GRAY){
-                        pstmt.setInt(4, Integer.parseInt(htfItemQuantity.getText()));
+                        pstmt.setInt(5, Integer.parseInt(htfItemQuantity.getText()));
                     } else {
                         error = "수량은 필수 항목 입니다";
                         throw new SQLException();
                     }
 
-                    pstmt.setString(5, (String) chkcomMarket.getSelectItems());
+                    pstmt.setString(6, (String) chkcomMarket.getSelectItems());
 
                     if (htfItemLocation.getForeground() != Color.GRAY){
-                        pstmt.setString(6, htfItemLocation.getText());
+                        pstmt.setString(7, htfItemLocation.getText());
                     } else {
-                        pstmt.setString(6, "");
+                        pstmt.setString(7, "");
                     }
-                    pstmt.setString(7, jtfLastReceivingDate.getText());
-                    pstmt.setString(8, jtfNextReceivingDate.getText());
-                    pstmt.setString(9, jtfImg.getText());
+                    pstmt.setString(8, jtfLastReceivingDate.getText());
+                    pstmt.setString(9, jtfNextReceivingDate.getText());
+                    pstmt.setString(10, jtfImg.getText());
 
                     int cnt = pstmt.executeUpdate();
                     System.out.println("SUCCESS");
@@ -286,25 +290,25 @@ public class IndividualRegistrationPanel extends JPanel {
                     chkcomMarket.Clear();
 
                     if (cnt == 1){
-                        String STTitle = new String("재고 현황");
-                        if (findTabByName(STTitle, jtpSubTab) != -1) {
-                            jtpSubTab.setSelectedIndex(findTabByName(STTitle, jtpSubTab));
-                        } else {
-                            jtpSubTab.addTab(STTitle, jpInventoryStatus);
-                            jtpSubTab.setSelectedIndex(findTabByName(STTitle, jtpSubTab));
-                            if (jspRight.getDividerSize() == 0){
-                                jtpSubTab.setVisible(true);
-                                jspRight.setDividerLocation(jspRight.getSize().height/2);
-                                jspRight.setDividerSize(7);
-                            }
-                        }
+                        String ISTitle = new String("재고 현황");
+//                        if (findTabByName(ISTitle, jtpSubTab) != -1) {
+//                            jtpSubTab.setSelectedIndex(findTabByName(ISTitle, jtpSubTab));
+//                        } else {
+//                            jtpSubTab.addTab(ISTitle, jpInventoryStatus);
+//                            jtpSubTab.setSelectedIndex(findTabByName(ISTitle, jtpSubTab));
+//                            if (jspRight.getDividerSize() == 0){
+//                                jtpSubTab.setVisible(true);
+//                                jspRight.setDividerLocation(jspRight.getSize().height/2);
+//                                jspRight.setDividerSize(7);
+//                            }
+//                        }
 
                         try{
                             pstmt = con.prepareStatement(sql2);
                             pstmt.execute("USE " + dbName); // 사용할 DB를 선택한다.
                             result = pstmt.executeQuery(); //리턴 받아와서 데이터를 사용할 객체 생성
                             while (result.next()){
-                                model2.addRow(new Object[]{result.getString("CATEGORY"), result.getString("CODE"), result.getString("Product_NAME"),
+                                modelItemList.addRow(new Object[]{false, result.getString("CATEGORY"), result.getString("CODE"), result.getString("Product_NAME"),
                                         result.getString("QUANTITY"), result.getString("MARKET"), result.getString("Product_Location"), result.getString("STOCKING_DATE"), result.getString("EDA"), result.getString("IMAGE")});
                             }
 
@@ -319,8 +323,6 @@ public class IndividualRegistrationPanel extends JPanel {
                         }
                     }
 
-//                    if(jTextField1.getText().isEmpty()) return;
-//                    jTextField1.setText("");//비우기
                 } catch (ClassNotFoundException cnfe) {
                     System.out.println("DB 드라이버 로딩 실패 :" + cnfe);
 
@@ -429,7 +431,13 @@ public class IndividualRegistrationPanel extends JPanel {
     public void setLocationCalc(int x, int y) {
         winCalc.setLocation(x, y);
     }
+    public void setModelItemList(DefaultTableModel model){ modelItemList = model; }
     public void setJspRight(JSplitPane jsp) { jspRight = jsp; }
+
+
+    public ComboBoxModel getComboboxModle(){
+        return jcbCategory.getModel();
+    }
 
     // 탭 타이틀 이름을 찾아 인덱스를 반환하는 함수
     public int findTabByName(String title, JTabbedPane tab) {

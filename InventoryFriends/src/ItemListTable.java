@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -7,7 +6,6 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.sql.*;
 
 public class ItemListTable extends JTable {
@@ -19,27 +17,15 @@ public class ItemListTable extends JTable {
     String url = "jdbc:mysql://iftest.cn9z6e29xfig.ap-northeast-2.rds.amazonaws.com/ifdb?characterEncoding=utf8&useUnicode=true&mysqlEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul";
     String user = "admin";
     String passwd = "admin1470!";
-    JTable table;
+    String dbTableName = "ItemList";
+//    TestPanel testPanel;
+    ItemStatusPanel itemStatusPanel;
     JTabbedPane jtpSubTab;
-    TestPanel testPanel;
-
-    private void dbconnect() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection(url, user, passwd);
-            stmt = con.createStatement();
-            System.out.println("MySQL 서버 연동 성공");
-        } catch (Exception e) {
-            System.out.println("MySQL 서버 연동 실패 > " + e.toString());
-        }
-    }
+    Object headerItemList[] = {"", "카테고리", "코드", "품명", "수량", "마켓", "재고 위치", "최근 입고일", "다음 입고 예정일","식별번호"};
+    Object ob[][] = new Object[0][10];
 
 
-    Object headerItemList[] = {"", "카테고리", "코드", "품명", "수량", "마켓", "재고 위치", "최근 입고일", "다음 입고 예정일"};
-    Object ob[][] = new Object[0][9];
-
-
-    DefaultTableModel modelItemList, tossmodel;
+    DefaultTableModel modelItemList;
     DefaultTableCellRenderer dcr;
 
     public ItemListTable() {
@@ -76,17 +62,20 @@ public class ItemListTable extends JTable {
         JCheckBox box = new JCheckBox();
         box.setHorizontalAlignment(JLabel.CENTER);
         getColumn("").setCellEditor(new DefaultCellEditor(box));
-        testPanel = new TestPanel();
+        this.getColumn("식별번호").setWidth(0);
+        this.getColumn("식별번호").setMinWidth(0);
+        this.getColumn("식별번호").setMaxWidth(0);
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
 
-                String ISTitle = new String("재고 현황"); /*생성되는 하단탭 제목*/
+                String ISTitle = new String("재고 상세"); /*생성되는 하단탭 제목*/
 
 
                 int row = getSelectedRow(); /*테이블로부터 선택한 줄 정보 표시*/
-                System.out.println("선택된 줄 = " + row);
+//                System.out.println("선택된 줄 = " + row);
                 TableModel data = getModel();  /*테이블로부터 값을 가져옴*/
 
                 String category = (String)data.getValueAt(row,1); /*선택한줄의 2번째 값*/
@@ -96,23 +85,24 @@ public class ItemListTable extends JTable {
                 String market = (String)data.getValueAt(row,5);
                 String location = (String)data.getValueAt(row,6);
                 String lastReceiveDate = (String)data.getValueAt(row,7);
-                String nextReceivDate = (String)data.getValueAt(row,8);
+                String  nextReceivDate = (String)data.getValueAt(row,8);
+                String idno = (String)data.getValueAt(row,9);
+                String index = Integer.toString(row);
 
-                System.out.println("가져온 값 = " + category + code + name + quantity +
-                        market + location + lastReceiveDate + nextReceivDate);
-
-                testPanel.setTexts(category, code, name, quantity, market, location,
-                        lastReceiveDate, nextReceivDate);
-                testPanel.repaint();
+//                System.out.println("가져온 값 = " + category + code + name + quantity +
+//                        market + location + lastReceiveDate + nextReceivDate + idno);
 
 
                 if (e.getClickCount() == 2) {
-                    System.out.println(getSelectedRow());
+                    itemStatusPanel.setTexts(category, code, name, quantity, market, location,
+                            lastReceiveDate, nextReceivDate,idno,index);
+                    itemStatusPanel.repaint();
+//                    System.out.println(getSelectedRow());
                     jtpSubTab.setVisible(true);
                     if (findTabByName(ISTitle, jtpSubTab) != -1) {
                         jtpSubTab.setSelectedIndex(findTabByName(ISTitle, jtpSubTab));
                     } else {
-                        jtpSubTab.addTab(ISTitle, testPanel);
+                        jtpSubTab.addTab(ISTitle, itemStatusPanel);
                         jtpSubTab.setSelectedIndex(findTabByName(ISTitle, jtpSubTab));
                     }
                 }
@@ -123,7 +113,6 @@ public class ItemListTable extends JTable {
     public void setSubTab(JTabbedPane SubTab){
         jtpSubTab = SubTab;
     }
-
         // 탭 타이틀 이름을 찾아 인덱스를 반환하는 함수
     public int findTabByName(String title, JTabbedPane tab) {
         int tabCount = tab.getTabCount();
@@ -134,34 +123,47 @@ public class ItemListTable extends JTable {
         return -1;
     }
 
-        public void select () {
-            try {
-                String sql = "select * from ksy_test";
-                pstmt = con.prepareStatement(sql);
-                rs = pstmt.executeQuery();
+    public void select () {
+        String sql = "select * from " + dbTableName;
+        try {
+            pstmt = con.prepareStatement(sql);
+            rs = pstmt.executeQuery();
 
-                while (rs.next()) {
-                    String category = rs.getString("Category");
-                    String code = rs.getString("Code");
-                    String name = rs.getString("Product_Name");
-                    String quantity = rs.getString("Quantity");
-                    String market = rs.getString("Market");
-                    String location = rs.getString("Product_Location");
-                    String lastreceive = rs.getString("Stocking_Date");
-                    String nextreceive = rs.getString("EDA");
+            while (rs.next()) {
+                String category = rs.getString("Category");
+                String code = rs.getString("Code");
+                String name = rs.getString("Product_Name");
+                String quantity = rs.getString("Quantity");
+                String market = rs.getString("Market");
+                String location = rs.getString("Product_Location");
+                String lastreceive = rs.getString("Stocking_Date");
+                String nextreceive = rs.getString("EDA");
+                String idno = rs.getString("id");
 
-                    Object contentsItemList[] = {false, category, code, name, quantity, market, location,
-                            lastreceive, nextreceive};
-                    modelItemList.addRow(contentsItemList);
-
-                }
-            } catch (Exception e) {
-                System.out.println("select() 실행 오류" + e);
+                Object contentsItemList[] = {false, category, code, name, quantity, market, location,
+                        lastreceive, nextreceive,idno};
+                modelItemList.addRow(contentsItemList);
 
             }
+        } catch (Exception e) {
+            System.out.println("select() 실행 오류" + e);
 
         }
+
     }
+
+    private void dbconnect() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(url, user, passwd);
+            stmt = con.createStatement();
+            System.out.println("MySQL 서버 연동 성공");
+        } catch (Exception e) {
+            System.out.println("MySQL 서버 연동 실패 > " + e.toString());
+        }
+    }
+}
+
 
 
 
