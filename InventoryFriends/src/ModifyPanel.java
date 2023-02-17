@@ -24,7 +24,7 @@ public class ModifyPanel extends JPanel{
     CalendarWindowForChoose winCalendar1, winCalendar2;
     Font font;
     String dbName = "ifdb";
-    String dbTableName = "ksy_test";
+    String dbTableName = "ItemList";
     static String error;
     public ModifyPanel() {
         // 폰트 설정

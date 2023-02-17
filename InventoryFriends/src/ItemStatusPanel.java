@@ -32,6 +32,7 @@ public class ItemStatusPanel extends JPanel {
     JButton btnChange,btnDel;
     ItemListTable jtItemList;
     ModifyPanel modifyPanel;
+    JTabbedPane jtpMainTab;
     JTabbedPane jtpSubTab;
     JPanel jpItemStatus, jpCenter, jpWest;
 
@@ -158,11 +159,33 @@ public class ItemStatusPanel extends JPanel {
         btnChange.setFocusPainted(false);
         btnChange.setContentAreaFilled(false);
         btnChange.setPreferredSize(new Dimension(48, 24));
+
         modifyPanel = new ModifyPanel();
         btnChange.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String IMTitle = new String("재고 수정");
 
+                String category = dbCategory.getText(); /*선택한줄의 2번째 값*/
+                String code = dbItemCode.getText();
+                String name = dbItemName.getText();
+                String quantity = dbItemQuantity.getText();
+                String market = dbMarket.getText();
+                String location = dbItemLocation.getText();
+                String lastReceiveDate = dbLastReceivingDate.getText();
+                String nextReceivDate = dbNextReceivingDate.getText();
+
+                modifyPanel.setTexts2(category, code, name, quantity, market, location,
+                        lastReceiveDate, nextReceivDate);
+                modifyPanel.repaint();
+
+                jtpMainTab.setVisible(true);
+                if (findTabByName(IMTitle, jtpMainTab) != -1) {
+                    jtpMainTab.setSelectedIndex(findTabByName(IMTitle, jtpMainTab));
+                } else {
+                    jtpMainTab.addTab(IMTitle, modifyPanel);
+                    jtpMainTab.setSelectedIndex(findTabByName(IMTitle, jtpMainTab));
+                }
             }
 
         });

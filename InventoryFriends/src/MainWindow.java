@@ -190,6 +190,7 @@ public class MainWindow extends JFrame {
         jpMainTab.jpItemList.jpItemStatusPanel = jpItemStatusPanel;
         jpItemStatusPanel.jtItemList = jpMainTab.jpItemList.jtItemList;
         jpItemStatusPanel.jtpSubTab = jtpSubTab;
+        jpItemStatusPanel.jtpMainTab = jpMainTab.jtpMainTab;
         jpMainTab.jpItemList.jtItemList.jpItemStatusPanel = jpItemStatusPanel;
 
         jpRD.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
