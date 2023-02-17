@@ -101,11 +101,11 @@ public class MenuBar extends JMenuBar {
                     jFrame.setSize(1280, 720);
                     jFrame.setLocationRelativeTo(null);
                     jspLeft.setDividerLocation(720/5*3+6);
-                    if(jspRight.getDividerSize() == 0){
-                        jspRight.setDividerLocation(721);
-                    } else {
-                        jspRight.setDividerLocation(720/2);
-                    }
+//                    if(jspRight.getDividerSize() == 0){
+//                        jspRight.setDividerLocation(721);
+//                    } else {
+//                        jspRight.setDividerLocation(720/2);
+//                    }
                     break;
                 case "1920x1050":
                     jFrame.setSize(1920, 1050);

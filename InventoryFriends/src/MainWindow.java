@@ -12,7 +12,7 @@ public class MainWindow extends JFrame {
     OrderConsolidationPanel jpOrderConsolidation;
     BatchRegistrationPanel jpBatchRegistration;
     IndividualRegistrationPanel jpIndividualRegistration;
-//    InventoryStatusTable jpIndividualStatusTable;
+    ItemStatusPanel jpItemStatusPanel;
     MenuBar jmbMenuBar;
     JButton btnAlarm;
     JSplitPane jspCenter, jspLeft, jspRight;
@@ -37,7 +37,7 @@ public class MainWindow extends JFrame {
             public void componentMoved(ComponentEvent e) {
                 winCalendar.setLocation(jlCalendar.getLocationOnScreen().x+1, jlCalendar.getLocationOnScreen().y-181);
                 winAlarm.setLocation(btnAlarm.getLocationOnScreen().x-326, btnAlarm.getLocationOnScreen().y-300);
-                if(findTabByName("재고 관리(개별 등록)", jpMainTab.jtpMainTab) != -1){
+                if(findTabByName("재고 관리(개별 등록)", jpMainTab.jtpMainTab) == jpMainTab.jtpMainTab.getSelectedIndex()){
                     jpIndividualRegistration.setLocationCalendar1(
                             jpIndividualRegistration.btnCal1.getLocationOnScreen().x,
                             jpIndividualRegistration.btnCal1.getLocationOnScreen().y-180);
@@ -68,8 +68,9 @@ public class MainWindow extends JFrame {
                 jspLeft.setDividerLocation(getSize().height/5*3+6);
                 if(jspRight.getDividerSize() == 0){
                     jspRight.setDividerLocation(getSize().height);
-                } else {
-                    jspRight.setDividerLocation(getSize().height/2);
+                }
+                else {
+                    jspRight.setDividerLocation(getRootPane().getSize().height - 400);
                 }
             }
         });
@@ -95,6 +96,7 @@ public class MainWindow extends JFrame {
         jpOrderConsolidation = new OrderConsolidationPanel();
         jpIndividualRegistration = new IndividualRegistrationPanel();
         jpBatchRegistration = new BatchRegistrationPanel();
+        jpItemStatusPanel = new ItemStatusPanel();
 
         jspCenter = new JSplitPane();
         jspLeft = new JSplitPane();
@@ -180,9 +182,15 @@ public class MainWindow extends JFrame {
         jpIndividualRegistration.setJspRight(jspRight);
         jpIndividualRegistration.setModelItemList((DefaultTableModel)jpMainTab.jpItemList.getTableModel());
         jpMainTab.jpItemList.setComboboxModel(jpIndividualRegistration.getComboboxModle());
+        jpItemStatusPanel.jspRight = jspRight;
+        jpMainTab.jpItemList.jtItemList.jspRight = jspRight;
 
         // 우하단 패널
         jpRD.setLayout(new BorderLayout());
+        jpMainTab.jpItemList.jpItemStatusPanel = jpItemStatusPanel;
+        jpItemStatusPanel.jtItemList = jpMainTab.jpItemList.jtItemList;
+        jpItemStatusPanel.jtpSubTab = jtpSubTab;
+        jpMainTab.jpItemList.jtItemList.jpItemStatusPanel = jpItemStatusPanel;
 
         jpRD.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         CloseableTabbedPaneLayerUI tmp = new CloseableTabbedPaneLayerUI();

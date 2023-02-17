@@ -19,14 +19,13 @@ public class ItemListTable extends JTable {
     String passwd = "admin1470!";
     String dbTableName = "ItemList";
 //    TestPanel testPanel;
-    ItemStatusPanel itemStatusPanel;
+    ItemStatusPanel jpItemStatusPanel;
     JTabbedPane jtpSubTab;
     Object headerItemList[] = {"", "카테고리", "코드", "품명", "수량", "마켓", "재고 위치", "최근 입고일", "다음 입고 예정일","식별번호"};
     Object ob[][] = new Object[0][10];
-
-
     DefaultTableModel modelItemList;
     DefaultTableCellRenderer dcr;
+    JSplitPane jspRight;
 
     public ItemListTable() {
 
@@ -71,7 +70,7 @@ public class ItemListTable extends JTable {
             public void mouseClicked(MouseEvent e) {
 
 
-                String ISTitle = new String("재고 상세"); /*생성되는 하단탭 제목*/
+                String ISTitle = "재고 상세"; /*생성되는 하단탭 제목*/
 
 
                 int row = getSelectedRow(); /*테이블로부터 선택한 줄 정보 표시*/
@@ -87,22 +86,25 @@ public class ItemListTable extends JTable {
                 String lastReceiveDate = (String)data.getValueAt(row,7);
                 String  nextReceivDate = (String)data.getValueAt(row,8);
                 String idno = (String)data.getValueAt(row,9);
-                String index = Integer.toString(row);
+                int index = row;
 
 //                System.out.println("가져온 값 = " + category + code + name + quantity +
 //                        market + location + lastReceiveDate + nextReceivDate + idno);
 
 
                 if (e.getClickCount() == 2) {
-                    itemStatusPanel.setTexts(category, code, name, quantity, market, location,
+                    jpItemStatusPanel.setTexts(category, code, name, quantity, market, location,
                             lastReceiveDate, nextReceivDate,idno,index);
-                    itemStatusPanel.repaint();
+                    jpItemStatusPanel.repaint();
+
 //                    System.out.println(getSelectedRow());
                     jtpSubTab.setVisible(true);
+                    jspRight.setDividerSize(7);
+                    jspRight.setDividerLocation(getRootPane().getSize().height-400);
                     if (findTabByName(ISTitle, jtpSubTab) != -1) {
                         jtpSubTab.setSelectedIndex(findTabByName(ISTitle, jtpSubTab));
                     } else {
-                        jtpSubTab.addTab(ISTitle, itemStatusPanel);
+                        jtpSubTab.addTab(ISTitle, jpItemStatusPanel);
                         jtpSubTab.setSelectedIndex(findTabByName(ISTitle, jtpSubTab));
                     }
                 }

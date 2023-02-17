@@ -19,7 +19,7 @@ public class ItemListTable1 extends JTable {
     String passwd = "admin1470!";
     String dbTableName = "ItemList";
     JTabbedPane jtpSubTab;
-    TestPanel testPanel;
+//    TestPanel testPanel;
     Object headerItemList[] = {"", "카테고리", "코드", "품명", "수량", "마켓", "재고 위치", "최근 입고일", "다음 입고 예정일"};
     Object ob[][] = new Object[0][9];
     DefaultTableModel modelItemList;
@@ -60,7 +60,7 @@ public class ItemListTable1 extends JTable {
         JCheckBox box = new JCheckBox();
         box.setHorizontalAlignment(JLabel.CENTER);
         getColumn("").setCellEditor(new DefaultCellEditor(box));
-        testPanel = new TestPanel();
+//        testPanel = new TestPanel();
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -94,7 +94,7 @@ public class ItemListTable1 extends JTable {
                     if (findTabByName(ISTitle, jtpSubTab) != -1) {
                         jtpSubTab.setSelectedIndex(findTabByName(ISTitle, jtpSubTab));
                     } else {
-                        jtpSubTab.addTab(ISTitle, testPanel);
+//                        jtpSubTab.addTab(ISTitle, testPanel);
                         jtpSubTab.setSelectedIndex(findTabByName(ISTitle, jtpSubTab));
                     }
                 }

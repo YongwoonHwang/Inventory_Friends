@@ -26,7 +26,7 @@ public class ItemListPanel extends JPanel {
     TableRowSorter<TableModel> rowSorter;
     ArrayList<RowFilter<Object, Object>> filters;
 
-    ItemStatusPanel itemStatusPanel;
+    ItemStatusPanel jpItemStatusPanel;
     public ItemListPanel(){
         Font font1 = new Font("돋움", Font.PLAIN, 12);
         filters = new ArrayList<>();
@@ -34,9 +34,9 @@ public class ItemListPanel extends JPanel {
         setLayout(new BorderLayout());
         jtItemList = new ItemListTable();
 
-        itemStatusPanel = new ItemStatusPanel();
-        jtItemList.itemStatusPanel = itemStatusPanel;
-        itemStatusPanel.jtItemList = jtItemList;
+//        jpItemStatusPanel = new ItemStatusPanel();
+//        jtItemList.jpItemStatusPanel = jpItemStatusPanel;
+//        jpItemStatusPanel.jtItemList = jtItemList;
 
         resizeColumnWidth(jtItemList);
         jtItemList.getColumn("").setPreferredWidth(1);  // 체크박스 컬럼 크기 줄이기
