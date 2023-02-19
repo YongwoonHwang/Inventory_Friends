@@ -53,7 +53,7 @@ public class MainWindow extends JFrame {
             public void componentResized(ComponentEvent e) {
                 winCalendar.setLocation(jlCalendar.getLocationOnScreen().x+1, jlCalendar.getLocationOnScreen().y-181);
                 winAlarm.setLocation(btnAlarm.getLocationOnScreen().x-326, btnAlarm.getLocationOnScreen().y-300);
-                if(findTabByName("재고 관리(개별 등록)", jpMainTab.jtpMainTab) != -1){
+                if(findTabByName("재고 관리(개별 등록)", jpMainTab.jtpMainTab) == jpMainTab.jtpMainTab.getSelectedIndex()){
                     jpIndividualRegistration.setLocationCalendar1(
                             jpIndividualRegistration.btnCal1.getLocationOnScreen().x,
                             jpIndividualRegistration.btnCal1.getLocationOnScreen().y-180);
@@ -181,9 +181,15 @@ public class MainWindow extends JFrame {
         jpIndividualRegistration.setSubTab(jtpSubTab);
         jpIndividualRegistration.setJspRight(jspRight);
         jpIndividualRegistration.setModelItemList((DefaultTableModel)jpMainTab.jpItemList.getTableModel());
-        jpMainTab.jpItemList.setComboboxModel(jpIndividualRegistration.getComboboxModle());
+        jpIndividualRegistration.jtpMainTab = jpMainTab.jtpMainTab;
+        jpItemStatusPanel.modifyPanel.jtpMainTab = jpMainTab.jtpMainTab;
         jpItemStatusPanel.jspRight = jspRight;
         jpMainTab.jpItemList.jtItemList.jspRight = jspRight;
+            // 카테코리 콤보박스 데이터 설정
+        jpItemStatusPanel.modifyPanel.setComboboxData(jpIndividualRegistration.jcbCategory);
+        jpMainTab.jpItemList.setComboboxData(jpIndividualRegistration.jcbCategory);
+        jpIndividualRegistration.jcbCategory2 = jpItemStatusPanel.modifyPanel.jcbCategory;
+        jpIndividualRegistration.jcbCategory3 = jpMainTab.jpItemList.jcbCategory;
 
         // 우하단 패널
         jpRD.setLayout(new BorderLayout());

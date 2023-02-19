@@ -1,10 +1,7 @@
 import javax.swing.*;
-import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Vector;
 
 public class ItemStatusPanel extends JPanel {
     JLabel jlCategory, jlItemCode, jlItemName, jlItemQuantity, jlMarket, jlItemLocation, jlLastReceivingDate, jlNextReceivingDate, jlImage,
@@ -13,8 +10,6 @@ public class ItemStatusPanel extends JPanel {
     int selectRow;
     String dbName = "ifdb";
     String dbTableName = "ItemList";
-    private Vector data = null;
-//    Vector result = selectAll();
     static String error;
     private  PreparedStatement pstmt = null;
     private  Connection con = null;

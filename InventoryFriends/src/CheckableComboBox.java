@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -17,7 +18,8 @@ import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
 
 public final class CheckableComboBox extends JPanel {
-    static CheckableItem[] m = {};
+    CheckableItem[] m = {};
+    String[] elegment;
     ComboBoxModel model;
     CheckedComboBox checkedComboBox;
 
@@ -30,6 +32,7 @@ public final class CheckableComboBox extends JPanel {
 
     public CheckableComboBox(String str[]) {
         super(new BorderLayout());
+        elegment = str;
         for (int i = 0; i < str.length; i++) {
             CheckableItem[] tmpModel = new CheckableItem[m.length + 1];
             System.arraycopy(m, 0, tmpModel, 0, m.length);
@@ -67,7 +70,46 @@ public final class CheckableComboBox extends JPanel {
         }
     }
 
-    private static ComboBoxModel<CheckableItem> makeModel() {
+    public void splitStrAndCheck(String str){
+        String[] result = str.split(", ");
+        ArrayList<String> result2 = new ArrayList<>();
+        String chkStr = "";
+        for (int i = 0; i < elegment.length; i++) {
+            boolean chk = false;
+            for (int j = 0; j < result.length; j++) {
+                if(elegment[i].equals(result[j])) {
+                    chkStr = result[j];
+                    chk = true;
+                }
+            }
+            if(chk){
+                result2.add(chkStr);
+            }else
+                result2.add("");
+        }
+
+        CheckableItem[] chkModel = new CheckableItem[elegment.length];
+        for (int i = 0; i < elegment.length; i++) {
+
+            if(elegment[i].equals(result2.get(i))){
+                System.out.println(i+" 번째 같음");
+                chkModel[i] = new CheckableItem(elegment[i], true);
+            }else {
+                chkModel[i] = new CheckableItem(elegment[i], false);
+            }
+//            System.arraycopy(m, 0, chkModel, 0, m.length);
+
+            m = chkModel.clone();
+        }
+        model = new DefaultComboBoxModel<>(m);
+//        JPanel p = new JPanel(new GridLayout(0, 1));
+//        checkedComboBox = new CheckedComboBox<>(model);
+        checkedComboBox.setModel(model);
+//        p.add(checkedComboBox);
+//        add(p, BorderLayout.CENTER);
+    }
+
+    private ComboBoxModel<CheckableItem> makeModel() {
 
         return new DefaultComboBoxModel<>(m);
     }

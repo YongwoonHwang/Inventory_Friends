@@ -5,7 +5,10 @@ import java.awt.event.*;
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.concurrent.Flow;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -13,14 +16,13 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 public class IndividualRegistrationPanel extends JPanel {
-    JPanel jpInventoryStatus;
-    JTable jtInventoryStatus;
+    JPanel jpCenter;
     JTabbedPane jtpSubTab;
     JButton btnSubmit1, btnSubmit3, btnCal1, btnCal2, btnCalc;
-    JLabel jlCategory, jlItemCode, jlItemName, jlItemQuantity, jlMarket, jlItemLocation, jlLastReceivingDate, jlNextReceivingDate, jlImage,
-            jlCalendar2, jlCalendar3;
+    JLabel jlCategory, jlItemCode, jlItemName, jlItemQuantity, jlMarket, jlItemLocation, jlLastReceivingDate, jlNextReceivingDate, jlImage;
     HintTextField htfItemCode, htfItemName, htfItemQuantity, htfItemLocation;
-    JComboBox jcbCategory;
+    JComboBox jcbCategory, jcbCategory2, jcbCategory3;
+    JTabbedPane jtpMainTab;
     ArrayList<String> categoryList =  new ArrayList();
     JSplitPane jspRight;
     CheckableComboBox chkcomMarket;
@@ -31,14 +33,13 @@ public class IndividualRegistrationPanel extends JPanel {
     JFileChooser imgfilechooser;
     CalendarWindowForChoose winCalendar1, winCalendar2;
     DefaultTableModel modelItemList;
-    Font font;
     String dbName = "ifdb";
     String dbTableName = "ItemList";
     String dbUserID = "1";
     static String error;
     public IndividualRegistrationPanel() {
-        // 폰트 설정
-        font = new Font("돋움", Font.PLAIN, 12);   // 왼쪽 하위메뉴 라벨 폰트
+        setLayout(new BorderLayout());
+        jpCenter = new JPanel();
         imgSubmit = new ImageIcon("./img/img_submit.jpg");
         imgAttach1 = new ImageIcon("./img/img_attach.jpg");
         imgAttach2 = new ImageIcon("./img/img_attach.jpg");
@@ -55,131 +56,228 @@ public class IndividualRegistrationPanel extends JPanel {
 
         winCalc = new CalculatorWindow();
 
-        jpInventoryStatus = new JPanel();
-        setLayout(null);
-
-        jlCalendar2 = new JLabel(imgSubmit);
-        jlCalendar2.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        jlCalendar2.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-        add(jlCalendar2);
-
-        jlCalendar3 = new JLabel(imgAttach1);
-        jlCalendar3.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        jlCalendar3.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        add(jlCalendar3);
+        GridBagLayout gb = new GridBagLayout();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+//        gbc.insets = new Insets(0, 20, 0, 0);
+        jpCenter.setLayout(gb);
 
         imgfilechooser = new JFileChooser();
-//        jlfilechooser = new JLabel();
         imgfilechooser.setAcceptAllFileFilterUsed(false);
         imgfilechooser.setFileFilter(new FileNameExtensionFilter("Image File(*.jpg;*.jpeg;*.png)", "jpg", "jpeg", "png"));
         imgfilechooser.setMultiSelectionEnabled(false); // 다중 선택 불가
 
+        FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
+        FlowLayout fr = new FlowLayout(FlowLayout.RIGHT);
 
-        //테이블 패널
-        String header[] = {"카테고리", "코드", "상품 이름", "수량", "마켓", "재고 위치", "최근 입고일", "다음 입고 예정일", "이미지"};
 
-        jtInventoryStatus = new JTable();
-        // 테이블 속성 오버라이드
-        DefaultTableModel model2 = new DefaultTableModel(header,0){
-            @Override
-            public boolean isCellEditable(int row, int col){
-                return false;
-            }
-        };
-        jtInventoryStatus.setModel(model2);
-        resizeColumnWidth(jtInventoryStatus);
-
-        jpInventoryStatus.setLayout(new BorderLayout());
-        jpInventoryStatus.add(new JScrollPane(jtInventoryStatus), BorderLayout.CENTER);
-
-        chkcomMarket = new CheckableComboBox(market);
-        chkcomMarket.setBounds(140, 135, 700, 25);
-        add(chkcomMarket);
-
-        jtfLastReceivingDate = new JTextField();
-        jtfLastReceivingDate.setBounds(140,195,675,25);
-        jtfLastReceivingDate.setEditable(false);
-        add(jtfLastReceivingDate);
-
-        jtfNextReceivingDate = new JTextField();
-        jtfNextReceivingDate.setBounds(140,225,675,25);
-        jtfNextReceivingDate.setEditable(false);
-        add(jtfNextReceivingDate);
-
-        jtfImg = new JTextField();
-        jtfImg.setBounds(140,255,200,25);
-        jtfImg.setEditable(false);
-        add(jtfImg);
-
+        JPanel panel1_1 = new JPanel(fr);
+        JPanel panel1_2 = new JPanel(fl);
+        gbc.weightx = 0.1;
+        gbc.weighty = 0.1;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(20, 0, 0, 0);
         jlCategory = new JLabel("카테고리 : ");
-        jlCategory.setBounds(20,15,120,30);
-        add(jlCategory);
-
-        jlItemCode = new JLabel("코드 : ");
-        jlItemCode.setBounds(20,45,120,30);
-        add(jlItemCode);
-
-        jlItemName = new JLabel("품명 : ");
-        jlItemName.setBounds(20,75,120,30);
-        add(jlItemName);
-
-        jlItemQuantity = new JLabel("수량 : ");
-        jlItemQuantity.setBounds(20,105,120,30);
-        add(jlItemQuantity);
-
-        jlMarket = new JLabel("마켓 선택 : ");
-        jlMarket.setBounds(20,135,120,30);
-        add(jlMarket);
-
-        jlItemLocation = new JLabel("재고 위치 : ");
-        jlItemLocation.setBounds(20,165,120,30);
-        add(jlItemLocation);
-
-        jlLastReceivingDate = new JLabel("최근 입고일 : ");
-        jlLastReceivingDate.setBounds(20,195,120,30);
-        add(jlLastReceivingDate);
-
-        jlNextReceivingDate = new JLabel("다음 입고 예정일 : ");
-        jlNextReceivingDate.setBounds(20,225, 120, 30);
-        add(jlNextReceivingDate);
-
-        jlImage = new JLabel("이미지 : ");
-        jlImage.setBounds(20,255, 120, 30);
-        add(jlImage);
-
-
+        panel1_1.add(jlCategory);
         jcbCategory = new JComboBox();
         jcbCategory.setEditable(true);
+        jcbCategory.setPreferredSize(new Dimension(443, 21));
         addItemsAtComboBox();
-        jcbCategory.setBounds(140,15,700,25);
-        add(jcbCategory);
+        panel1_2.add(jcbCategory);
+        jpCenter.add(panel1_1, gbc);
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.gridx = 1;
+        jpCenter.add(panel1_2, gbc);
 
+
+        JPanel panel2_1 = new JPanel(fr);
+        JPanel panel2_2 = new JPanel(fl);
+        gbc.weightx = 0.1;
+        gbc.weighty = 0.1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(0, 0, 0, 0);
+        jlItemCode = new JLabel("코드 : ");
+        panel2_1.add(jlItemCode);
         htfItemCode = new HintTextField("코드는 필수 입력 항목입니다. (ex. Cover-A-01-Black)");
-        htfItemCode.setBounds(140,45,700,25);
-        add(htfItemCode);
+        htfItemCode.setColumns(40);
+        panel2_2.add(htfItemCode);
+        jpCenter.add(panel2_1, gbc);
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.gridx = 1;
+        jpCenter.add(panel2_2, gbc);
 
+        JPanel panel3_1 = new JPanel(fr);
+        JPanel panel3_2 = new JPanel(fl);
+        gbc.weightx = 0.1;
+        gbc.weighty = 0.1;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        jlItemName = new JLabel("품명 : ");
+        panel3_1.add(jlItemName);
         htfItemName = new HintTextField("품명은 필수 입력 항목입니다. (ex. 의자 커버 원형 플로럴 검정)");
-        htfItemName.setBounds(140,75,700,25);
-        add(htfItemName);
+        htfItemName.setColumns(40);
+        panel3_2.add(htfItemName);
+        jpCenter.add(panel3_1, gbc);
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.gridx = 1;
+        jpCenter.add(panel3_2, gbc);
 
+        JPanel panel4_1 = new JPanel(fr);
+        JPanel panel4_2 = new JPanel(fl);
+        gbc.weightx = 0.1;
+        gbc.weighty = 0.1;
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        jlItemQuantity = new JLabel("수량 : ");
+        panel4_1.add(jlItemQuantity);
         htfItemQuantity = new HintTextField("수량은 필수 입력 항목입니다.(ex. 10EA)");
-        htfItemQuantity.setBounds(140,105,678,25);
-        add(htfItemQuantity);
-        winCalc.setTextField(htfItemQuantity);
+        htfItemQuantity.setColumns(40);
+        panel4_2.add(htfItemQuantity);
+        btnCalc = new JButton(imgCalc);
+        btnCalc.setFocusPainted(false);
+        btnCalc.setPreferredSize(new Dimension(22, 24));
+        btnCalc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(winCalc.isVisible())
+                    winCalc.setVisible(false);
+                else{
+                    winCalc.setLocation(btnCalc.getLocationOnScreen().x, btnCalc.getLocationOnScreen().y+24);
+                    winCalc.setVisible(true);
+                }
+            }
+        });
+        panel4_2.add(btnCalc);
+        jpCenter.add(panel4_1, gbc);
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.gridx = 1;
+        jpCenter.add(panel4_2, gbc);
 
+        JPanel panel5_1 = new JPanel(fr);
+        JPanel panel5_2 = new JPanel(fl);
+        gbc.weightx = 0.1;
+        gbc.weighty = 0.1;
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        jlMarket = new JLabel("마켓 선택 : ");
+        panel5_1.add(jlMarket);
+        chkcomMarket = new CheckableComboBox(market);
+        chkcomMarket.setPreferredSize(new Dimension(443, 21));
+        panel5_2.add(chkcomMarket);
+        jpCenter.add(panel5_1, gbc);
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.gridx = 1;
+        jpCenter.add(panel5_2, gbc);
+
+        JPanel panel6_1 = new JPanel(fr);
+        JPanel panel6_2 = new JPanel(fl);
+        gbc.weightx = 0.1;
+        gbc.weighty = 0.1;
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        jlItemLocation = new JLabel("재고 위치 : ");
+        panel6_1.add(jlItemLocation);
         htfItemLocation = new HintTextField("ex.Rack-01-A-05");
-        htfItemLocation.setBounds(140,165,700,25);
-        add(htfItemLocation);
+        htfItemLocation.setColumns(40);
+        panel6_2.add(htfItemLocation);
+        jpCenter.add(panel6_1, gbc);
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.gridx = 1;
+        jpCenter.add(panel6_2, gbc);
 
+        JPanel panel7_1 = new JPanel(fr);
+        JPanel panel7_2 = new JPanel(fl);
+        gbc.weightx = 0.1;
+        gbc.weighty = 0.1;
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        jlLastReceivingDate = new JLabel("최근 입고일 : ");
+        panel7_1.add(jlLastReceivingDate);
+        jtfLastReceivingDate = new JTextField();
+        jtfLastReceivingDate.setEditable(false);
+        jtfLastReceivingDate.setColumns(44);
+        jtfLastReceivingDate.setPreferredSize(new Dimension(20, 20));
+        panel7_2.add(jtfLastReceivingDate);
+        btnCal1 = new JButton(imgCal);
+        btnCal1.setFocusPainted(false);
+        btnCal1.setPreferredSize(new Dimension(23, 24));
+        btnCal1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (winCalendar1.isVisible()){
+                    winCalendar1.setVisible(false);
+                }else{
+                    winCalendar1.setLocation(btnCal1.getLocationOnScreen().x, btnCal1.getLocationOnScreen().y-180);
+                    winCalendar1.setVisible(true);
+                }
+            }
+        });
+        panel7_2.add(btnCal1);
+        jpCenter.add(panel7_1, gbc);
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.gridx = 1;
+        jpCenter.add(panel7_2, gbc);
+
+        JPanel panel8_1 = new JPanel(fr);
+        JPanel panel8_2 = new JPanel(fl);
+        gbc.weightx = 0.1;
+        gbc.weighty = 0.1;
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        jlNextReceivingDate = new JLabel("다음 입고 예정일 : ");
+        panel8_1.add(jlNextReceivingDate);
+        jtfNextReceivingDate = new JTextField();
+        jtfNextReceivingDate.setEditable(false);
+        jtfNextReceivingDate.setColumns(44);
+        panel8_2.add(jtfNextReceivingDate);
+        btnCal2 = new JButton(imgCal);
+        btnCal2.setFocusPainted(false);
+        btnCal2.setPreferredSize(new Dimension(23, 24));
+        btnCal2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (winCalendar2.isVisible()){
+                    winCalendar2.setVisible(false);
+                }else{
+                    winCalendar2.setLocation(btnCal2.getLocationOnScreen().x, btnCal2.getLocationOnScreen().y+24);
+                    winCalendar2.setVisible(true);
+                }
+            }
+        });
+        panel8_2.add(btnCal2);
+        jpCenter.add(panel8_1, gbc);
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.gridx = 1;
+        jpCenter.add(panel8_2, gbc);
+
+        JPanel panel9_1 = new JPanel(fr);
+        JPanel panel9_2 = new JPanel(fl);
+        gbc.weightx = 0.1;
+        gbc.weighty = 0.1;
+        gbc.gridx = 0;
+        gbc.gridy = 8;
+        jlImage = new JLabel("이미지 : ");
+        panel9_1.add(jlImage);
+        jtfImg = new JTextField();
+        jtfImg.setEditable(false);
+        jtfImg.setColumns(25);
+        panel9_2.add(jtfImg);
         btnSubmit1 = new JButton(imgFile1);
         btnSubmit1.setRolloverIcon(imgFile2); // 버튼에 마우스가 올라갈떄 이미지 변환
         btnSubmit1.setBorderPainted(false); // 버튼 테두리 제거
         btnSubmit1.setFocusPainted(false);
         btnSubmit1.setContentAreaFilled(false);
         btnSubmit1.setPreferredSize(new Dimension(70, 24)); // 버튼 크기 지정
-
-        btnSubmit1.setBounds(340, 255, 85, 25);
-//        windowCalc.add(jlfilechooser);
         btnSubmit1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -197,18 +295,24 @@ public class IndividualRegistrationPanel extends JPanel {
                 }
             }
         });
-        add(btnSubmit1);
+        panel9_2.add(btnSubmit1);
+        jpCenter.add(panel9_1, gbc);
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.gridx = 1;
+        jpCenter.add(panel9_2, gbc);
 
-
+        JPanel panel10 = new JPanel(fr);
+        gbc.gridx = 1;
+        gbc.gridy = 9;
+        gbc.insets = new Insets(0, 0, 0, 20);
         btnSubmit3 = new JButton(imgAdd1);
-        btnSubmit3.setBounds(900, 280, 75, 25);
         btnSubmit3.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         btnSubmit3.setRolloverIcon(imgAdd2); // 버튼에 마우스가 올라갈떄 이미지 변환
         btnSubmit3.setBorderPainted(false); // 버튼 테두리 제거
         btnSubmit3.setFocusPainted(false);
         btnSubmit3.setContentAreaFilled(false);
         btnSubmit3.setPreferredSize(new Dimension(48, 24));
-        btnSubmit3.setBounds(900, 280, 75, 25);
         btnSubmit3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -232,19 +336,7 @@ public class IndividualRegistrationPanel extends JPanel {
                     pstmt.setString(1, dbUserID);
 
                     String str = jcbCategory.getSelectedItem().toString();
-                    boolean chk = false;
                     pstmt.setString(2, str);
-                    for (int i = 0; i < categoryList.size();i++){
-                        if(!categoryList.get(i).equals(str))
-                            chk = true;
-                    }
-                    if(categoryList.size() == 0) {
-                        jcbCategory.addItem("");
-                        jcbCategory.addItem(str);
-                    }
-                    else if(chk){
-                        jcbCategory.addItem(str);
-                    }
 
                     if (htfItemCode.getForeground() != Color.GRAY){
                         pstmt.setString(3, htfItemCode.getText());
@@ -290,19 +382,22 @@ public class IndividualRegistrationPanel extends JPanel {
                     chkcomMarket.Clear();
 
                     if (cnt == 1){
-                        String ISTitle = new String("재고 현황");
-//                        if (findTabByName(ISTitle, jtpSubTab) != -1) {
-//                            jtpSubTab.setSelectedIndex(findTabByName(ISTitle, jtpSubTab));
-//                        } else {
-//                            jtpSubTab.addTab(ISTitle, jpInventoryStatus);
-//                            jtpSubTab.setSelectedIndex(findTabByName(ISTitle, jtpSubTab));
-//                            if (jspRight.getDividerSize() == 0){
-//                                jtpSubTab.setVisible(true);
-//                                jspRight.setDividerLocation(jspRight.getSize().height/2);
-//                                jspRight.setDividerSize(7);
-//                            }
-//                        }
-
+                        boolean chk = false;
+                        for (int i = 0; i < categoryList.size();i++){
+                            if(!categoryList.get(i).equals(str))
+                                chk = true;
+                        }
+                        if(categoryList.size() == 0) {
+                            jcbCategory.addItem("");
+                            jcbCategory.addItem(str);
+                            jcbCategory2.addItem(str);
+                            jcbCategory3.addItem(str);
+                        }
+                        else if(chk){
+                            jcbCategory.addItem(str);
+                            jcbCategory2.addItem(str);
+                            jcbCategory3.addItem(str);
+                        }
                         try{
                             pstmt = con.prepareStatement(sql2);
                             pstmt.execute("USE " + dbName); // 사용할 DB를 선택한다.
@@ -336,58 +431,35 @@ public class IndividualRegistrationPanel extends JPanel {
 
             }
         });
-        add(btnSubmit3);
+        panel10.add(btnSubmit3);
+        jpCenter.add(panel10, gbc);
 
+        winCalc.setTextField(htfItemQuantity);
         winCalendar1.setTextField(jtfLastReceivingDate);
-        btnCal1 = new JButton(imgCal);
-        btnCal1.setBounds(815, 195, 23, 24);
-        btnCal1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (winCalendar1.isVisible()){
-                    winCalendar1.setVisible(false);
-                }else{
-                    winCalendar1.setLocation(btnCal1.getLocationOnScreen().x, btnCal1.getLocationOnScreen().y-180);
-                    winCalendar1.setVisible(true);
-                }
-            }
-        });
-        add(btnCal1);
-
         winCalendar2.setTextField(jtfNextReceivingDate);
-        btnCal2 = new JButton(imgCal);
-        btnCal2.setBounds(815, 225, 23, 24);
-        btnCal2.addActionListener(new ActionListener() {
+        JScrollPane scrollPane = new JScrollPane(jpCenter);
+        scrollPane.setBorder(null);
+        scrollPane.getViewport().addChangeListener(new ChangeListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                if (winCalendar2.isVisible()){
-                    winCalendar2.setVisible(false);
-                }else{
-                    winCalendar2.setLocation(btnCal2.getLocationOnScreen().x, btnCal2.getLocationOnScreen().y+24);
-                    winCalendar2.setVisible(true);
+            public void stateChanged(ChangeEvent e) {
+                if(findTabByName("재고 관리(개별 등록)", jtpMainTab) == jtpMainTab.getSelectedIndex()) {
+                    setLocationCalendar1(
+                            btnCal1.getLocationOnScreen().x,
+                            btnCal1.getLocationOnScreen().y-180);
+                    setLocationCalendar2(
+                            btnCal2.getLocationOnScreen().x,
+                            btnCal2.getLocationOnScreen().y+24);
+                    setLocationCalc(
+                            btnCalc.getLocationOnScreen().x,
+                            btnCalc.getLocationOnScreen().y+24);
                 }
-            }
-        });
-        add(btnCal2);
 
-        btnCalc = new JButton(imgCalc);
-        btnCalc.setBounds(818, 105, 22, 24);
-        btnCalc.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(winCalc.isVisible())
-                    winCalc.setVisible(false);
-                else{
-                    winCalc.setLocation(btnCalc.getLocationOnScreen().x, btnCalc.getLocationOnScreen().y+24);
-                    winCalc.setVisible(true);
-                }
             }
         });
-        add(btnCalc);
+        add(scrollPane, BorderLayout.CENTER);
     }
 
     public void addItemsAtComboBox(){
-//        jcbCategory.addItem("");
         boolean chk = false;
         String sql2 = "SELECT DISTINCT Category FROM " + dbTableName + " ksy_test ORDER BY Category";
         Connection con = null;

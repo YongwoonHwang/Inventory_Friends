@@ -153,8 +153,12 @@ public class ItemListPanel extends JPanel {
         return jtItemList.getModel();
     }
 
-    public void setComboboxModel(ComboBoxModel model){
-        jcbCategory.setModel(model);
+    public void setComboboxData(JComboBox comboBox){
+        jcbCategory.removeAllItems();
+        for (int t = 0; t < comboBox.getItemCount(); t++)
+        {
+            jcbCategory.addItem(comboBox.getItemAt(t));
+        }
     }
 
     // 테이블 너비를 내용에 맞춰주는 함수

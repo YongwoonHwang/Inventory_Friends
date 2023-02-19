@@ -55,6 +55,11 @@ public class HintTextField extends JTextField {
         setForeground(Color.GRAY);
     }
 
+    public void forcedGainFocus(){
+        setFont(gainFont);
+        setForeground(Color.BLACK);
+    }
+
     public boolean getLostFocus(){
         if(getForeground() == Color.BLACK){
             return false;
