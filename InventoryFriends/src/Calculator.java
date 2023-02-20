@@ -324,7 +324,7 @@ public class Calculator implements ActionListener, KeyListener {
                 num2 = 0;
                 nInput = "";
             }
-            System.out.println(nInput);
+//            System.out.println(nInput);
             if(!(nInput.contains(".") & e.getActionCommand().equals(".")))
                 if(e.getActionCommand().equals(".") & nInput.equals(""))
                     nInput = "0.";

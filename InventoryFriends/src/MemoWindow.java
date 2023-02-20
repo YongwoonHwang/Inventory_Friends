@@ -159,8 +159,6 @@ public class MemoWindow extends JFrame{
             for(int i=0; i<selectIndex; i++) {
                 while(!(line = br.readLine()).equals(endMemo)){
                     dummy += (line + "\r\n");
-                    System.out.println("1");
-                    System.out.println(line);
                 }
                 dummy += (endMemo + "\r\n");
             }
@@ -200,8 +198,6 @@ public class MemoWindow extends JFrame{
             for(int i=0; i<selectIndex; i++) {
                 while(!(line = br.readLine()).equals(endMemo)){
                     dummy += (line + "\r\n");
-                    System.out.println("1");
-                    System.out.println(line);
                 }
                 dummy += (endMemo + "\r\n");
             }

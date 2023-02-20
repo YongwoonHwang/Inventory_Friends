@@ -92,7 +92,6 @@ public final class CheckableComboBox extends JPanel {
         for (int i = 0; i < elegment.length; i++) {
 
             if(elegment[i].equals(result2.get(i))){
-                System.out.println(i+" 번째 같음");
                 chkModel[i] = new CheckableItem(elegment[i], true);
             }else {
                 chkModel[i] = new CheckableItem(elegment[i], false);
@@ -102,11 +101,7 @@ public final class CheckableComboBox extends JPanel {
             m = chkModel.clone();
         }
         model = new DefaultComboBoxModel<>(m);
-//        JPanel p = new JPanel(new GridLayout(0, 1));
-//        checkedComboBox = new CheckedComboBox<>(model);
         checkedComboBox.setModel(model);
-//        p.add(checkedComboBox);
-//        add(p, BorderLayout.CENTER);
     }
 
     private ComboBoxModel<CheckableItem> makeModel() {

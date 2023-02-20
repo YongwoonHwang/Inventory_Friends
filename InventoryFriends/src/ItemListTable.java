@@ -21,8 +21,8 @@ public class ItemListTable extends JTable {
 //    TestPanel testPanel;
     ItemStatusPanel jpItemStatusPanel;
     JTabbedPane jtpSubTab;
-    Object headerItemList[] = {"", "카테고리", "코드", "품명", "수량", "마켓", "재고 위치", "최근 입고일", "다음 입고 예정일","식별번호"};
-    Object ob[][] = new Object[0][10];
+    Object headerItemList[] = {"", "카테고리", "코드", "품명", "수량", "마켓", "재고 위치", "최근 입고일", "다음 입고 예정일", "이미지", "식별번호"};
+    Object ob[][] = new Object[0][11];
     DefaultTableModel modelItemList;
     DefaultTableCellRenderer dcr;
     JSplitPane jspRight;
@@ -61,20 +61,20 @@ public class ItemListTable extends JTable {
         JCheckBox box = new JCheckBox();
         box.setHorizontalAlignment(JLabel.CENTER);
         getColumn("").setCellEditor(new DefaultCellEditor(box));
-        this.getColumn("식별번호").setWidth(0);
-        this.getColumn("식별번호").setMinWidth(0);
-        this.getColumn("식별번호").setMaxWidth(0);
+        getColumn("식별번호").setWidth(0);
+        getColumn("식별번호").setMinWidth(0);
+        getColumn("식별번호").setMaxWidth(0);
+        getColumn("이미지").setWidth(0);
+        getColumn("이미지").setMinWidth(0);
+        getColumn("이미지").setMaxWidth(0);
 
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-
                 String ISTitle = "재고 상세"; /*생성되는 하단탭 제목*/
 
-
                 int row = getSelectedRow(); /*테이블로부터 선택한 줄 정보 표시*/
-//                System.out.println("선택된 줄 = " + row);
                 TableModel data = getModel();  /*테이블로부터 값을 가져옴*/
 
                 String category = (String)data.getValueAt(row,1); /*선택한줄의 2번째 값*/
@@ -84,20 +84,15 @@ public class ItemListTable extends JTable {
                 String market = (String)data.getValueAt(row,5);
                 String location = (String)data.getValueAt(row,6);
                 String lastReceiveDate = (String)data.getValueAt(row,7);
-                String  nextReceivDate = (String)data.getValueAt(row,8);
-                String idno = (String)data.getValueAt(row,9);
-                int index = row;
-
-//                System.out.println("가져온 값 = " + category + code + name + quantity +
-//                        market + location + lastReceiveDate + nextReceivDate + idno);
-
+                String nextReceivDate = (String)data.getValueAt(row,8);
+                String img = (String)data.getValueAt(row, 9);
+                String idno = (String)data.getValueAt(row,10);
 
                 if (e.getClickCount() == 2) {
                     jpItemStatusPanel.setTexts(category, code, name, quantity, market, location,
-                            lastReceiveDate, nextReceivDate,idno,index);
+                            lastReceiveDate, nextReceivDate,img,idno,row);
                     jpItemStatusPanel.repaint();
 
-//                    System.out.println(getSelectedRow());
                     jtpSubTab.setVisible(true);
                     jspRight.setDividerSize(7);
                     jspRight.setDividerLocation(getRootPane().getSize().height-400);
@@ -140,10 +135,11 @@ public class ItemListTable extends JTable {
                 String location = rs.getString("Product_Location");
                 String lastreceive = rs.getString("Stocking_Date");
                 String nextreceive = rs.getString("EDA");
+                String image = rs.getString("Image");
                 String idno = rs.getString("id");
 
                 Object contentsItemList[] = {false, category, code, name, quantity, market, location,
-                        lastreceive, nextreceive,idno};
+                        lastreceive, nextreceive, image, idno};
                 modelItemList.addRow(contentsItemList);
 
             }

@@ -26,6 +26,7 @@ public class IndividualRegistrationPanel extends JPanel {
     ArrayList<String> categoryList =  new ArrayList();
     JSplitPane jspRight;
     CheckableComboBox chkcomMarket;
+    ItemStatusPanel jpItemStatusPanel;
     CalculatorWindow winCalc;
     String market[] = {"11번가", "G마켓", "네이버", "옥션", "위메프", "쿠팡", "티몬"};
     ImageIcon imgSubmit, imgAttach1, imgAttach2, imgCalc, imgCal, imgAdd1, imgAdd2, imgFile1, imgFile2;
@@ -316,7 +317,6 @@ public class IndividualRegistrationPanel extends JPanel {
         btnSubmit3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                System.out.println(categoryList);  //선택된 버튼의 테스트값 출력
                 Connection con = null;
                 PreparedStatement pstmt = null;
                 ResultSet result = null;
@@ -404,7 +404,26 @@ public class IndividualRegistrationPanel extends JPanel {
                             result = pstmt.executeQuery(); //리턴 받아와서 데이터를 사용할 객체 생성
                             while (result.next()){
                                 modelItemList.addRow(new Object[]{false, result.getString("CATEGORY"), result.getString("CODE"), result.getString("Product_NAME"),
-                                        result.getString("QUANTITY"), result.getString("MARKET"), result.getString("Product_Location"), result.getString("STOCKING_DATE"), result.getString("EDA"), result.getString("IMAGE")});
+                                        result.getString("QUANTITY"), result.getString("MARKET"), result.getString("Product_Location"),
+                                        result.getString("STOCKING_DATE"), result.getString("EDA"), result.getString("IMAGE")});
+
+                                jpItemStatusPanel.setTexts(result.getString("CATEGORY"), result.getString("CODE"), result.getString("Product_NAME"),
+                                        result.getString("QUANTITY"), result.getString("MARKET"), result.getString("Product_Location"),
+                                        result.getString("STOCKING_DATE"), result.getString("EDA"),result.getString("IMAGE"),
+                                        result.getString("ID"),modelItemList.getRowCount()-1);
+                                jpItemStatusPanel.repaint();
+
+                                String ISTitle = "재고 상세";
+
+                                jtpSubTab.setVisible(true);
+                                jspRight.setDividerSize(7);
+                                jspRight.setDividerLocation(getRootPane().getSize().height-400);
+                                if (findTabByName(ISTitle, jtpSubTab) != -1) {
+                                    jtpSubTab.setSelectedIndex(findTabByName(ISTitle, jtpSubTab));
+                                } else {
+                                    jtpSubTab.addTab(ISTitle, jpItemStatusPanel);
+                                    jtpSubTab.setSelectedIndex(findTabByName(ISTitle, jtpSubTab));
+                                }
                             }
 
                         }catch(Exception cnfe){
@@ -507,10 +526,6 @@ public class IndividualRegistrationPanel extends JPanel {
     public void setJspRight(JSplitPane jsp) { jspRight = jsp; }
 
 
-    public ComboBoxModel getComboboxModle(){
-        return jcbCategory.getModel();
-    }
-
     // 탭 타이틀 이름을 찾아 인덱스를 반환하는 함수
     public int findTabByName(String title, JTabbedPane tab) {
         int tabCount = tab.getTabCount();
@@ -519,18 +534,5 @@ public class IndividualRegistrationPanel extends JPanel {
             if (tabTitle.equals(title)) return i;
         }
         return -1;
-    }
-    // 테이블 너비를 내용에 맞춰주는 함수
-    public void resizeColumnWidth(JTable table) {
-        final TableColumnModel columnModel = table.getColumnModel();
-        for (int column = 0; column < table.getColumnCount(); column++) {
-            int width = 50; // Min width
-            for (int row = 0; row < table.getRowCount(); row++) {
-                TableCellRenderer renderer = table.getCellRenderer(row, column);
-                Component comp = table.prepareRenderer(renderer, row, column);
-                width = Math.max(comp.getPreferredSize().width +1 , width);
-            }
-            columnModel.getColumn(column).setPreferredWidth(width);
-        }
     }
 }

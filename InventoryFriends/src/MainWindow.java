@@ -180,6 +180,7 @@ public class MainWindow extends JFrame {
         //우상단 패널
         jpIndividualRegistration.setSubTab(jtpSubTab);
         jpIndividualRegistration.setJspRight(jspRight);
+        jpIndividualRegistration.jpItemStatusPanel = jpItemStatusPanel;
         jpIndividualRegistration.setModelItemList((DefaultTableModel)jpMainTab.jpItemList.getTableModel());
         jpIndividualRegistration.jtpMainTab = jpMainTab.jtpMainTab;
         jpItemStatusPanel.modifyPanel.jtpMainTab = jpMainTab.jtpMainTab;

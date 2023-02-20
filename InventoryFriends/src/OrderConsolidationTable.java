@@ -28,7 +28,6 @@ public class OrderConsolidationTable extends JTable {
             public void mouseClicked(MouseEvent e) {
                 String ODTitle = new String("주문 상세");
                 if (e.getClickCount() == 2) {
-                    System.out.println(getSelectedRow());
                     jtpSubTab.setVisible(true);
                     if (findTabByName(ODTitle, jtpSubTab) != -1) {
                         jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));

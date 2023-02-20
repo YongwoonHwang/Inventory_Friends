@@ -95,7 +95,6 @@ public class MenuBar extends JMenuBar {
 
             switch(command) { // 메뉴 아이템 구분
                 case "열기":
-                    System.out.println(jspRight.getDividerSize());
                     break;
                 case "1280x720" :
                     jFrame.setSize(1280, 720);

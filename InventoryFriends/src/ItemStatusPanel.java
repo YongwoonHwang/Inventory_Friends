@@ -1,6 +1,10 @@
+import javax.imageio.IIOException;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.sql.*;
 
 public class ItemStatusPanel extends JPanel {
@@ -18,7 +22,7 @@ public class ItemStatusPanel extends JPanel {
     ImageIcon imgChange2 = new ImageIcon("./img/img_Change2.jpg");
     ImageIcon imgDel1 = new ImageIcon("./img/img_Del1.jpg");
     ImageIcon imgDel2 = new ImageIcon("./img/img_Del2.jpg");
-    ImageIcon icon = new ImageIcon("./img/mugcup.jpg");
+    ImageIcon icon = new ImageIcon("./img/img_default.jpg");
 
     JSplitPane jspRight;
     JScrollPane scrItemStatus;
@@ -56,7 +60,7 @@ public class ItemStatusPanel extends JPanel {
 
         gbc.gridy = 1;
         img = icon.getImage();
-        updateimg = img.getScaledInstance(265,250,Image.SCALE_SMOOTH);
+        updateimg = img.getScaledInstance(250,250,Image.SCALE_SMOOTH);
         updateIcon = new ImageIcon(updateimg);
         dbImage = new JLabel();
         dbImage.setIcon(updateIcon);
@@ -202,13 +206,7 @@ public class ItemStatusPanel extends JPanel {
 
                 if(input == JOptionPane.OK_OPTION){
                     jtItemList.modelItemList.removeRow(selectRow);
-
-                    System.out.println("현재 선택된 행의 id = " + dbIdno);
-
-                    System.out.println(e.getActionCommand());  //선택된 버튼의 테스트값 출력
-
                     String sql = "DELETE FROM " + dbTableName + " WHERE id = " + dbIdno;
-                    System.out.println(sql);
 
                     try{
                         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -218,7 +216,6 @@ public class ItemStatusPanel extends JPanel {
                         pstmt = con.prepareStatement(sql);
                         pstmt.execute("USE " + dbName);
                         int cnt = pstmt.executeUpdate();
-                        System.out.println(cnt);
                         // 사용할 DB를 선택한다.
 
                     } catch (ClassNotFoundException cnfe) {
@@ -269,7 +266,7 @@ public class ItemStatusPanel extends JPanel {
         return -1;
     }
     public void setTexts(String category, String code, String name,String quantity,
-                         String market, String location, String lastDate,String nextDate,String idno,int index){
+                         String market, String location, String lastDate, String nextDate, String image, String idno, int index){
 
         dbCategory.setText(category);
         dbItemCode.setText(code);
@@ -279,11 +276,36 @@ public class ItemStatusPanel extends JPanel {
         dbItemLocation.setText(location);
         dbLastReceivingDate.setText(lastDate);
         dbNextReceivingDate.setText(nextDate);
+        if(image.equals(""))
+            image = "./img/img_default.jpg";
+        else if(!isImage(image))
+            image = "./img/img_default.jpg";
+        ImageIcon newIcon = new ImageIcon(image);
+        img = newIcon.getImage();
+        updateimg = img.getScaledInstance(250,250,Image.SCALE_SMOOTH);
+        ImageIcon updatenewIcon = new ImageIcon(updateimg);
+        dbImage.setIcon(updatenewIcon);
         dbIdno = idno;
         selectRow = index;
 
         revalidate();
         repaint();
+    }
+
+    public static boolean isImage(String filepath){
+        boolean result = false;
+        try {
+            File f = new File(filepath);
+            BufferedImage buf = ImageIO.read(f);
+            if(buf == null){
+                result = false;
+            } else {
+                result = true;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return result;
     }
 
 
