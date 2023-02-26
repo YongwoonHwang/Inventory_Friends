@@ -8,6 +8,12 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.Collections;
+import java.util.List;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ItemListPanel extends JPanel {
@@ -17,26 +23,32 @@ public class ItemListPanel extends JPanel {
     ImageIcon imgSearch2 = new ImageIcon("./img/img_Search2.jpg");
     ImageIcon imgClear1 = new ImageIcon("./img/img_X1.jpg");
     ImageIcon imgClear2 = new ImageIcon("./img/img_X2.jpg");
-    JButton btnSearch, btnClear;
+    ImageIcon imgDel1 = new ImageIcon("./img/img_Del1.jpg");
+    ImageIcon imgDel2 = new ImageIcon("./img/img_Del2.jpg");
+    JButton btnSearch, btnClear, btnDel;
     JComboBox jcbMarket, jcbCategory;
-    JPanel jpILSearch;
+    JPanel jpILSearch, jpSouth;
     ItemListTable jtItemList;
     HintTextField jtfItemCode, jtfItemName, jtfItemQuantity, jtfItemLocation,
             jtfLastReceivingDate, jtfNextReceivingDate;
     TableRowSorter<TableModel> rowSorter;
     ArrayList<RowFilter<Object, Object>> filters;
-
+    List<Integer> selectRows = new ArrayList<>();
+    List<String> selectID = new ArrayList<>();
     ItemStatusPanel jpItemStatusPanel;
-    public ItemListPanel(){
+    JTabbedPane jtpSubTab;
+    JSplitPane jspRight;
+    String dbName = "ifdb";
+    String dbTableName;
+    private PreparedStatement pstmt = null;
+    private Connection con = null;
+    public ItemListPanel(String userid){
+        dbTableName = userid + "_ItemList";
         Font font1 = new Font("돋움", Font.PLAIN, 12);
         filters = new ArrayList<>();
 
         setLayout(new BorderLayout());
-        jtItemList = new ItemListTable();
-
-//        jpItemStatusPanel = new ItemStatusPanel();
-//        jtItemList.jpItemStatusPanel = jpItemStatusPanel;
-//        jpItemStatusPanel.jtItemList = jtItemList;
+        jtItemList = new ItemListTable(userid);
 
         resizeColumnWidth(jtItemList);
         jtItemList.getColumn("").setPreferredWidth(1);  // 체크박스 컬럼 크기 줄이기
@@ -47,9 +59,11 @@ public class ItemListPanel extends JPanel {
         jpILSearch = new JPanel();
 
         jcbMarket = new JComboBox(market);
+        jcbMarket.setPreferredSize(new Dimension(100, 20));
         jcbMarket.setBackground(Color.WHITE);
         jcbMarket.setFont(font1);
         jcbCategory = new JComboBox();
+        jcbCategory.setPreferredSize(new Dimension(100, 20));
         jcbCategory.setBackground(Color.WHITE);
         jcbCategory.setFont(font1);
 
@@ -143,6 +157,79 @@ public class ItemListPanel extends JPanel {
 
         add(jpILSearch, BorderLayout.NORTH);
         add(new JScrollPane(jtItemList), BorderLayout.CENTER);
+
+        jpSouth = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        btnDel = new JButton(imgDel1);
+        btnDel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnDel.setRolloverIcon(imgDel2); // 버튼에 마우스가 올라갈떄 이미지 변환
+        btnDel.setBorderPainted(false); // 버튼 테두리 제거
+        btnDel.setFocusPainted(false);
+        btnDel.setContentAreaFilled(false);
+        btnDel.setPreferredSize(new Dimension(48, 24));
+        btnDel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for(int i = 0; i < jtItemList.getRowCount(); i++) {
+                    if ((boolean) jtItemList.getValueAt(i, 0)) {
+                        selectRows.add(jtItemList.convertRowIndexToModel(i));
+                        selectID.add((String)jtItemList.getValueAt(i, 10));
+                    }
+                }
+                if(selectRows.size() != 0){
+                    Collections.sort(selectRows, Collections.reverseOrder());
+                    int input = JOptionPane.showConfirmDialog(null, "정말로 삭제하시겠습니까?",
+                            "삭제 확인", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+                    if(input == JOptionPane.OK_OPTION){
+                        for(int i = 0; i < selectRows.size(); i++){
+                            String sql = "DELETE FROM " + dbTableName + " WHERE id = " + selectID.get(i);
+
+                            try{
+                                Class.forName("com.mysql.cj.jdbc.Driver");
+                                con = DriverManager.getConnection("jdbc:mysql://iftest.cn9z6e29xfig.ap-northeast-2.rds.amazonaws.com:3306/","admin","admin1470!");
+                                // Statement는 정적 SQL문을 실행하고 결과를 반환받기 위한 객체다.
+                                //Statement하나당 한개의 ResultSet 객체만을 열 수 있다.
+                                pstmt = con.prepareStatement(sql);
+                                pstmt.execute("USE " + dbName);
+                                int cnt = pstmt.executeUpdate();
+                                // 사용할 DB를 선택한다.
+                                if(cnt != 0) {
+                                    jtItemList.modelItemList.removeRow(selectRows.get(i));
+                                    if (selectID.get(i) == jpItemStatusPanel.dbIdno) {
+                                        String ISTitle = "재고 상세";
+                                        jtpSubTab.removeTabAt(findTabByName(ISTitle, jtpSubTab));
+                                        try {
+                                            jtpSubTab.isEnabledAt(0);
+                                        } catch (Exception exception) {
+                                            jspRight.setDividerSize(0);
+                                            jspRight.setDividerLocation(jspRight.getLocation().y + jspRight.getSize().width + 1);
+                                            jtpSubTab.setVisible(false);
+                                        }
+                                    }
+
+                                }
+
+
+                            } catch (ClassNotFoundException cnfe) {
+                                System.out.println("DB 드라이버 로딩 실패 :" + cnfe);
+
+                            } catch (SQLException sqle) {
+                                System.out.println("DB 접속실패 : " + sqle);
+                            } finally {
+                                try{
+                                    pstmt.close();
+                                    con.close();
+                                } catch (Exception e2) {}
+                            }
+                        }
+                    }
+                }
+                selectRows.clear();
+                selectID.clear();
+            }
+        });
+        jpSouth.add(btnDel);
+        add(jpSouth, BorderLayout.SOUTH);
     }
 
     public void setSubTab(JTabbedPane SubTab){
@@ -159,6 +246,14 @@ public class ItemListPanel extends JPanel {
         {
             jcbCategory.addItem(comboBox.getItemAt(t));
         }
+    }
+    public int findTabByName(String title, JTabbedPane tab) {
+        int tabCount = tab.getTabCount();
+        for (int i=0; i < tabCount; i++) {
+            String tabTitle = tab.getTitleAt(i);
+            if (tabTitle.equals(title)) return i;
+        }
+        return -1;
     }
 
     // 테이블 너비를 내용에 맞춰주는 함수

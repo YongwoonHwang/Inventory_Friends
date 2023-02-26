@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.sql.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -13,13 +14,13 @@ import javax.swing.table.TableModel;
 
 public class ModifyPanel extends JPanel{
     JPanel jpCenter;
-    JTabbedPane jtpSubTab;
     JButton btnSubmit1, btnSubmit3, btnCal1, btnCal2, btnCalc;
-    JLabel jlCategory, jlItemCode, jlItemName, jlItemQuantity, jlMarket, jlItemLocation, jlLastReceivingDate, jlNextReceivingDate, jlImage,
-            jlCalendar2, jlCalendar3;
+    JLabel jlCategory, jlItemCode, jlItemName, jlItemQuantity, jlMarket, jlItemLocation, jlLastReceivingDate, jlNextReceivingDate, jlImage;
     HintTextField htfItemCode, htfItemName, htfItemQuantity, htfItemLocation;
-    JComboBox jcbCategory;
-    JTabbedPane jtpMainTab;
+    JComboBox jcbCategory, jcbCategory2, jcbCategory3;
+    JTabbedPane jtpMainTab, jtpSubTab;
+    ItemStatusPanel jpItemStatusPanel;
+    JSplitPane jspRight;
     String market[] = {"11번가", "G마켓", "네이버", "옥션", "위메프", "쿠팡", "티몬"};
     CheckableComboBox chkcomMarket;
     ImageIcon imgSubmit, imgAttach1, imgAttach2, imgCalc, imgCal, imgAdd1, imgAdd2, imgFile1, imgFile2;
@@ -27,9 +28,12 @@ public class ModifyPanel extends JPanel{
     JFileChooser imgfilechooser;
     CalendarWindowForChoose winCalendar1, winCalendar2;
     CalculatorWindow winCalc;
-
+    ArrayList<String> categoryList;
+    DefaultTableModel modelItemList;
     String dbName = "ifdb";
-    String dbTableName = "ItemList";
+    String dbIdno;
+    String dbTableName;
+    int selectRow;
     static String error;
     public ModifyPanel() {
         setLayout(new BorderLayout());
@@ -311,7 +315,148 @@ public class ModifyPanel extends JPanel{
         btnSubmit3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+                Connection con = null;
+                PreparedStatement pstmt = null;
+                ResultSet result = null;
+                String sql = "UPDATE " + dbTableName + " SET CATEGORY = ?, CODE = ?, PRODUCTNAME =?, QUANTITY = ?, MARKET =?," +
+                        " PRODUCTLOCATION = ?, STOCKINGDATE = ?, EDA = ?, IMAGE = ? WHERE id = ?";
+                System.out.println("모디패널" + dbTableName);
+
+                try{
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    con = DriverManager.getConnection("jdbc:mysql://iftest.cn9z6e29xfig.ap-northeast-2.rds.amazonaws.com:3306/","admin","admin1470!");
+                    // Statement는 정적 SQL문을 실행하고 결과를 반환받기 위한 객체다.
+                    //Statement하나당 한개의 ResultSet 객체만을 열 수 있다.
+
+                    pstmt = con.prepareStatement(sql);
+                    pstmt.execute("USE " + dbName); // 사용할 DB를 선택한다.
+                    // executeQuery : 쿼리를 실행하고 결과를 ResultSet 객체로 반환한다.
+
+
+                    String str = jcbCategory.getSelectedItem().toString();
+                    pstmt.setString(1, str);
+
+                    if (htfItemCode.getForeground() != Color.GRAY){
+                        pstmt.setString(2, htfItemCode.getText());
+                    } else {
+                        error = "코드는 필수 항목 입니다";
+                        throw new SQLException();
+                    }
+                    if (htfItemName.getForeground() != Color.GRAY){
+                        pstmt.setString(3, htfItemName.getText());
+                    } else {
+                        error = "품명은 필수 항목 입니다";
+                        throw new SQLException();
+                    }
+                    if (htfItemQuantity.getForeground() != Color.GRAY){
+                        pstmt.setInt(4, Integer.parseInt(htfItemQuantity.getText()));
+                    } else {
+                        error = "수량은 필수 항목 입니다";
+                        throw new SQLException();
+                    }
+
+                    pstmt.setString(5, (String) chkcomMarket.getSelectItems());
+
+                    if (htfItemLocation.getForeground() != Color.GRAY){
+                        pstmt.setString(6, htfItemLocation.getText());
+                    } else {
+                        pstmt.setString(6, "");
+                    }
+                    pstmt.setString(7, jtfLastReceivingDate.getText());
+                    pstmt.setString(8, jtfNextReceivingDate.getText());
+                    pstmt.setString(9, jtfImg.getText());
+                    pstmt.setString(10,dbIdno);
+
+
+                    int cnt = pstmt.executeUpdate();
+                    System.out.println(cnt);
+
+                    if (cnt == 1){
+                        boolean chk = false;
+                        for (int i = 0; i < categoryList.size();i++){
+                            if(categoryList.get(i).equals(str))
+                                chk = true;
+                        }
+                        if(categoryList.size() == 0) {
+                            jcbCategory.addItem("");
+                            jcbCategory.addItem(str);
+                            jcbCategory2.addItem("");
+                            jcbCategory2.addItem(str);
+                            jcbCategory3.addItem("");
+                            jcbCategory3.addItem(str);
+                            categoryList.add("");
+                            categoryList.add(str);
+                        }
+                        else if(!chk){
+                            jcbCategory.addItem(str);
+                            jcbCategory2.addItem(str);
+                            jcbCategory3.addItem(str);
+                            categoryList.add(str);
+                        }
+
+                        String category = jcbCategory.getSelectedItem().toString();
+                        String code = htfItemCode.getText();
+                        String name = htfItemName.getText();
+                        String num = htfItemQuantity.getText();
+                        String market = chkcomMarket.getSelectItems();
+                        String locate = htfItemLocation.getText();
+                        String lastRD = jtfLastReceivingDate.getText();
+                        String nextRD = jtfNextReceivingDate.getText();
+                        String img = jtfImg.getText();
+
+                        modelItemList.setValueAt(category,selectRow,1);
+                        modelItemList.setValueAt(code,selectRow,2);
+                        modelItemList.setValueAt(name,selectRow,3);
+                        modelItemList.setValueAt(num,selectRow,4);
+                        modelItemList.setValueAt(market,selectRow,5);
+                        modelItemList.setValueAt(locate,selectRow,6);
+                        modelItemList.setValueAt(lastRD,selectRow,7);
+                        modelItemList.setValueAt(nextRD,selectRow,8);
+                        modelItemList.setValueAt(img,selectRow,9);
+
+                        jpItemStatusPanel.setTexts(category,code,name,num,market,locate,lastRD,nextRD,img,dbIdno,selectRow, dbTableName);
+                        jpItemStatusPanel.repaint();
+
+                        String ISTitle = "재고 상세";
+
+                        jtpSubTab.setVisible(true);
+                        jspRight.setDividerSize(7);
+                        jspRight.setDividerLocation(getRootPane().getSize().height-400);
+                        if (findTabByName(ISTitle, jtpSubTab) != -1) {
+                            jtpSubTab.setSelectedIndex(findTabByName(ISTitle, jtpSubTab));
+                        } else {
+                            jtpSubTab.addTab(ISTitle, jpItemStatusPanel);
+                            jtpSubTab.setSelectedIndex(findTabByName(ISTitle, jtpSubTab));
+                        }
+
+                        jcbCategory.setSelectedIndex(0);
+                        htfItemCode.reset();
+                        htfItemLocation.reset();
+                        htfItemName.reset();
+                        htfItemQuantity.reset();
+                        jtfImg.setText("");
+                        jtfLastReceivingDate.setText("");
+                        jtfNextReceivingDate.setText("");
+                        chkcomMarket.Clear();
+                    }
+
+                } catch (ClassNotFoundException cnfe) {
+                    System.out.println("DB 드라이버 로딩 실패 :" + cnfe);
+
+                } catch (SQLException sqle) {
+                    System.out.println("DB 접속실패 : " + sqle);
+                    if (error != null){
+                        JOptionPane.showMessageDialog(null, error,"ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+                        error = null;
+                    }
+                }finally {
+                    try{
+                        result.close();
+                        pstmt.close();
+                        con.close();
+                    } catch (Exception e2) {}
+                }
+
             }
         });
         panel10.add(btnSubmit3);
@@ -364,8 +509,8 @@ public class ModifyPanel extends JPanel{
         }
         return -1;
     }
-    public void setTexts2(String category, String code, String name,String quantity,
-                         String market, String location, String lastDate,String nextDate){
+    public void setTexts(String category, String code, String name,String quantity,
+                         String market, String location, String lastDate,String nextDate,String idno,int index,String dbtname){
 
         jcbCategory.setSelectedItem(category);
         htfItemCode.setText(code);
@@ -379,6 +524,10 @@ public class ModifyPanel extends JPanel{
         htfItemLocation.forcedGainFocus();
         jtfLastReceivingDate.setText(lastDate);
         jtfNextReceivingDate.setText(nextDate);
+        dbIdno = idno;
+        dbTableName = dbtname;
+        selectRow = index;
+
 
         revalidate();
         repaint();
@@ -392,18 +541,4 @@ public class ModifyPanel extends JPanel{
         }
     }
 
-
-    // 테이블 너비를 내용에 맞춰주는 함수
-    public void resizeColumnWidth(JTable table) {
-        final TableColumnModel columnModel = table.getColumnModel();
-        for (int column = 0; column < table.getColumnCount(); column++) {
-            int width = 50; // Min width
-            for (int row = 0; row < table.getRowCount(); row++) {
-                TableCellRenderer renderer = table.getCellRenderer(row, column);
-                Component comp = table.prepareRenderer(renderer, row, column);
-                width = Math.max(comp.getPreferredSize().width +1 , width);
-            }
-            columnModel.getColumn(column).setPreferredWidth(width);
-        }
-    }
 }

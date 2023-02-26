@@ -375,7 +375,8 @@ public class Calculator implements ActionListener, KeyListener {
 
         frame.setResizable(false);  // 프레임 크기 사용자 지정
         frame.setContentPane(calc.getView()); // 프레임에 컴포넌트 삽입
-        frame.setBounds(100, 100, 300, 350); // 프레임의 크기 지정
+        frame.setLocation(100, 100); // 프레임의 크기 지정
+        frame.setSize(300, 350);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // X버튼을 누르면 닫히는 설정
         frame.setVisible(true);
 

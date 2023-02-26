@@ -17,8 +17,7 @@ public class ItemListTable extends JTable {
     String url = "jdbc:mysql://iftest.cn9z6e29xfig.ap-northeast-2.rds.amazonaws.com/ifdb?characterEncoding=utf8&useUnicode=true&mysqlEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul";
     String user = "admin";
     String passwd = "admin1470!";
-    String dbTableName = "ItemList";
-//    TestPanel testPanel;
+    String dbTableName;
     ItemStatusPanel jpItemStatusPanel;
     JTabbedPane jtpSubTab;
     Object headerItemList[] = {"", "카테고리", "코드", "품명", "수량", "마켓", "재고 위치", "최근 입고일", "다음 입고 예정일", "이미지", "식별번호"};
@@ -27,7 +26,7 @@ public class ItemListTable extends JTable {
     DefaultTableCellRenderer dcr;
     JSplitPane jspRight;
 
-    public ItemListTable() {
+    public ItemListTable(String userid) {
 
         modelItemList = new DefaultTableModel(ob, headerItemList) {
             public boolean isCellEditable(int row, int col) {
@@ -41,7 +40,7 @@ public class ItemListTable extends JTable {
         };
 
         dbconnect(); //db접속
-        select(); //접속한 db로부터 column값을 읽어 밸류가져옴
+        select(userid); //접속한 db로부터 column값을 읽어 밸류가져옴
 
         dcr = new DefaultTableCellRenderer() {
             public Component getTableCellRendererComponent  // 셀렌더러
@@ -74,7 +73,7 @@ public class ItemListTable extends JTable {
 
                 String ISTitle = "재고 상세"; /*생성되는 하단탭 제목*/
 
-                int row = getSelectedRow(); /*테이블로부터 선택한 줄 정보 표시*/
+                int row = convertRowIndexToModel(getSelectedRow()); /*테이블로부터 선택한 줄 정보 표시*/
                 TableModel data = getModel();  /*테이블로부터 값을 가져옴*/
 
                 String category = (String)data.getValueAt(row,1); /*선택한줄의 2번째 값*/
@@ -87,10 +86,11 @@ public class ItemListTable extends JTable {
                 String nextReceivDate = (String)data.getValueAt(row,8);
                 String img = (String)data.getValueAt(row, 9);
                 String idno = (String)data.getValueAt(row,10);
+                String dbtablename = dbTableName;
 
                 if (e.getClickCount() == 2) {
                     jpItemStatusPanel.setTexts(category, code, name, quantity, market, location,
-                            lastReceiveDate, nextReceivDate,img,idno,row);
+                            lastReceiveDate, nextReceivDate,img,idno,row,dbtablename);
                     jpItemStatusPanel.repaint();
 
                     jtpSubTab.setVisible(true);
@@ -120,7 +120,8 @@ public class ItemListTable extends JTable {
         return -1;
     }
 
-    public void select () {
+    public void select(String userid) {
+        dbTableName = userid + "_ItemList";
         String sql = "select * from " + dbTableName;
         try {
             pstmt = con.prepareStatement(sql);
@@ -129,11 +130,11 @@ public class ItemListTable extends JTable {
             while (rs.next()) {
                 String category = rs.getString("Category");
                 String code = rs.getString("Code");
-                String name = rs.getString("Product_Name");
+                String name = rs.getString("ProductName");
                 String quantity = rs.getString("Quantity");
                 String market = rs.getString("Market");
-                String location = rs.getString("Product_Location");
-                String lastreceive = rs.getString("Stocking_Date");
+                String location = rs.getString("ProductLocation");
+                String lastreceive = rs.getString("StockingDate");
                 String nextreceive = rs.getString("EDA");
                 String image = rs.getString("Image");
                 String idno = rs.getString("id");
@@ -157,7 +158,7 @@ public class ItemListTable extends JTable {
             stmt = con.createStatement();
             System.out.println("MySQL 서버 연동 성공");
         } catch (Exception e) {
-            System.out.println("MySQL 서버 연동 실패 > " + e.toString());
+            System.out.println("MySQL 서버 연동 실패 > " + e);
         }
     }
 }

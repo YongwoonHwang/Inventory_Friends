@@ -25,9 +25,9 @@ public class MainWindow extends JFrame {
 
     int sizeWidth = 1280;
     int sizeHeight = 720;
-    public MainWindow() {
+    public MainWindow(String userid) {
         super("Inventory Friends 0.0.1");
-        createPanel();
+        createPanel(userid);
         setSize(sizeWidth, sizeHeight);
         setLocationRelativeTo(null);        // 화면 가운데에 창 배치
         setResizable(false);                // 화면 크기 고정
@@ -76,9 +76,10 @@ public class MainWindow extends JFrame {
         });
         setVisible(true);
     }
-    private void createPanel(){
-        jmbMenuBar = new MenuBar();
+    private void createPanel(String userid){
+        jmbMenuBar = new MenuBar(userid);
         jmbMenuBar.setJFrame(this);
+        jmbMenuBar.mainWindow = this;
         setJMenuBar(jmbMenuBar);
         // 폰트 설정
         font2 = new Font("SansSerif", Font.BOLD, 14);   // 탭 타이틀 폰트
@@ -88,14 +89,14 @@ public class MainWindow extends JFrame {
         jpMain = new JPanel();
         jpMenuBtn = new MenuBtnPanel();
         jpMemoTab = new MemoTabPanel();
-        jpMainTab = new MainTabPanel();
+        jpMainTab = new MainTabPanel(userid);
         jpMainTab.setSubTab(jtpSubTab);
         jpRD = new JPanel();
         jpBottom = new JPanel();
         jpBottom.setLayout(new BorderLayout());
         jpOrderConsolidation = new OrderConsolidationPanel();
-        jpIndividualRegistration = new IndividualRegistrationPanel();
-        jpBatchRegistration = new BatchRegistrationPanel();
+        jpIndividualRegistration = new IndividualRegistrationPanel(userid);
+        jpBatchRegistration = new BatchRegistrationPanel(userid);
         jpItemStatusPanel = new ItemStatusPanel();
 
         jspCenter = new JSplitPane();
@@ -178,26 +179,49 @@ public class MainWindow extends JFrame {
         jpMenuBtn.setJpBatchRegistration(jpBatchRegistration);
 
         //우상단 패널
+            // 재고 목록 패널
+        jpMainTab.jpItemList.jspRight = jspRight;
+        jpMainTab.jpItemList.jtpSubTab = jtpSubTab;
+        jpMainTab.jpItemList.jpItemStatusPanel = jpItemStatusPanel;
+            // 개별등록 패널
         jpIndividualRegistration.setSubTab(jtpSubTab);
         jpIndividualRegistration.setJspRight(jspRight);
         jpIndividualRegistration.jpItemStatusPanel = jpItemStatusPanel;
         jpIndividualRegistration.setModelItemList((DefaultTableModel)jpMainTab.jpItemList.getTableModel());
         jpIndividualRegistration.jtpMainTab = jpMainTab.jtpMainTab;
-        jpItemStatusPanel.modifyPanel.jtpMainTab = jpMainTab.jtpMainTab;
-        jpItemStatusPanel.jspRight = jspRight;
-        jpMainTab.jpItemList.jtItemList.jspRight = jspRight;
-            // 카테코리 콤보박스 데이터 설정
-        jpItemStatusPanel.modifyPanel.setComboboxData(jpIndividualRegistration.jcbCategory);
-        jpMainTab.jpItemList.setComboboxData(jpIndividualRegistration.jcbCategory);
         jpIndividualRegistration.jcbCategory2 = jpItemStatusPanel.modifyPanel.jcbCategory;
         jpIndividualRegistration.jcbCategory3 = jpMainTab.jpItemList.jcbCategory;
+        jpMainTab.jpItemList.jtItemList.jspRight = jspRight;
+            // 카테코리 콤보박스 데이터 설정
+        jpMainTab.jpItemList.setComboboxData(jpIndividualRegistration.jcbCategory);
+            // 일괄등록 패널
+        jpBatchRegistration.jcbCategory = jpIndividualRegistration.jcbCategory;
+        jpBatchRegistration.jcbCategory2 = jpItemStatusPanel.modifyPanel.jcbCategory;
+        jpBatchRegistration.jcbCategory3 = jpMainTab.jpItemList.jcbCategory;
+        jpBatchRegistration.modelItemList = (DefaultTableModel)jpMainTab.jpItemList.getTableModel();
+        jpBatchRegistration.categoryList = jpIndividualRegistration.categoryList;
+            // 수정 패널
+        jpItemStatusPanel.modifyPanel.modelItemList = (DefaultTableModel)jpMainTab.jpItemList.getTableModel();
+        jpItemStatusPanel.modifyPanel.jcbCategory2 = jpMainTab.jpItemList.jcbCategory;
+        jpItemStatusPanel.modifyPanel.jcbCategory3 = jpIndividualRegistration.jcbCategory;
+        jpItemStatusPanel.modifyPanel.jtpMainTab = jpMainTab.jtpMainTab;
+            //카테코리 콤보박스 데이터 설정
+        jpItemStatusPanel.modifyPanel.setComboboxData(jpIndividualRegistration.jcbCategory);
 
         // 우하단 패널
         jpRD.setLayout(new BorderLayout());
-        jpMainTab.jpItemList.jpItemStatusPanel = jpItemStatusPanel;
+            // 재고 현황 패널
+        jpItemStatusPanel.jspRight = jspRight;
         jpItemStatusPanel.jtItemList = jpMainTab.jpItemList.jtItemList;
         jpItemStatusPanel.jtpSubTab = jtpSubTab;
         jpItemStatusPanel.jtpMainTab = jpMainTab.jtpMainTab;
+        jpItemStatusPanel.modifyPanel.categoryList = jpIndividualRegistration.categoryList;
+        jpItemStatusPanel.modifyPanel.jspRight = jspRight;
+        jpItemStatusPanel.modifyPanel.jpItemStatusPanel = jpItemStatusPanel;
+        jpItemStatusPanel.modifyPanel.jtpSubTab = jtpSubTab;
+
+
+        jpMainTab.jpItemList.jpItemStatusPanel = jpItemStatusPanel;
         jpMainTab.jpItemList.jtItemList.jpItemStatusPanel = jpItemStatusPanel;
 
         jpRD.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -241,7 +265,12 @@ public class MainWindow extends JFrame {
         return -1;
     }
 
+    public void setUseridx(String useridx){
+        jpBatchRegistration.dbUserIdx = useridx;
+        jpIndividualRegistration.dbUserIdx = useridx;
+    }
+
     public static void main(String[] args) {
-        new MainWindow();
+        new MainWindow("sy999");
     }
 }

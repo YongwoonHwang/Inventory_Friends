@@ -35,11 +35,14 @@ public class IndividualRegistrationPanel extends JPanel {
     CalendarWindowForChoose winCalendar1, winCalendar2;
     DefaultTableModel modelItemList;
     String dbName = "ifdb";
-    String dbTableName = "ItemList";
-    String dbUserID = "1";
+    String dbTableName;
+    String dbUserIdx;
     static String error;
-    public IndividualRegistrationPanel() {
+    public IndividualRegistrationPanel(String userid) {
         setLayout(new BorderLayout());
+
+        dbTableName = userid + "_ItemList";
+
         jpCenter = new JPanel();
         imgSubmit = new ImageIcon("./img/img_submit.jpg");
         imgAttach1 = new ImageIcon("./img/img_attach.jpg");
@@ -91,7 +94,6 @@ public class IndividualRegistrationPanel extends JPanel {
         gbc.weighty = 1.0;
         gbc.gridx = 1;
         jpCenter.add(panel1_2, gbc);
-
 
         JPanel panel2_1 = new JPanel(fr);
         JPanel panel2_2 = new JPanel(fl);
@@ -317,10 +319,11 @@ public class IndividualRegistrationPanel extends JPanel {
         btnSubmit3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                dbTableName = userid + "_ItemList";
                 Connection con = null;
                 PreparedStatement pstmt = null;
                 ResultSet result = null;
-                String sql = "INSERT INTO " + dbTableName + " (user_id, CATEGORY, CODE, PRODUCT_NAME, QUANTITY, MARKET, PRODUCT_LOCATION, STOCKING_DATE, EDA, IMAGE) VALUES (?,?,?,?,?,?,?,?,?,?)";
+                String sql = "INSERT INTO " + dbTableName + " (user_id, CATEGORY, CODE, ProductName, QUANTITY, MARKET, PRODUCTLocation, STOCKINGDate, EDA, IMAGE) VALUES (?,?,?,?,?,?,?,?,?,?)";
                 String sql2 = "SELECT * FROM " + dbTableName + " ORDER BY id DESC LIMIT 1";
 
                 try{
@@ -333,7 +336,7 @@ public class IndividualRegistrationPanel extends JPanel {
                     pstmt.execute("USE " + dbName); // 사용할 DB를 선택한다.
                     // executeQuery : 쿼리를 실행하고 결과를 ResultSet 객체로 반환한다.
 
-                    pstmt.setString(1, dbUserID);
+                    pstmt.setString(1, dbUserIdx);
 
                     String str = jcbCategory.getSelectedItem().toString();
                     pstmt.setString(2, str);
@@ -384,33 +387,38 @@ public class IndividualRegistrationPanel extends JPanel {
                     if (cnt == 1){
                         boolean chk = false;
                         for (int i = 0; i < categoryList.size();i++){
-                            if(!categoryList.get(i).equals(str))
+                            if(categoryList.get(i).equals(str))
                                 chk = true;
                         }
                         if(categoryList.size() == 0) {
                             jcbCategory.addItem("");
                             jcbCategory.addItem(str);
+                            jcbCategory2.addItem("");
                             jcbCategory2.addItem(str);
+                            jcbCategory3.addItem("");
                             jcbCategory3.addItem(str);
+                            categoryList.add("");
+                            categoryList.add(str);
                         }
-                        else if(chk){
+                        else if(!chk){
                             jcbCategory.addItem(str);
                             jcbCategory2.addItem(str);
                             jcbCategory3.addItem(str);
+                            categoryList.add(str);
                         }
                         try{
                             pstmt = con.prepareStatement(sql2);
                             pstmt.execute("USE " + dbName); // 사용할 DB를 선택한다.
                             result = pstmt.executeQuery(); //리턴 받아와서 데이터를 사용할 객체 생성
                             while (result.next()){
-                                modelItemList.addRow(new Object[]{false, result.getString("CATEGORY"), result.getString("CODE"), result.getString("Product_NAME"),
-                                        result.getString("QUANTITY"), result.getString("MARKET"), result.getString("Product_Location"),
-                                        result.getString("STOCKING_DATE"), result.getString("EDA"), result.getString("IMAGE")});
+                                modelItemList.addRow(new Object[]{false, result.getString("CATEGORY"), result.getString("CODE"), result.getString("ProductName"),
+                                        result.getString("QUANTITY"), result.getString("MARKET"), result.getString("ProductLocation"),
+                                        result.getString("STOCKINGDate"), result.getString("EDA"), result.getString("IMAGE"), result.getString("ID")});
 
-                                jpItemStatusPanel.setTexts(result.getString("CATEGORY"), result.getString("CODE"), result.getString("Product_NAME"),
-                                        result.getString("QUANTITY"), result.getString("MARKET"), result.getString("Product_Location"),
-                                        result.getString("STOCKING_DATE"), result.getString("EDA"),result.getString("IMAGE"),
-                                        result.getString("ID"),modelItemList.getRowCount()-1);
+                                jpItemStatusPanel.setTexts(result.getString("CATEGORY"), result.getString("CODE"), result.getString("ProductName"),
+                                        result.getString("QUANTITY"), result.getString("MARKET"), result.getString("ProductLocation"),
+                                        result.getString("STOCKINGDate"), result.getString("EDA"),result.getString("IMAGE"),
+                                        result.getString("ID"),modelItemList.getRowCount()-1, dbTableName);
                                 jpItemStatusPanel.repaint();
 
                                 String ISTitle = "재고 상세";

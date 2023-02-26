@@ -13,11 +13,9 @@ public class ItemStatusPanel extends JPanel {
     String dbIdno;
     int selectRow;
     String dbName = "ifdb";
-    String dbTableName = "ItemList";
-    static String error;
+    String dbTableName;
     private  PreparedStatement pstmt = null;
     private  Connection con = null;
-
     ImageIcon imgChange1 = new ImageIcon("./img/img_Change1.jpg");
     ImageIcon imgChange2 = new ImageIcon("./img/img_Change2.jpg");
     ImageIcon imgDel1 = new ImageIcon("./img/img_Del1.jpg");
@@ -173,9 +171,11 @@ public class ItemStatusPanel extends JPanel {
                 String location = dbItemLocation.getText();
                 String lastReceiveDate = dbLastReceivingDate.getText();
                 String nextReceivDate = dbNextReceivingDate.getText();
+                String idno = dbIdno;
+                String dbtablename = dbTableName;
 
-                modifyPanel.setTexts2(category, code, name, quantity, market, location,
-                        lastReceiveDate, nextReceivDate);
+                modifyPanel.setTexts(category, code, name, quantity, market, location,
+                        lastReceiveDate, nextReceivDate,idno,selectRow,dbtablename);
                 modifyPanel.repaint();
 
                 jtpMainTab.setVisible(true);
@@ -205,9 +205,8 @@ public class ItemStatusPanel extends JPanel {
                         "삭제 확인", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
                 if(input == JOptionPane.OK_OPTION){
-                    jtItemList.modelItemList.removeRow(selectRow);
                     String sql = "DELETE FROM " + dbTableName + " WHERE id = " + dbIdno;
-
+                    System.out.println(sql);
                     try{
                         Class.forName("com.mysql.cj.jdbc.Driver");
                         con = DriverManager.getConnection("jdbc:mysql://iftest.cn9z6e29xfig.ap-northeast-2.rds.amazonaws.com:3306/","admin","admin1470!");
@@ -217,16 +216,24 @@ public class ItemStatusPanel extends JPanel {
                         pstmt.execute("USE " + dbName);
                         int cnt = pstmt.executeUpdate();
                         // 사용할 DB를 선택한다.
-
+                        System.out.println("cnt = "+cnt);
+                        if(cnt != 0){
+                            jtItemList.modelItemList.removeRow(selectRow);
+                            String ISTitle = "재고 상세";
+                            jtpSubTab.removeTabAt(findTabByName(ISTitle, jtpSubTab));
+                            try{
+                                jtpSubTab.isEnabledAt(0);
+                            } catch (Exception exception){
+                                jspRight.setDividerSize(0);
+                                jspRight.setDividerLocation(jspRight.getLocation().y + jspRight.getSize().width + 1);
+                                jtpSubTab.setVisible(false);
+                            }
+                        }
                     } catch (ClassNotFoundException cnfe) {
                         System.out.println("DB 드라이버 로딩 실패 :" + cnfe);
 
                     } catch (SQLException sqle) {
                         System.out.println("DB 접속실패 : " + sqle);
-                        if (error != null){
-                            JOptionPane.showMessageDialog(null, error,"ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
-                            error = null;
-                        }
                     } finally {
                         try{
                             pstmt.close();
@@ -234,24 +241,11 @@ public class ItemStatusPanel extends JPanel {
                         } catch (Exception e2) {}
                     }
 
-                    String ISTitle = "재고 상세";
-
-                    jtpSubTab.removeTabAt(findTabByName(ISTitle, jtpSubTab));
-                    try{
-                        jtpSubTab.isEnabledAt(0);
-                    } catch (Exception exception){
-                        jspRight.setDividerSize(0);
-                        jspRight.setDividerLocation(jspRight.getLocation().y + jspRight.getSize().width + 1);
-                        jtpSubTab.setVisible(false);
-                    };
                 }
             }
         });
-
         panel9.add(btnDel);
-
         jpCenter.add(panel9, gbc);
-//        jpItemStatus.add(btnDel);
         JScrollPane jScrollPane = new JScrollPane(jpItemStatus);
         jScrollPane.setBorder(null);
         add(jScrollPane, BorderLayout.CENTER);
@@ -266,7 +260,7 @@ public class ItemStatusPanel extends JPanel {
         return -1;
     }
     public void setTexts(String category, String code, String name,String quantity,
-                         String market, String location, String lastDate, String nextDate, String image, String idno, int index){
+                         String market, String location, String lastDate, String nextDate, String image, String idno,int index,String dbtname){
 
         dbCategory.setText(category);
         dbItemCode.setText(code);
@@ -287,6 +281,7 @@ public class ItemStatusPanel extends JPanel {
         dbImage.setIcon(updatenewIcon);
         dbIdno = idno;
         selectRow = index;
+        dbTableName = dbtname;
 
         revalidate();
         repaint();

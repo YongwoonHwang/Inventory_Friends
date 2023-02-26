@@ -16,7 +16,7 @@ public class MarketInformationWindow extends JFrame {
     JButton btnConfirm;
     String dbName = "ifdb";
     String dbTableName = "MarketInformation";
-    String dbUserId = "1";
+    String dbUserIdx = "1";
     ArrayList<JTextField> textList = new ArrayList<>();
     ArrayList<JCheckBox> checkList = new ArrayList<>();
     public MarketInformationWindow(){
@@ -124,7 +124,7 @@ public class MarketInformationWindow extends JFrame {
                     pstmt.execute("USE " + dbName); // 사용할 DB를 선택한다.
                     // executeQuery : 쿼리를 실행하고 결과를 ResultSet 객체로 반환한다.
 
-                    pstmt.setString(1, dbUserId);
+                    pstmt.setString(1, dbUserIdx);
                     for(int i = 0; i<7;i++){
                         pstmt.setString(i+2, textList.get(i).getText());
                     }

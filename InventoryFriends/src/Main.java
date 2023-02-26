@@ -2,7 +2,7 @@
 
 public class Main{
     public Main(){
-        new MainWindow();
+        new Operator();
     }
     public static void main(String[] args) {
         new Main();

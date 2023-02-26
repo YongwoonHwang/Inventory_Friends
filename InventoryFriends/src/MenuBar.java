@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class MenuBar extends JMenuBar {
     JMenu jmFileMenu, jmResolution;
@@ -12,7 +15,13 @@ public class MenuBar extends JMenuBar {
     JButton btnSignOut;
     JLabel jlUserName;
     ImageIcon imgSO1, imgSO2;
-    public MenuBar(){
+    String url = "jdbc:mysql://iftest.cn9z6e29xfig.ap-northeast-2.rds.amazonaws.com/ifdb?characterEncoding=utf8&useUnicode=true&mysqlEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul";
+    String user = "admin";
+    String passwd = "admin1470!";
+    Connection con;
+    MainWindow mainWindow;
+    LoginFrame loginFrame;
+    public MenuBar(String userid){
         jmFileMenu = new JMenu("파일"); // "파일" 메뉴 컴포넌트 생성
 //
 //        JMenuItem[] menuItems = new JMenuItem[3];
@@ -48,7 +57,7 @@ public class MenuBar extends JMenuBar {
         imgSO1 = new ImageIcon("./img/img_SO1.jpg");
         imgSO2 = new ImageIcon("./img/img_SO2.jpg");
 
-        jlUserName = new JLabel("UserNameTest");
+        jlUserName = new JLabel(userid + " 님");
         jlUserName.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
 
         btnSignOut = new JButton(imgSO1);
@@ -61,7 +70,19 @@ public class MenuBar extends JMenuBar {
         btnSignOut.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Sign Out");
+                try {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    con = DriverManager.getConnection(url, user, passwd);
+                    con.isClosed();
+                    mainWindow.setVisible(false);
+                    loginFrame.setVisible(true);
+//                    new Operator();
+
+                } catch (ClassNotFoundException k) {
+                    System.out.println("문제가 발생하였습니다" + k.toString());
+                } catch (SQLException k) {
+                    k.printStackTrace();
+                }
             }
         });
 

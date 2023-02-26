@@ -10,7 +10,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/jdatepicker-1.3.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/jdatepicker-1.3.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -19,7 +19,46 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/mysql-connector-j-8.0.32.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/mysql-connector-j-8.0.32.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/libs/poi-bin-5.2.3" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/libs/poi-bin-5.2.3" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/libs/poi-bin-5.2.3/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/libs/poi-bin-5.2.3/lib" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/libs/poi-bin-5.2.3/ooxml-lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/libs/poi-bin-5.2.3/ooxml-lib" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/spring-security-crypto-4.0.4.RELEASE.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

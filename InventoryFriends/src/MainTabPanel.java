@@ -7,7 +7,7 @@ public class MainTabPanel extends JPanel {
     ItemListPanel jpItemList;
     JTabbedPane jtpMainTab;
     Font font;
-    public MainTabPanel(){
+    public MainTabPanel(String userid){
 
         font = new Font("SansSerif", Font.BOLD, 14);   // 탭 타이틀 폰트
 
@@ -16,7 +16,7 @@ public class MainTabPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         jtpMainTab = new JTabbedPane();
-        jpItemList = new ItemListPanel();
+        jpItemList = new ItemListPanel(userid);
         jtpMainTab.addTab("재고 목록", jpItemList);
         jtpMainTab.setFont(font);
         jtpMainTab.setBackground(Color.LIGHT_GRAY);
