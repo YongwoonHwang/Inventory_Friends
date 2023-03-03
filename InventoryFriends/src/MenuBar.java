@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class MenuBar extends JMenuBar {
+    String userName;
     JMenu jmFileMenu, jmResolution;
     JMenuItem Item1, Item2, Item3, Item4;
     MenuAction menuAct;
@@ -57,7 +58,7 @@ public class MenuBar extends JMenuBar {
         imgSO1 = new ImageIcon("./img/img_SO1.jpg");
         imgSO2 = new ImageIcon("./img/img_SO2.jpg");
 
-        jlUserName = new JLabel(userid + " 님");
+        jlUserName = new JLabel(" 님");
         jlUserName.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
 
         btnSignOut = new JButton(imgSO1);
@@ -97,6 +98,13 @@ public class MenuBar extends JMenuBar {
         add(jlUserName);
         add(btnSignOut);
 //        setJMenuBar(jmbMenuBar); // 메뉴바 설정
+
+    }
+
+    public void findusername(String username){
+        jlUserName.setText(username + " 님");
+        revalidate();
+        repaint();
 
     }
 

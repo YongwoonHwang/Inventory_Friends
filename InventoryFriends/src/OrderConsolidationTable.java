@@ -12,6 +12,8 @@ public class OrderConsolidationTable extends JTable {
             {"03", "chair-03-03-blue", "5", "권순용", "010-4109-****", "서울시 강서구 공항대로60길", "EG033025977JA", "230104", "쿠팡"}
     };
     static JTabbedPane jtpSubTab;
+    static int chk = 0;
+    OrderDetailPanel jpOrderDetail;
     public OrderConsolidationTable(){
         DefaultTableModel modelOrderCon = new DefaultTableModel(contentsOrderCon, headerOrderCon){
             @Override
@@ -27,15 +29,21 @@ public class OrderConsolidationTable extends JTable {
             @Override
             public void mouseClicked(MouseEvent e) {
                 String ODTitle = new String("주문 상세");
+                chk++;
                 if (e.getClickCount() == 2) {
                     System.out.println(getSelectedRow());
                     jtpSubTab.setVisible(true);
-                    if (findTabByName(ODTitle, jtpSubTab) != -1) {
-                        jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));
-                    } else {
-                        jtpSubTab.addTab(ODTitle, new JPanel());
-                        jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));
-                    }
+                    new Test3("./HTML.html");
+//                    if (findTabByName(ODTitle, jtpSubTab) != -1) {
+//                        jpOrderDetail = new OrderDetailPanel("./HTML1.html");
+//                        jtpSubTab.removeTabAt(findTabByName(ODTitle, jtpSubTab));
+//                        jtpSubTab.addTab(ODTitle, jpOrderDetail);
+//                        jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));
+//                    } else {
+//                        jpOrderDetail = new OrderDetailPanel("./HTML.html");
+//                        jtpSubTab.addTab(ODTitle, jpOrderDetail);
+//                        jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));
+//                    }
                 }
             }
         });

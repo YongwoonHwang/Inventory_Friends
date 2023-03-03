@@ -70,7 +70,7 @@ public class LoginFrame extends JFrame {
 
 
     public String findusername() {
-        String sql2 = "SELECT userName FROM user WHERE userID = '" + userid + "'";
+        String sql2 = "SELECT user_name FROM user WHERE userID = '" + userid + "'";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -79,7 +79,7 @@ public class LoginFrame extends JFrame {
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                username = rs.getString("userName");
+                username = rs.getString("user_name");
                 System.out.println(username);
                 return username;
 
@@ -303,10 +303,9 @@ public class LoginFrame extends JFrame {
                         mainWindow = new MainWindow(userid);
                         mainWindow.jmbMenuBar.loginFrame = loginFrame;
                         mainWindow.setUseridx(o.db.getUseridx(userid));
-//                        String username = findusername();
-//                        String userid = userid;
+                        String username = findusername();
                         System.out.println("Loginframe에서의 반환값= " + userid);
-//                        mainWindow.findusername(username);
+                        mainWindow.findusername(username);
                         mainWindow.setVisible(true);
 
 //                        new Main();

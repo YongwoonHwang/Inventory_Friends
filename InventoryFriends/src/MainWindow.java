@@ -254,6 +254,13 @@ public class MainWindow extends JFrame {
         jpMain.add(jpBottom, BorderLayout.SOUTH);
 
         getContentPane().add(jpMain);
+
+        JPanel panel11 = new JPanel();
+    }
+
+
+    public void findusername(String username){
+        jmbMenuBar.findusername(username);
     }
 
     public int findTabByName(String title, JTabbedPane tab) {
