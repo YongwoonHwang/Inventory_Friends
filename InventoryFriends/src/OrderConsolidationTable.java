@@ -33,17 +33,17 @@ public class OrderConsolidationTable extends JTable {
                 if (e.getClickCount() == 2) {
                     System.out.println(getSelectedRow());
                     jtpSubTab.setVisible(true);
-                    new Test3("./HTML.html");
-//                    if (findTabByName(ODTitle, jtpSubTab) != -1) {
-//                        jpOrderDetail = new OrderDetailPanel("./HTML1.html");
-//                        jtpSubTab.removeTabAt(findTabByName(ODTitle, jtpSubTab));
-//                        jtpSubTab.addTab(ODTitle, jpOrderDetail);
-//                        jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));
-//                    } else {
+//                    new Test3("./HTML.html");
+                    if (findTabByName(ODTitle, jtpSubTab) != -1) {
+//                        jpOrderDetail = new OrderDetailPanel();
+                        jtpSubTab.removeTabAt(findTabByName(ODTitle, jtpSubTab));
+                        jtpSubTab.addTab(ODTitle, jpOrderDetail);
+                        jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));
+                    } else {
 //                        jpOrderDetail = new OrderDetailPanel("./HTML.html");
-//                        jtpSubTab.addTab(ODTitle, jpOrderDetail);
-//                        jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));
-//                    }
+                        jtpSubTab.addTab(ODTitle, jpOrderDetail);
+                        jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));
+                    }
                 }
             }
         });

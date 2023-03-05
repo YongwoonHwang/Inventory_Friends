@@ -64,18 +64,5 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="file://$MODULE_DIR$/libs/javaFX/lib" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/libs/javaFX/lib" />
-        </SOURCES>
-        <jarDirectory url="file://$MODULE_DIR$/libs/javaFX/lib" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/libs/javaFX/lib" recursive="false" type="SOURCES" />
-      </library>
-    </orderEntry>
   </component>
 </module>
