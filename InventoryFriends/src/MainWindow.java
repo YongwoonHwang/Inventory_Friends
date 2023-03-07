@@ -137,6 +137,7 @@ public class MainWindow extends JFrame {
 
         // 주문 통합 탭
         jpOrderConsolidation.setJtpSubTab(jtpSubTab);
+        jpOrderConsolidation.jtOrderCon.jspRight = jspRight;
 
         // 알림 버튼
         btnAlarm = new JButton(imgAlarm1);

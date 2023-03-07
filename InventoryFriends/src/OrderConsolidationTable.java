@@ -1,6 +1,9 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -13,8 +16,27 @@ public class OrderConsolidationTable extends JTable {
     };
     static JTabbedPane jtpSubTab;
     static int chk = 0;
-    OrderDetailPanel jpOrderDetail;
+    OrderDetailPanel jpOrderDetail, jpOrderDetail2;
+    JSplitPane jspRight;
     public OrderConsolidationTable(){
+        jpOrderDetail = new OrderDetailPanel();
+        jpOrderDetail2 = new OrderDetailPanel();
+        OrderDetailPrintWindow winOD = new OrderDetailPrintWindow(jpOrderDetail2, "123");
+        JScrollPane jsp = new JScrollPane(jpOrderDetail);
+        jsp.setBorder(null);
+        JPanel panel = new JPanel(new BorderLayout());
+        JPanel jpNorth = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton btnPrint = new JButton("자세히 보기");
+        btnPrint.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                winOD.setVisible(true);
+            }
+        });
+        jpNorth.add(btnPrint);
+        panel.add(jsp, BorderLayout.CENTER);
+        panel.add(jpNorth, BorderLayout.NORTH);
+
         DefaultTableModel modelOrderCon = new DefaultTableModel(contentsOrderCon, headerOrderCon){
             @Override
             public boolean isCellEditable(int row, int col){
@@ -31,17 +53,16 @@ public class OrderConsolidationTable extends JTable {
                 String ODTitle = new String("주문 상세");
                 chk++;
                 if (e.getClickCount() == 2) {
-                    System.out.println(getSelectedRow());
+                    System.out.println(convertRowIndexToModel(getSelectedRow()));
+
+                    jsp.getVerticalScrollBar().setValue(jsp.getVerticalScrollBar().getMinimum());
                     jtpSubTab.setVisible(true);
-//                    new Test3("./HTML.html");
+                    jspRight.setDividerSize(7);
+                    jspRight.setDividerLocation(getRootPane().getSize().height-400);
                     if (findTabByName(ODTitle, jtpSubTab) != -1) {
-//                        jpOrderDetail = new OrderDetailPanel();
-                        jtpSubTab.removeTabAt(findTabByName(ODTitle, jtpSubTab));
-                        jtpSubTab.addTab(ODTitle, jpOrderDetail);
                         jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));
                     } else {
-//                        jpOrderDetail = new OrderDetailPanel("./HTML.html");
-                        jtpSubTab.addTab(ODTitle, jpOrderDetail);
+                        jtpSubTab.addTab(ODTitle, panel);
                         jtpSubTab.setSelectedIndex(findTabByName(ODTitle, jtpSubTab));
                     }
                 }

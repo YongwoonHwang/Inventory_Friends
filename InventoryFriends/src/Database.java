@@ -34,8 +34,6 @@ public class Database {
 
             while(result.next()) {
                 useridx = result.getString("user_idx");
-                System.out.println("db에서 가져온 idx = "+ useridx);
-
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -56,8 +54,6 @@ public class Database {
 
             int count = 0;
             while(result.next()) {
-                System.out.println("db에서 가져온 password = "+ result.getString("password"));
-                System.out.println("입력한 패스워드 = "+ pw);
 
                 if(passwordEncoder.matches(_p,result.getString("password"))) {
 

@@ -216,7 +216,6 @@ public class ItemStatusPanel extends JPanel {
                         pstmt.execute("USE " + dbName);
                         int cnt = pstmt.executeUpdate();
                         // 사용할 DB를 선택한다.
-                        System.out.println("cnt = "+cnt);
                         if(cnt != 0){
                             jtItemList.modelItemList.removeRow(selectRow);
                             String ISTitle = "재고 상세";

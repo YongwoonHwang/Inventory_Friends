@@ -4,183 +4,249 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 
 public class OrderDetailPanel extends JPanel{
     BufferedImage img;
     BufferedImage resizeImg;
+    JPanel jpImage, jpItemName1, jpItemQuantity, jpItemPrice1, jpMallName, jpOrderNum, jpOrderStatus,
+            jpItemName2, jpOption, jpItemCode, jpItemPrice2, jpItemPrice3, jpCustomerID, jpCustomerName,
+            jpRecipientName, jpPhoneNum, jpTelNum, jpEmail, jpOrderDate, jpCollectDate, jpShippingDate,
+            jpTrackingNumber, jpShippingMethod, jpCourier, jpAddress, jpShippingMessage;
+    JLabel jlImage, jlItemName1, jlItemQuantity, jlItemPrice1, jlMallName, jlOrderNum, jlOrderStatus,
+            jlItemName2, jlOption, jlItemCode, jlItemPrice2, jlItemPrice3, jlCustomerID, jlCustomerName,
+            jlRecipientName, jlPhoneNum, jlTelNum, jlEmail, jlOrderDate, jlCollectDate, jlShippingDate,
+            jlTrackingNumber, jlShippingMethod, jlCourier, jlAddress, jlShippingMessage;
+
 
     public OrderDetailPanel() {
-        Font font = new Font("돋움", Font.PLAIN, 14);
+        Font font = new Font("돋움", Font.PLAIN, 12);
         Font font1 = new Font("돋움", Font.PLAIN, 11);
         setLayout(null);
+        setPreferredSize(new Dimension(800, 1000));
         try {
             img = ImageIO.read(new File("./img/img_Order.png"));
             resizeImg =  resize(img, 800, 1000);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        JPanel jpImage = new JPanel(new BorderLayout());
-        jpImage.setBorder(BorderFactory.createEtchedBorder());
-        jpImage.setBounds(144, 210, 80, 70);
+
+        jpImage = new JPanel(new BorderLayout());
+        jpImage.setBackground(Color.WHITE);
+//        jpImage.setBorder(BorderFactory.createEtchedBorder());
         add(jpImage);
-        JLabel jlImage = new JLabel("이미지", SwingConstants.CENTER);
-        jlImage.setBorder(new LineBorder(Color.red));
+        jlImage = new JLabel("이미지", SwingConstants.CENTER);
+//        jlImage.setBorder(new LineBorder(Color.red));
         jlImage.setFont(font);
         jpImage.add(jlImage, BorderLayout.CENTER);
 
-        JPanel jpItemName1 = new JPanel(new BorderLayout());
-        jpItemName1.setBorder(BorderFactory.createEtchedBorder());
-        jpItemName1.setBounds(232, 210, 250, 70);
+        jpItemName1 = new JPanel(new BorderLayout());
+        jpItemName1.setBackground(Color.WHITE);
         add(jpItemName1);
-        JLabel jlItemName1 = new JLabel("제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목", SwingConstants.CENTER);
-        jlItemName1.setBorder(new LineBorder(Color.red));
+        jlItemName1 = new JLabel("제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목", SwingConstants.CENTER);
         jlItemName1.setFont(font);
         jpItemName1.add(jlItemName1, BorderLayout.CENTER);
 
-        JPanel jpItemQuantity = new JPanel(new BorderLayout());
-        jpItemQuantity.setBorder(BorderFactory.createEtchedBorder());
-        jpItemQuantity.setBounds(490, 210, 80, 70);
+        jpItemQuantity = new JPanel(new BorderLayout());
+        jpItemQuantity.setBackground(Color.WHITE);
         add(jpItemQuantity);
-        JLabel jlItemQuantity = new JLabel("수량", SwingConstants.CENTER);
-        jlItemQuantity.setBorder(new LineBorder(Color.red));
+        jlItemQuantity = new JLabel("수량", SwingConstants.CENTER);
         jlItemQuantity.setFont(font);
         jpItemQuantity.add(jlItemQuantity, BorderLayout.CENTER);
 
-        JPanel jpItemPrice1 = new JPanel(new BorderLayout());
-        jpItemPrice1.setBorder(BorderFactory.createEtchedBorder());
-        jpItemPrice1.setBounds(577, 210, 80, 70);
+        jpItemPrice1 = new JPanel(new BorderLayout());
+        jpItemPrice1.setBackground(Color.WHITE);
         add(jpItemPrice1);
-        JLabel jlItemPrice1 = new JLabel("가격", SwingConstants.CENTER);
-        jlItemPrice1.setBorder(new LineBorder(Color.red));
+        jlItemPrice1 = new JLabel("가격", SwingConstants.CENTER);
         jlItemPrice1.setFont(font);
         jpItemPrice1.add(jlItemPrice1, BorderLayout.CENTER);
 
-        JPanel jpMallName = new JPanel(new BorderLayout());
-        jpMallName.setBorder(BorderFactory.createEtchedBorder());
-        jpMallName.setBounds(230, 368, 80, 35);
+        jpMallName = new JPanel(new BorderLayout());
+        jpMallName.setBackground(Color.WHITE);
         add(jpMallName);
-        JLabel jlMallName = new JLabel("쇼핑몰", SwingConstants.CENTER);
-        jlMallName.setBorder(new LineBorder(Color.red));
+        jlMallName = new JLabel("쇼핑몰", SwingConstants.CENTER);
         jlMallName.setFont(font);
         jpMallName.add(jlMallName, BorderLayout.CENTER);
 
-        JPanel jpOrderNum = new JPanel(new BorderLayout());
-        jpOrderNum.setBorder(BorderFactory.createEtchedBorder());
-        jpOrderNum.setBounds(403, 368, 80, 35);
+        jpOrderNum = new JPanel(new BorderLayout());
+        jpOrderNum.setBackground(Color.WHITE);
         add(jpOrderNum);
-        JLabel jlOrderNum = new JLabel("주문번호", SwingConstants.CENTER);
-        jlOrderNum.setBorder(new LineBorder(Color.red));
+        jlOrderNum = new JLabel("주문번호", SwingConstants.CENTER);
         jlOrderNum.setFont(font);
         jpOrderNum.add(jlOrderNum, BorderLayout.CENTER);
 
-        JPanel jpOrderStatus = new JPanel(new BorderLayout());
-        jpOrderStatus.setBorder(BorderFactory.createEtchedBorder());
-        jpOrderStatus.setBounds(577, 368, 80, 35);
+        jpOrderStatus = new JPanel(new BorderLayout());
+        jpOrderStatus.setBackground(Color.WHITE);
         add(jpOrderStatus);
-        JLabel jlOrderStatus = new JLabel("주문 상태", SwingConstants.CENTER);
-        jlOrderStatus.setBorder(new LineBorder(Color.red));
+        jlOrderStatus = new JLabel("주문 상태", SwingConstants.CENTER);
         jlOrderStatus.setFont(font);
         jpOrderStatus.add(jlOrderStatus, BorderLayout.CENTER);
 
-        JPanel jpItemName2 = new JPanel(new BorderLayout());
-        jpItemName2.setBorder(BorderFactory.createEtchedBorder());
-        jpItemName2.setBounds(230, 409, 427, 35);
+        jpItemName2 = new JPanel(new BorderLayout());
+        jpItemName2.setBackground(Color.WHITE);
         add(jpItemName2);
-        JLabel jlItemName2 = new JLabel("제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목", SwingConstants.CENTER);
-        jlItemName2.setBorder(new LineBorder(Color.red));
+        jlItemName2 = new JLabel("제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목제목", SwingConstants.CENTER);
         jlItemName2.setFont(font);
         jpItemName2.add(jlItemName2, BorderLayout.CENTER);
 
-        JPanel jpOption = new JPanel(new BorderLayout());
-        jpOption.setBorder(BorderFactory.createEtchedBorder());
-        jpOption.setBounds(230, 448, 427, 35);
+        jpOption = new JPanel(new BorderLayout());
+        jpOption.setBackground(Color.WHITE);
         add(jpOption);
-        JLabel jlOption = new JLabel("옵션명", SwingConstants.CENTER);
-        jlOption.setBorder(new LineBorder(Color.red));
+        jlOption = new JLabel("옵션명", SwingConstants.CENTER);
         jlOption.setFont(font);
         jpOption.add(jlOption, BorderLayout.CENTER);
 
-        JPanel jpItemCode = new JPanel(new BorderLayout());
-        jpItemCode.setBorder(BorderFactory.createEtchedBorder());
-        jpItemCode.setBounds(230, 488, 80, 35);
+        jpItemCode = new JPanel(new BorderLayout());
+        jpItemCode.setBackground(Color.WHITE);
         add(jpItemCode);
-        JLabel jlItemCode = new JLabel("상품 코드", SwingConstants.CENTER);
-        jlItemCode.setBorder(new LineBorder(Color.red));
+        jlItemCode = new JLabel("상품 코드", SwingConstants.CENTER);
         jlItemCode.setFont(font);
         jpItemCode.add(jlItemCode, BorderLayout.CENTER);
 
-        JPanel jpItemPrice2 = new JPanel(new BorderLayout());
-        jpItemPrice2.setBorder(BorderFactory.createEtchedBorder());
-        jpItemPrice2.setBounds(404, 488, 80, 35);
+        jpItemPrice2 = new JPanel(new BorderLayout());
+        jpItemPrice2.setBackground(Color.WHITE);
         add(jpItemPrice2);
-        JLabel jlItemPrice2 = new JLabel("상품 금액", SwingConstants.CENTER);
-        jlItemPrice2.setBorder(new LineBorder(Color.red));
+        jlItemPrice2 = new JLabel("상품 금액", SwingConstants.CENTER);
         jlItemPrice2.setFont(font);
         jpItemPrice2.add(jlItemPrice2, BorderLayout.CENTER);
 
-        JPanel jpItemPrice3 = new JPanel(new BorderLayout());
-        jpItemPrice3.setBorder(BorderFactory.createEtchedBorder());
-        jpItemPrice3.setBounds(577, 488, 80, 35);
+        jpItemPrice3 = new JPanel(new BorderLayout());
+        jpItemPrice3.setBackground(Color.WHITE);
         add(jpItemPrice3);
-        JLabel jlItemPrice3 = new JLabel("판매 단가", SwingConstants.CENTER);
-        jlItemPrice3.setBorder(new LineBorder(Color.red));
+        jlItemPrice3 = new JLabel("판매 단가", SwingConstants.CENTER);
         jlItemPrice3.setFont(font);
         jpItemPrice3.add(jlItemPrice3, BorderLayout.CENTER);
 
-        JPanel jpCustomerID = new JPanel(new BorderLayout());
-        jpCustomerID.setBorder(BorderFactory.createEtchedBorder());
-        jpCustomerID.setBounds(230, 528, 80, 35);
+        jpCustomerID = new JPanel(new BorderLayout());
+        jpCustomerID.setBackground(Color.WHITE);
         add(jpCustomerID);
-        JLabel jlCustomerID = new JLabel("구매자 ID", SwingConstants.CENTER);
-        jlCustomerID.setBorder(new LineBorder(Color.red));
+        jlCustomerID = new JLabel("구매자 ID", SwingConstants.CENTER);
         jlCustomerID.setFont(font);
         jpCustomerID.add(jlCustomerID, BorderLayout.CENTER);
 
-        JPanel jpCustomerName = new JPanel(new BorderLayout());
-        jpCustomerName.setBorder(BorderFactory.createEtchedBorder());
-        jpCustomerName.setBounds(404, 528, 80, 35);
+        jpCustomerName = new JPanel(new BorderLayout());
+        jpCustomerName.setBackground(Color.WHITE);
         add(jpCustomerName);
-        JLabel jlCustomerName = new JLabel("구매자이름", SwingConstants.CENTER);
-        jlCustomerName.setBorder(new LineBorder(Color.red));
+        jlCustomerName = new JLabel("구매자이름", SwingConstants.CENTER);
         jlCustomerName.setFont(font);
         jpCustomerName.add(jlCustomerName, BorderLayout.CENTER);
 
-        JPanel jpRecipientName = new JPanel(new BorderLayout());
-        jpRecipientName.setBorder(BorderFactory.createEtchedBorder());
-        jpRecipientName.setBounds(577, 528, 80, 35);
+        jpRecipientName = new JPanel(new BorderLayout());
+        jpRecipientName.setBackground(Color.WHITE);
         add(jpRecipientName);
-        JLabel jlRecipientName = new JLabel("수취인이름", SwingConstants.CENTER);
-        jlRecipientName.setBorder(new LineBorder(Color.red));
+        jlRecipientName = new JLabel("수취인이름", SwingConstants.CENTER);
         jlRecipientName.setFont(font);
         jpRecipientName.add(jlRecipientName, BorderLayout.CENTER);
 
-        JPanel jpPhoneNum = new JPanel(new BorderLayout());
-        jpPhoneNum.setBorder(BorderFactory.createEtchedBorder());
-        jpPhoneNum.setBounds(228, 568, 84, 35);
+        jpPhoneNum = new JPanel(new BorderLayout());
+        jpPhoneNum.setBackground(Color.WHITE);
         add(jpPhoneNum);
-        JLabel jlPhoneNum = new JLabel("010-1234-5678", SwingConstants.CENTER);
-        jlPhoneNum.setBorder(new LineBorder(Color.red));
+        jlPhoneNum = new JLabel("010-1234-5678", SwingConstants.CENTER);
         jlPhoneNum.setFont(font1);
         jpPhoneNum.add(jlPhoneNum, BorderLayout.CENTER);
 
-        JPanel jpTelNum = new JPanel(new BorderLayout());
-        jpTelNum.setBorder(BorderFactory.createEtchedBorder());
-        jpTelNum.setBounds(402, 568, 84, 35);
+        jpTelNum = new JPanel(new BorderLayout());
+        jpTelNum.setBackground(Color.WHITE);
         add(jpTelNum);
-        JLabel jlTelNum = new JLabel("02-123-4567", SwingConstants.CENTER);
-        jlTelNum.setBorder(new LineBorder(Color.red));
+        jlTelNum = new JLabel("02-123-4567", SwingConstants.CENTER);
         jlTelNum.setFont(font1);
         jpTelNum.add(jlTelNum, BorderLayout.CENTER);
 
-//        JPanel jp = new JPanel(new BorderLayout());
-//        jp.setBorder(BorderFactory.createEtchedBorder());
-//        jp.setBounds(404, 528, 80, 35);
-//        add(jp);
-//        JLabel jl = new JLabel("수취인이름", SwingConstants.CENTER);
-//        jl.setBorder(new LineBorder(Color.red));
-//        jl.setFont(font);
-//        jp.add(jl, BorderLayout.CENTER);
+        jpEmail = new JPanel(new BorderLayout());
+        jpEmail.setBackground(Color.WHITE);
+        add(jpEmail);
+        jlEmail = new JLabel("<html>ggoma6245<br>@naver.com</html>", SwingConstants.CENTER);
+        jlEmail.setFont(font1);
+        jpEmail.add(jlEmail, BorderLayout.CENTER);
+
+        jpOrderDate = new JPanel(new BorderLayout());
+        jpOrderDate.setBackground(Color.WHITE);
+        add(jpOrderDate);
+        jlOrderDate = new JLabel("220202", SwingConstants.CENTER);
+        jlOrderDate.setFont(font);
+        jpOrderDate.add(jlOrderDate, BorderLayout.CENTER);
+
+        jpCollectDate = new JPanel(new BorderLayout());
+        jpCollectDate.setBackground(Color.WHITE);
+        add(jpCollectDate);
+        jlCollectDate = new JLabel("22023", SwingConstants.CENTER);
+        jlCollectDate.setFont(font);
+        jpCollectDate.add(jlCollectDate, BorderLayout.CENTER);
+
+        jpShippingDate = new JPanel(new BorderLayout());
+        jpShippingDate.setBackground(Color.WHITE);
+        add(jpShippingDate);
+        jlShippingDate = new JLabel("220208", SwingConstants.CENTER);
+        jlShippingDate.setFont(font);
+        jpShippingDate.add(jlShippingDate, BorderLayout.CENTER);
+
+        jpTrackingNumber = new JPanel(new BorderLayout());
+        jpTrackingNumber.setBackground(Color.WHITE);
+        add(jpTrackingNumber);
+        jlTrackingNumber = new JLabel("송장번호", SwingConstants.CENTER);
+        jlTrackingNumber.setFont(font);
+        jpTrackingNumber.add(jlTrackingNumber, BorderLayout.CENTER);
+
+        jpShippingMethod = new JPanel(new BorderLayout());
+        jpShippingMethod.setBackground(Color.WHITE);
+        add(jpShippingMethod);
+        jlShippingMethod = new JLabel("배송법", SwingConstants.CENTER);
+        jlShippingMethod.setFont(font);
+        jpShippingMethod.add(jlShippingMethod, BorderLayout.CENTER);
+
+        jpCourier = new JPanel(new BorderLayout());
+        jpCourier.setBackground(Color.WHITE);
+        add(jpCourier);
+        jlCourier = new JLabel("택배사", SwingConstants.CENTER);
+        jlCourier.setFont(font);
+        jpCourier.add(jlCourier, BorderLayout.CENTER);
+
+        jpAddress = new JPanel(new BorderLayout());
+        jpAddress.setBackground(Color.WHITE);
+        add(jpAddress);
+        jlAddress = new JLabel("주소", SwingConstants.CENTER);
+        jlAddress.setFont(font);
+        jpAddress.add(jlAddress, BorderLayout.CENTER);
+
+        jpShippingMessage = new JPanel(new BorderLayout());
+        jpShippingMessage.setBackground(Color.WHITE);
+        add(jpShippingMessage);
+        jlShippingMessage = new JLabel("배송메시지", SwingConstants.CENTER);
+        jlShippingMessage.setFont(font);
+        jpShippingMessage.add(jlShippingMessage, BorderLayout.CENTER);
+    }
+
+    public void setText(String image, String itemName, String itemQuantity, String itemPrice, String mallName, String orderNum,
+                        String orderStatus, String option, String itemCode, String customerID, String customerName, String recipientName,
+                        String phoneNum, String telNum, String email, String orderDate, String collectDate, String shippingDate,
+                        String trackingNum, String shippingMethod, String courier, String address, String shippingMessage){
+
+        jlImage.setText(image);
+        jlItemName1.setText(itemName);
+        jlItemQuantity.setText(itemQuantity);
+        jlItemPrice1.setText(itemPrice);
+        jlMallName.setText(mallName);
+        jlOrderNum.setText(orderNum);
+        jlOrderStatus.setText(orderStatus);
+        jlItemName2.setText(itemName);
+        jlOption.setText(option);
+        jlItemCode.setText(itemCode);
+        jlItemPrice2.setText(itemPrice);
+        jlItemPrice3.setText(itemPrice);
+        jlCustomerID.setText(customerID);
+        jlCustomerName.setText(customerName);
+        jlRecipientName.setText(recipientName);
+        jlPhoneNum.setText(phoneNum);
+        jlTelNum.setText(telNum);
+        jlEmail.setText(email);
+        jlOrderDate.setText(orderDate);
+        jlCollectDate.setText(collectDate);
+        jlShippingDate.setText(shippingDate);
+        jlTrackingNumber.setText(trackingNum);
+        jlShippingMethod.setText(shippingMethod);
+        jlCourier.setText(courier);
+        jlAddress.setText(address);
+        jlShippingMessage.setText(shippingMessage);
+
     }
 
     public static BufferedImage resize(BufferedImage img, int newW, int newH) {
@@ -197,7 +263,37 @@ public class OrderDetailPanel extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(resizeImg, 0, 0, this); // see javadoc for more info on the parameters
+//        g.drawImage(resizeImg, 0, 0, this); // see javadoc for more info on the parameters
+        int x = (this.getWidth() - resizeImg.getWidth(null)) / 2;
+        int y = (this.getHeight() - resizeImg.getHeight(null)) / 2;
+        jpImage.setBounds(x + 144, 210, 80, 70);
+        jpItemName1.setBounds(x + 232, 210, 250, 70);
+        jpItemQuantity.setBounds(x + 490, 210, 80, 70);
+        jpItemPrice1.setBounds(x + 577, 210, 80, 70);
+        jpMallName.setBounds(x + 230, 368, 80, 35);
+        jpOrderNum.setBounds(x + 403, 368, 80, 35);
+        jpOrderStatus.setBounds(x + 577, 368, 80, 35);
+        jpItemName2.setBounds(x + 230, 409, 427, 35);
+        jpOption.setBounds(x + 230, 448, 427, 35);
+        jpItemCode.setBounds(x + 230, 488, 80, 35);
+        jpItemPrice2.setBounds(x + 404, 488, 80, 35);
+        jpItemPrice3.setBounds(x + 577, 488, 80, 35);
+        jpCustomerID.setBounds(x + 230, 528, 80, 35);
+        jpCustomerName.setBounds(x + 404, 528, 80, 35);
+        jpRecipientName.setBounds(x + 577, 528, 80, 35);
+        jpPhoneNum.setBounds(x + 228, 568, 84, 35);
+        jpTelNum.setBounds(x + 402, 568, 84, 35);
+        jpEmail.setBounds(x + 575, 568, 84, 35);
+        jpOrderDate.setBounds(x + 230, 688, 80, 35);
+        jpCollectDate.setBounds(x + 404, 688, 80, 35);
+        jpShippingDate.setBounds(x + 577, 688, 80, 35);
+        jpTrackingNumber.setBounds(x + 230, 728, 80, 35);
+        jpShippingMethod.setBounds(x + 404, 728, 80, 35);
+        jpCourier.setBounds(x + 577, 728, 80, 35);
+        jpAddress.setBounds(x + 230, 768, 427, 35);
+        jpShippingMessage.setBounds(x + 230, 808, 427, 35);
+
+        g.drawImage(resizeImg, x, y, null);
     }
 
     public static void main(String[] args) {
