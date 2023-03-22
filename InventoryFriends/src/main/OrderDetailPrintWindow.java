@@ -51,18 +51,6 @@ public class OrderDetailPrintWindow extends JFrame {
                     throw new RuntimeException(ex);
                 }
 
-//
-//                try {
-//                    // 파일 삭제
-//                    Files.delete(filePath);
-//
-//                } catch (NoSuchFileException ex) {
-//                    System.out.println("삭제하려는 파일/디렉토리가 없습니다");
-//                } catch (DirectoryNotEmptyException ex) {
-//                    System.out.println("디렉토리가 비어있지 않습니다");
-//                } catch (IOException ex) {
-//                    ex.printStackTrace();
-//                }
             }
         });
         add(btn, BorderLayout.SOUTH);
@@ -108,11 +96,4 @@ public class OrderDetailPrintWindow extends JFrame {
      * to check all squares are drawn to image
      */
 
-//    public static void main(String[] args) {
-//        SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-//                new OrderDetailPrintWindow();
-//            }
-//        });
-//    }
 }

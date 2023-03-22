@@ -8,6 +8,9 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class OrderConsolidationPanel extends JPanel {
@@ -16,20 +19,31 @@ public class OrderConsolidationPanel extends JPanel {
     ImageIcon imgSearch2 = new ImageIcon("./img/img_Search2.jpg");
     ImageIcon imgClear1 = new ImageIcon("./img/img_X1.jpg");
     ImageIcon imgClear2 = new ImageIcon("./img/img_X2.jpg");
+    ImageIcon imgRefresh1 = new ImageIcon("./img/img_Refresh1.jpg");
+    ImageIcon imgRefresh2 = new ImageIcon("./img/img_Refresh2.jpg");
+    ImageIcon imgCal = new ImageIcon("./img/img_Cal.jpg");
+    Timestamp timestamp;
+    SimpleDateFormat sdf;
+    JLabel refreshTime;
     JComboBox jcbMarket;
-    JButton btnSearch, btnClear;
+    JButton btnSearch, btnClear, btnRefresh, btnCal;
+    JTextField jtfDate;
     HintTextField jtfOrderNum, jtfItemCode, jtfOrderer, jtfPhoneNum, jtfInvoiceNum, jtfOrderDate;
-    JPanel jpOCSearch;
+    JPanel jpOCSearch, jpSouth, jpSouthLeft, jpSouthRight;
     OrderConsolidationTable jtOrderCon;
+    CalendarWindowForChoose winCalendar;
     TableRowSorter<TableModel> rowSorter;
     ArrayList<RowFilter<Object, Object>> filters;
     public OrderConsolidationPanel(){
-        JPanel panel1 = new JPanel();
         Font font1 = new Font("돋움", Font.PLAIN, 12);
         filters = new ArrayList<>();
 
+        jtfDate = new JTextField();
+        winCalendar = new CalendarWindowForChoose();
+        winCalendar.setTextField(jtfDate);
+
         setLayout(new BorderLayout());
-        jtOrderCon = new OrderConsolidationTable();
+        jtOrderCon = new OrderConsolidationTable(LocalDate.now().toString());
         rowSorter = new TableRowSorter<>(jtOrderCon.getModel());
         jtOrderCon.setRowSorter(rowSorter);
 
@@ -125,6 +139,58 @@ public class OrderConsolidationPanel extends JPanel {
 
         add(jpOCSearch, BorderLayout.NORTH);
         add(new JScrollPane(jtOrderCon), BorderLayout.CENTER);
+
+        jpSouth = new JPanel(new BorderLayout());
+        jpSouthLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        jpSouthRight = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        btnRefresh = new JButton(imgRefresh1);
+        btnRefresh.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnRefresh.setRolloverIcon(imgRefresh2); // 버튼에 마우스가 올라갈떄 이미지 변환
+        btnRefresh.setBorderPainted(false); // 버튼 테두리 제거
+        btnRefresh.setFocusPainted(false);
+        btnRefresh.setContentAreaFilled(false);
+        btnRefresh.setPreferredSize(new Dimension(48, 24));
+        btnRefresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                jtOrderCon.modelOrderCon.setRowCount(0);
+                jtOrderCon.makeRowData(jtfDate.getText());
+                refreshTime.setText("마지막 갱신 일자: " + sdf.format(new Timestamp(System.currentTimeMillis())));
+                refreshTime.revalidate();
+                refreshTime.repaint();
+            }
+        });
+        jpSouthLeft.add(btnRefresh);
+//        add(jpSouthLeft,BorderLayout.SOUTH);
+
+        timestamp = new Timestamp(System.currentTimeMillis());
+        sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        refreshTime = new JLabel("마지막 갱신 일자: " + sdf.format(timestamp));
+        jpSouthLeft.add(refreshTime);
+
+        jpSouthRight.add(new JLabel("마지막 주문상태 변경일"));
+        jtfDate.setEditable(false);
+        jtfDate.setColumns(20);
+        jtfDate.setText(LocalDate.now().toString());
+        jpSouthRight.add(jtfDate);
+        btnCal = new JButton(imgCal);
+        btnCal.setFocusPainted(false);
+        btnCal.setPreferredSize(new Dimension(23, 24));
+        btnCal.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (winCalendar.isVisible()){
+                    winCalendar.setVisible(false);
+                }else{
+                    winCalendar.setLocation(btnCal.getLocationOnScreen().x, btnCal.getLocationOnScreen().y-180);
+                    winCalendar.setVisible(true);
+                }
+            }
+        });
+        jpSouthRight.add(btnCal);
+        jpSouth.add(jpSouthLeft, BorderLayout.CENTER);
+        jpSouth.add(jpSouthRight, BorderLayout.EAST);
+        add(jpSouth,BorderLayout.SOUTH);
     }
 
     public void setJtpSubTab(JTabbedPane SubTab){

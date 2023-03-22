@@ -5,15 +5,11 @@ import java.awt.event.*;
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.concurrent.Flow;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 
 public class IndividualRegistrationPanel extends JPanel {
     JPanel jpCenter;

@@ -322,7 +322,7 @@ public class ModifyPanel extends JPanel{
                 ResultSet result = null;
                 String sql = "UPDATE " + dbTableName + " SET CATEGORY = ?, CODE = ?, PRODUCTNAME =?, QUANTITY = ?, MARKET =?," +
                         " PRODUCTLOCATION = ?, STOCKINGDATE = ?, EDA = ?, IMAGE = ? WHERE id = ?";
-                System.out.println("모디패널" + dbTableName);
+//                System.out.println("모디패널" + dbTableName);
 
                 try{
                     Class.forName("com.mysql.cj.jdbc.Driver");
@@ -371,7 +371,7 @@ public class ModifyPanel extends JPanel{
 
 
                     int cnt = pstmt.executeUpdate();
-                    System.out.println(cnt);
+//                    System.out.println(cnt);
 
                     if (cnt == 1){
                         boolean chk = false;
