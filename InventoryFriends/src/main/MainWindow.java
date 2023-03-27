@@ -5,6 +5,7 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
 
 public class MainWindow extends JFrame {
     JPanel jpMain, jpRD, jpBottom;
@@ -21,15 +22,60 @@ public class MainWindow extends JFrame {
     JLabel jlCalendar;
     JTabbedPane jtpSubTab;
     CalendarWindowForMemo winCalendar;
+    MarketInformationWindow winMarketInfo;
     AlarmWindow winAlarm;
     ImageIcon imgAlarm1, imgAlarm2, imgCal;
     Font font2;
+    String url = "jdbc:mysql://iftest.cn9z6e29xfig.ap-northeast-2.rds.amazonaws.com/ifdb?characterEncoding=utf8&useUnicode=true&mysqlEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul";
+    String user = "admin";
+    String passwd = "admin1470!";
+    Connection con = null;
+    Statement stmt = null;
 
     int sizeWidth = 1280;
     int sizeHeight = 720;
-    public MainWindow(String userid) {
+    public MainWindow(String userid, String username, String useridx) {
         super("Inventory Friends 0.0.1");
-        createPanel(userid);
+        winMarketInfo = new MarketInformationWindow(username, useridx);
+        winMarketInfo.dbUserIdx = useridx;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(url, user, passwd);
+            stmt = con.createStatement(); //db와 연결된 conn객체로부터 stmt객체 획득
+
+
+            StringBuilder sb1 = new StringBuilder();
+            String sql1 = sb1.append("SELECT EXISTS (select * from MarketInformation where user_idx = '" + useridx + "') as success").toString();
+            System.out.println("sql 입력문 = " + sql1);
+            ResultSet result = stmt.executeQuery(sql1); //query문 날리기
+            while(result.next()) {
+                String flag = result.getString("success");
+                System.out.println("데이터존재유무 값은? = "+ flag);
+
+                if(Integer.parseInt(flag) == 0){
+                    System.out.println("사용자의 마켓정보를 검색하지못했으므로 마켓정보 입력창을 출력합니다");
+                    winMarketInfo.setVisible(true);
+                }else{
+                    System.out.println(userid + "의 사용자테이블 검색 성공. 마켓정보 입력창을 띄우지 않습니다");
+                }
+
+            }
+
+
+        } catch (ClassNotFoundException k) {
+            System.out.println("사용자의 마켓정보를 검색하지못했으므로 마켓정보 입력창을 출력합니다 " + k.toString());
+        } catch (SQLException k) {
+            k.printStackTrace();
+        } finally {
+            try { //자원해제
+                if (con != null && !con.isClosed())
+                    con.close();
+            } catch (SQLException k) {
+                k.printStackTrace();
+            }
+        }
+
+        createPanel(userid, username, useridx);
         setSize(sizeWidth, sizeHeight);
         setLocationRelativeTo(null);        // 화면 가운데에 창 배치
         setResizable(false);                // 화면 크기 고정
@@ -78,10 +124,12 @@ public class MainWindow extends JFrame {
         });
         setVisible(true);
     }
-    private void createPanel(String userid){
+    private void createPanel(String userid, String username, String useridx){
+
         jmbMenuBar = new MenuBar(userid);
         jmbMenuBar.setJFrame(this);
         jmbMenuBar.mainWindow = this;
+        jmbMenuBar.findusername(username);
         setJMenuBar(jmbMenuBar);
         // 폰트 설정
         font2 = new Font("SansSerif", Font.BOLD, 14);   // 탭 타이틀 폰트
@@ -96,9 +144,12 @@ public class MainWindow extends JFrame {
         jpRD = new JPanel();
         jpBottom = new JPanel();
         jpBottom.setLayout(new BorderLayout());
-        jpOrderConsolidation = new OrderConsolidationPanel();
+        jpOrderConsolidation = new OrderConsolidationPanel(useridx);
+        winMarketInfo.jtOC = jpOrderConsolidation.jtOrderCon;
         jpIndividualRegistration = new IndividualRegistrationPanel(userid);
+        jpIndividualRegistration.dbUserIdx = useridx;
         jpBatchRegistration = new BatchRegistrationPanel(userid);
+        jpBatchRegistration.dbUserIdx = useridx;
         jpItemStatusPanel = new ItemStatusPanel();
 
         jspCenter = new JSplitPane();
@@ -258,14 +309,7 @@ public class MainWindow extends JFrame {
 
         getContentPane().add(jpMain);
 
-        JPanel panel11 = new JPanel();
     }
-
-
-    public void findusername(String username){
-        jmbMenuBar.findusername(username);
-    }
-
     public int findTabByName(String title, JTabbedPane tab) {
         int tabCount = tab.getTabCount();
         for (int i=0; i < tabCount; i++) {
@@ -275,12 +319,7 @@ public class MainWindow extends JFrame {
         return -1;
     }
 
-    public void setUseridx(String useridx){
-        jpBatchRegistration.dbUserIdx = useridx;
-        jpIndividualRegistration.dbUserIdx = useridx;
-    }
-
     public static void main(String[] args) {
-        new MainWindow("sy999");
+        new MainWindow("sy999", "권순용", "1");
     }
 }

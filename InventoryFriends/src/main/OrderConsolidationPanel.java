@@ -34,7 +34,7 @@ public class OrderConsolidationPanel extends JPanel {
     CalendarWindowForChoose winCalendar;
     TableRowSorter<TableModel> rowSorter;
     ArrayList<RowFilter<Object, Object>> filters;
-    public OrderConsolidationPanel(){
+    public OrderConsolidationPanel(String useridx){
         Font font1 = new Font("돋움", Font.PLAIN, 12);
         filters = new ArrayList<>();
 
@@ -43,7 +43,7 @@ public class OrderConsolidationPanel extends JPanel {
         winCalendar.setTextField(jtfDate);
 
         setLayout(new BorderLayout());
-        jtOrderCon = new OrderConsolidationTable(LocalDate.now().toString());
+        jtOrderCon = new OrderConsolidationTable(LocalDate.now().toString(), useridx);
         rowSorter = new TableRowSorter<>(jtOrderCon.getModel());
         jtOrderCon.setRowSorter(rowSorter);
 
@@ -135,8 +135,6 @@ public class OrderConsolidationPanel extends JPanel {
         jpOCSearch.add(btnSearch);
         jpOCSearch.add(btnClear);
 
-        resizeColumnWidth(jtOrderCon);
-
         add(jpOCSearch, BorderLayout.NORTH);
         add(new JScrollPane(jtOrderCon), BorderLayout.CENTER);
 
@@ -191,6 +189,7 @@ public class OrderConsolidationPanel extends JPanel {
         jpSouth.add(jpSouthLeft, BorderLayout.CENTER);
         jpSouth.add(jpSouthRight, BorderLayout.EAST);
         add(jpSouth,BorderLayout.SOUTH);
+        resizeColumnWidth(jtOrderCon);
     }
 
     public void setJtpSubTab(JTabbedPane SubTab){

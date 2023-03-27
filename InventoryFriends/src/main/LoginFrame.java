@@ -92,7 +92,7 @@ public class LoginFrame extends JFrame {
 
         } finally {
 //            username = this.findusername();
-            System.out.println("최종 반환 변수는? = " + username);
+//            System.out.println("최종 반환 변수는? = " + username);
             return username;
 
         }
@@ -300,14 +300,13 @@ public class LoginFrame extends JFrame {
                                 k.printStackTrace();
                             }
                         }
+                        username = findusername();
                         tfUsername.reset();
                         tfPassword.reset();
-                        mainWindow = new MainWindow(userid);
+                        mainWindow = new MainWindow(userid, username, o.db.getUseridx(userid));
                         mainWindow.jmbMenuBar.loginFrame = loginFrame;
-                        mainWindow.setUseridx(o.db.getUseridx(userid));
-                        String username = findusername();
+
                         System.out.println("Loginframe에서의 반환값= " + userid);
-                        mainWindow.findusername(username);
                         mainWindow.setVisible(true);
 
 //                        new Main();

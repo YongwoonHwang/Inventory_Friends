@@ -49,7 +49,7 @@ public class Database {
         String pw = _p;
 
         try {
-            String checkingStr = "SELECT password FROM user WHERE userID = '" + id + "'";
+            String checkingStr = "SELECT password FROM user WHERE BINARY(userID) = '" + id + "'";
             System.out.println(checkingStr);
             ResultSet result = stmt.executeQuery(checkingStr);
 
