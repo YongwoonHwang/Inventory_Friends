@@ -126,7 +126,8 @@ public class MainWindow extends JFrame {
     }
     private void createPanel(String userid, String username, String useridx){
 
-        jmbMenuBar = new MenuBar(userid);
+        jmbMenuBar = new MenuBar(useridx);
+        jmbMenuBar.winMarketInfo = winMarketInfo;
         jmbMenuBar.setJFrame(this);
         jmbMenuBar.mainWindow = this;
         jmbMenuBar.findusername(username);

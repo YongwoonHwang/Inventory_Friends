@@ -9,9 +9,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class MenuBar extends JMenuBar {
-    String userName;
-    JMenu jmFileMenu, jmResolution;
-    JMenuItem Item1, Item2, Item3, Item4;
+    String dbuseridx;
+    JMenu jmFileMenu, jmResolution, jmModifyMenu;
+    JMenuItem itemClose, itemRes1, itemRes2, itemMarket;
     MenuAction menuAct;
     JSplitPane jspLeft, jspRight;
     JFrame jFrame;
@@ -24,28 +24,27 @@ public class MenuBar extends JMenuBar {
     Connection con;
     MainWindow mainWindow;
     LoginFrame loginFrame;
-    public MenuBar(String userid){
+    MarketInformationWindow winMarketInfo;
+    public MenuBar(String useridx){
+        dbuseridx = useridx;
         jmFileMenu = new JMenu("파일"); // "파일" 메뉴 컴포넌트 생성
 //
 //        JMenuItem[] menuItems = new JMenuItem[3];
 //        String[] items = {"열기", "해상도", "닫기"};
         menuAct = new MenuAction();
 
-        Item1 = new JMenuItem("열기");
-        Item1.addActionListener(menuAct);
-        jmFileMenu.add(Item1);
         jmResolution = new JMenu("해상도");
         jmFileMenu.add(jmResolution);
         jmFileMenu.addSeparator(); // 구분선 추가
-        Item2 = new JMenuItem("닫기");
-        Item2.addActionListener(menuAct);
-        jmFileMenu.add(Item2);
-        Item3 = new JMenuItem("1280x720");
-        Item4 = new JMenuItem("1920x1050");
-        Item3.addActionListener(menuAct);
-        Item4.addActionListener(menuAct);
-        jmResolution.add(Item3);
-        jmResolution.add(Item4);
+        itemClose = new JMenuItem("닫기");
+        itemClose.addActionListener(menuAct);
+        jmFileMenu.add(itemClose);
+        itemRes1 = new JMenuItem("1280x720");
+        itemRes2 = new JMenuItem("1920x1050");
+        itemRes1.addActionListener(menuAct);
+        itemRes2.addActionListener(menuAct);
+        jmResolution.add(itemRes1);
+        jmResolution.add(itemRes2);
 
 //        for(int i=0; i<menuItems.length; i++) {
 //            if(i == 1){
@@ -92,9 +91,12 @@ public class MenuBar extends JMenuBar {
 //        jmbMenuBar.setBackground(new Color(238, 238, 238));
         setBackground(Color.WHITE);
         add(jmFileMenu); // 메뉴바에 메뉴 추가
-        add(new JMenu("수정"));
-        add(new JMenu("업데이트"));
-        add(new JMenu("도움"));
+
+        jmModifyMenu = new JMenu("수정");
+        itemMarket = new JMenuItem("마켓 정보 수정");
+        itemMarket.addActionListener(menuAct);
+        jmModifyMenu.add(itemMarket);
+        add(jmModifyMenu);
 
         add(Box.createHorizontalGlue());
         add(jlUserName);
@@ -125,8 +127,6 @@ public class MenuBar extends JMenuBar {
             String command = e.getActionCommand();
 
             switch(command) { // 메뉴 아이템 구분
-                case "열기":
-                    break;
                 case "1280x720" :
                     jFrame.setSize(1280, 720);
                     jFrame.setLocationRelativeTo(null);
@@ -141,8 +141,14 @@ public class MenuBar extends JMenuBar {
                     jFrame.setSize(1920, 1050);
                     jFrame.setLocation(0, 0);
                     break;
+                case "마켓 정보 수정":
+                    winMarketInfo.getIDs(dbuseridx);
+                    winMarketInfo.setVisible(true);
+                    break;
                 case "닫기":
                     System.exit(0); // 시스템 종료
+                    break;
+                default:
                     break;
             }
         }

@@ -155,6 +155,8 @@ public class NaverOrderInfo {
                     return accessKey;
 
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "입력된 네이버 마켓 정보가 잘못되었습니다. API Key를 다시 확인해 주세요");
             }
 
         } catch (Exception e) {

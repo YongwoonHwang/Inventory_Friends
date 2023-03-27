@@ -158,7 +158,6 @@ public class MarketInformationWindow extends JFrame {
                 }
             }
         }
-        getIDs(dbUserIdx);
         gbc.gridx = 0;
         gbc.gridy = 7;
         gbc.gridwidth = 2;
@@ -306,6 +305,7 @@ public class MarketInformationWindow extends JFrame {
                 dispose();
             }
         });
+        getIDs(dbUserIdx);
         setVisible(false);
     }
 
@@ -322,6 +322,7 @@ public class MarketInformationWindow extends JFrame {
             pstmt = con.prepareStatement(sql2);
             pstmt.execute("USE " + dbName); // 사용할 DB를 선택한다.
             result = pstmt.executeQuery(); //리턴 받아와서 데이터를 사용할 객체 생성
+            System.out.println("1");
             while (result.next()){
                 for(int i = 0; i < 7; i++){
                     if(!result.getString(columnsList[i]).equals("")){
