@@ -126,11 +126,11 @@ public class MainWindow extends JFrame {
     }
     private void createPanel(String userid, String username, String useridx){
 
-        jmbMenuBar = new MenuBar(useridx,username);
+        jmbMenuBar = new MenuBar(useridx);
         jmbMenuBar.winMarketInfo = winMarketInfo;
         jmbMenuBar.setJFrame(this);
         jmbMenuBar.mainWindow = this;
-//        jmbMenuBar.findusername(username);
+        jmbMenuBar.findusername(username);
         setJMenuBar(jmbMenuBar);
         // 폰트 설정
         font2 = new Font("SansSerif", Font.BOLD, 14);   // 탭 타이틀 폰트

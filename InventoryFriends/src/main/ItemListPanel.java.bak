@@ -14,7 +14,6 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.sql.Connection;
@@ -178,31 +177,6 @@ public class ItemListPanel extends JPanel {
         jpILSearch.add(jcbMarket);
         jpILSearch.add(btnSearch);
         jpILSearch.add(btnClear);
-
-        //////////////Enter키 입력시 발생 이벤트/////////////////////////
-
-        Action Enter = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnSearch.doClick();
-            }
-        };
-
-        KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false);
-        jtfItemCode.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "Enter");
-        jtfItemName.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "Enter");
-        jtfItemQuantity.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "Enter");
-        jtfItemLocation.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "Enter");
-        jtfLastReceivingDate.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "Enter");
-        jtfNextReceivingDate.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "Enter");
-        jtfItemCode.getActionMap().put("Enter", Enter);
-        jtfItemName.getActionMap().put("Enter", Enter);
-        jtfItemQuantity.getActionMap().put("Enter", Enter);
-        jtfItemLocation.getActionMap().put("Enter", Enter);
-        jtfLastReceivingDate.getActionMap().put("Enter", Enter);
-        jtfNextReceivingDate.getActionMap().put("Enter", Enter);
-
-        /////////////////////////////////////////////////////////////
 
         add(jpILSearch, BorderLayout.NORTH);
         add(new JScrollPane(jtItemList), BorderLayout.CENTER);
