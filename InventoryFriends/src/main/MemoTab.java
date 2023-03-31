@@ -29,12 +29,12 @@ public class MemoTab extends JTabbedPane{
 
         font = new Font("SansSerif", Font.BOLD, 14);   // 탭 타이틀 폰트
 
-        imgAdd1 = new ImageIcon("./img/img_Add1.jpg");
-        imgAdd2 = new ImageIcon("./img/img_Add2.jpg");
-        imgChange1 = new ImageIcon("./img/img_Change1.jpg");
-        imgChange2 = new ImageIcon("./img/img_Change2.jpg");
-        imgSave1 = new ImageIcon("./img/img_Save1.jpg");
-        imgSave2 = new ImageIcon("./img/img_Save2.jpg");
+        imgAdd1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Add1.jpg"));
+        imgAdd2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Add2.jpg"));
+        imgChange1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Change1.jpg"));
+        imgChange2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Change2.jpg"));
+        imgSave1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Save1.jpg"));
+        imgSave2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Save2.jpg"));
 
         setFont(font);
         setBackground(Color.LIGHT_GRAY);
@@ -132,7 +132,6 @@ public class MemoTab extends JTabbedPane{
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount()==2){
-//                    System.out.println(jlList.indexOf(label));
                     if(label.date != null){
                         memoWindow.jtaMemoWin.setText(label.getContents());
                         memoWindow.btnDelete.setEnabled(true);
@@ -168,14 +167,4 @@ public class MemoTab extends JTabbedPane{
         jspMemoTab.repaint();
     }
 
-    public static void main(String[] args)
-    {
-        MemoTab tmp = new MemoTab();
-        JFrame f = new JFrame();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.add(tmp);
-        f.setSize(400,400);
-        f.setLocation(200,200);
-        f.setVisible(true);
-    }
 }

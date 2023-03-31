@@ -29,8 +29,8 @@ public class MarketInformationWindow extends JFrame {
         font1 = new Font("돋움", Font.BOLD, 20);
         font2 = new Font("돋움", Font.BOLD, 15);
 
-        imgConfirm1 = new ImageIcon("./img/img_Confirm1.jpg");
-        imgConfirm2 = new ImageIcon("./img/img_Confirm2.jpg");
+        imgConfirm1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Confirm1.jpg"));
+        imgConfirm2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Confirm2.jpg"));
 
         setSize(500, 600);
         setResizable(false);
@@ -190,18 +190,15 @@ public class MarketInformationWindow extends JFrame {
 
                     StringBuilder sb1 = new StringBuilder();
                     String sql1 = sb1.append("SELECT EXISTS (select * from MarketInformation where user_idx = '" + useridx + "') as success").toString();
-                    System.out.println("sql 입력문 = " + sql1);
                     result = stmt.executeQuery(sql1); //query문 날리기
                     while (result.next()) {
                         flag = result.getString("success");
-                        System.out.println("데이터존재유무 값은? = " + flag);
                     }
                 } catch (Exception ex){
                     System.out.println(ex);
                 }
 
                 if(flag.equals("0")){
-                    System.out.println("정보 없음");
                     String sql1 = "INSERT INTO " + dbTableName + " (user_idx, 11st_API_Key, Gmarket_API_Key, Naver_Client_Id, Naver_Client_Secret, Auction_API_Key, WMP_API_Key, Coupang_API_Key, Tmon_API_Key) VALUES (?,?,?,?,?,?,?,?,?)";
 
                     try{
@@ -220,7 +217,6 @@ public class MarketInformationWindow extends JFrame {
                         }
 
                         int cnt = pstmt.executeUpdate();
-                        System.out.println("SUCCESS");
 
 
                     } catch (ClassNotFoundException cnfe2) {
@@ -259,7 +255,6 @@ public class MarketInformationWindow extends JFrame {
                         pstmt.setString(9, dbUserIdx);
 
                         int cnt = pstmt.executeUpdate();
-                        System.out.println("SUCCESS");
 
 
                     } catch (ClassNotFoundException cnfe2) {
@@ -322,7 +317,6 @@ public class MarketInformationWindow extends JFrame {
             pstmt = con.prepareStatement(sql2);
             pstmt.execute("USE " + dbName); // 사용할 DB를 선택한다.
             result = pstmt.executeQuery(); //리턴 받아와서 데이터를 사용할 객체 생성
-            System.out.println("1");
             while (result.next()){
                 for(int i = 0; i < 7; i++){
                     if(!result.getString(columnsList[i]).equals("")){
@@ -345,9 +339,5 @@ public class MarketInformationWindow extends JFrame {
                 con.close();
             } catch (Exception e2) {}
         }
-    }
-
-    public static void main(String[] args) {
-        new MarketInformationWindow("권순용", "1");
     }
 }

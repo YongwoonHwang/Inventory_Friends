@@ -43,10 +43,10 @@ public class BatchRegistrationPanel extends JPanel {
         setLayout(new BorderLayout());
         jpCenter = new JPanel();
 
-        imgAdd1 = new ImageIcon("./img/img_Add1.jpg");
-        imgAdd2 = new ImageIcon("./img/img_Add2.jpg");
-        imgFile1 = new ImageIcon("./img/img_File1.jpg");
-        imgFile2 = new ImageIcon("./img/img_File2.jpg");
+        imgAdd1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Add1.jpg"));
+        imgAdd2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Add2.jpg"));
+        imgFile1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_File1.jpg"));
+        imgFile2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_File2.jpg"));
 
         FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
         FlowLayout fr = new FlowLayout(FlowLayout.RIGHT);
@@ -235,7 +235,6 @@ public class BatchRegistrationPanel extends JPanel {
             pstmt.setString(10, arrayList.get(8).toString());
 
             int cnt = pstmt.executeUpdate();
-            System.out.println("SUCCESS");
 
             if (cnt == 1){
                 boolean chk = false;
@@ -302,7 +301,6 @@ public class BatchRegistrationPanel extends JPanel {
                 String array[] = line.split(",");
                 //배열에서 리스트 반환
                 tmpList = Arrays.asList(array);
-//                System.out.println(tmpList);
                 csvList.add(tmpList);
             }
         } catch (FileNotFoundException e) {

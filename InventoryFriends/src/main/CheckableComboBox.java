@@ -40,7 +40,6 @@ public final class CheckableComboBox extends JPanel {
             System.arraycopy(m, 0, tmpModel, 0, m.length);
             tmpModel[i] = new CheckableItem(str[i], false);
             m = tmpModel.clone();
-//            System.out.println(Arrays.toString(m));
         }
         model = new DefaultComboBoxModel<>(m);
         JPanel p = new JPanel(new GridLayout(0, 1));
@@ -109,16 +108,6 @@ public final class CheckableComboBox extends JPanel {
     private ComboBoxModel<CheckableItem> makeModel() {
 
         return new DefaultComboBoxModel<>(m);
-    }
-
-
-    public static void main(String[] args) {
-        JFrame f = new JFrame();
-        f.pack();
-        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        f.setLocationRelativeTo(null);
-        f.add(new CheckableComboBox());
-        f.setVisible(true);
     }
 }
 

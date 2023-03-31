@@ -46,24 +46,18 @@ public class MainWindow extends JFrame {
 
             StringBuilder sb1 = new StringBuilder();
             String sql1 = sb1.append("SELECT EXISTS (select * from MarketInformation where user_idx = '" + useridx + "') as success").toString();
-            System.out.println("sql 입력문 = " + sql1);
             ResultSet result = stmt.executeQuery(sql1); //query문 날리기
             while(result.next()) {
                 String flag = result.getString("success");
-                System.out.println("데이터존재유무 값은? = "+ flag);
 
                 if(Integer.parseInt(flag) == 0){
-                    System.out.println("사용자의 마켓정보를 검색하지못했으므로 마켓정보 입력창을 출력합니다");
                     winMarketInfo.setVisible(true);
-                }else{
-                    System.out.println(userid + "의 사용자테이블 검색 성공. 마켓정보 입력창을 띄우지 않습니다");
                 }
 
             }
 
 
         } catch (ClassNotFoundException k) {
-            System.out.println("사용자의 마켓정보를 검색하지못했으므로 마켓정보 입력창을 출력합니다 " + k.toString());
         } catch (SQLException k) {
             k.printStackTrace();
         } finally {
@@ -160,9 +154,9 @@ public class MainWindow extends JFrame {
         jmbMenuBar.setJspLeft(jspLeft);
         jmbMenuBar.setJspRight(jspRight);
 
-        imgAlarm1 = new ImageIcon("./img/img_Alarm1.jpg");
-        imgAlarm2 = new ImageIcon("./img/img_Alarm2.jpg");
-        imgCal = new ImageIcon("./img/img_Cal.jpg");
+        imgAlarm1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Alarm1.jpg"));
+        imgAlarm2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Alarm2.jpg"));
+        imgCal = new ImageIcon(getClass().getClassLoader().getResource("img/img_Cal.jpg"));
 
         jpRD.setBackground(Color.WHITE);
 
@@ -318,9 +312,5 @@ public class MainWindow extends JFrame {
             if (tabTitle.equals(title)) return i;
         }
         return -1;
-    }
-
-    public static void main(String[] args) {
-        new MainWindow("sy999", "권순용", "1");
     }
 }

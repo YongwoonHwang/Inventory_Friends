@@ -49,16 +49,4 @@ public class MemoLabel extends JLabel {
     public String getDate(){
         return this.date;
     }
-
-    public static void main(String[] args) {
-        JFrame f = new JFrame();
-        JPanel p = new JPanel();
-        MemoLabel ml = new MemoLabel("123");
-
-        p.add(ml);
-        f.add(p);
-        f.setSize(100, 210);
-        f.setVisible(true);
-
-    }
 }

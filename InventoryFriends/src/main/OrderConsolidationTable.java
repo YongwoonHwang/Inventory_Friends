@@ -35,7 +35,7 @@ public class OrderConsolidationTable extends JTable {
         naverAPI = new NaverOrderInfo(useridx);
         jpOrderDetail1 = new OrderDetailPanel();
         jpOrderDetail2 = new OrderDetailPanel();
-        OrderDetailPrintWindow winOD = new OrderDetailPrintWindow(jpOrderDetail2, "123");
+        OrderDetailPrintWindow winOD = new OrderDetailPrintWindow(jpOrderDetail2, "print");
         JScrollPane jsp = new JScrollPane(jpOrderDetail1);
         jsp.setBorder(null);
         JPanel panel = new JPanel(new BorderLayout());
@@ -67,7 +67,6 @@ public class OrderConsolidationTable extends JTable {
                 String ODTitle = new String("주문 상세");
 //                chk++;
                 if (e.getClickCount() == 2) {
-//                    System.out.println(rowData.get(convertRowIndexToModel(getSelectedRow())));
                     String orderId = rowData.get(convertRowIndexToModel(getSelectedRow())).get("OrderId").toString();
                     String sellerProductCode = rowData.get(convertRowIndexToModel(getSelectedRow())).get("SellerProductCode").toString();
                     String quantity = rowData.get(convertRowIndexToModel(getSelectedRow())).get("Quantity").toString();

@@ -56,8 +56,8 @@ public class MenuBar extends JMenuBar {
 //            }
 //        }
 
-        imgSO1 = new ImageIcon("./img/img_SO1.jpg");
-        imgSO2 = new ImageIcon("./img/img_SO2.jpg");
+        imgSO1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_SO1.jpg"));
+        imgSO2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_SO2.jpg"));
 
         jlUserName = new JLabel(username + " 님");
         jlUserName.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));

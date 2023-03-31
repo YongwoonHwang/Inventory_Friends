@@ -45,18 +45,7 @@ public class LoginFrame extends JFrame {
     /**
      * Launch the application.
      */
-//    public static void main(String[] args) {
-//        EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                try {
-//                    LoginFrame frame = new LoginFrame();
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//    }
+
     private void JoinWebsite(JLabel JoinLink) {
         JoinLink.addMouseListener(new MouseAdapter() {
             @Override
@@ -82,7 +71,6 @@ public class LoginFrame extends JFrame {
 
             while (rs.next()) {
                 username = rs.getString("user_name");
-                System.out.println(username);
                 return username;
 
             }
@@ -91,8 +79,6 @@ public class LoginFrame extends JFrame {
             return null;
 
         } finally {
-//            username = this.findusername();
-//            System.out.println("최종 반환 변수는? = " + username);
             return username;
 
         }
@@ -248,10 +234,8 @@ public class LoginFrame extends JFrame {
                 if (userid.equals("") || upass.equals("")) {
                     JOptionPane.showMessageDialog(null, "아이디와 비밀번호 모두 입력해주세요."
                             , "로그인 실패", JOptionPane.ERROR_MESSAGE);
-                    System.out.println("로그인 실패 > 로그인 정보 미입력");
                 } else if (userid != null && upass != null) {
                     if (o.db.logincheck(userid, upass)) {
-                        System.out.println("로그인 성공");
                         JOptionPane.showMessageDialog(null, "로그인에 성공했습니다");
                         setVisible(false);
                         dispose(); /* 현재 윈도우만 닫히게하는 코드*/
@@ -285,11 +269,7 @@ public class LoginFrame extends JFrame {
 
                             stmt.execute(sql); //query문 날리기
 
-//                            pstmt = con.prepareStatement(sql);
-//                            pstmt.execute("USE " + dbName); // 사용할 DB를 선택한다.
-                            System.out.println(userid + "의 사용자테이블 검색 성공");
                         } catch (ClassNotFoundException k) {
-                            System.out.println("사용자의 테이블을 검색하지못했으므로 새로운 테이블을 생성합니다 " + k.toString());
                         } catch (SQLException k) {
                             k.printStackTrace();
                         } finally {
@@ -306,14 +286,10 @@ public class LoginFrame extends JFrame {
                         mainWindow = new MainWindow(userid, username, o.db.getUseridx(userid));
                         mainWindow.jmbMenuBar.loginFrame = loginFrame;
 
-                        System.out.println("Loginframe에서의 반환값= " + userid);
                         mainWindow.setVisible(true);
 
 //                        new Main();
                     } else {
-                        System.out.println("로그인 실패 > 로그인 정보 불일치");
-                        System.out.println(upass);
-//                        System.out.println(userid);
                         JOptionPane.showMessageDialog(null, "로그인에 실패했습니다");
                     }
                 }

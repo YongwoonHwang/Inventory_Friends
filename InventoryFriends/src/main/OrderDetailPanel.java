@@ -29,7 +29,7 @@ public class OrderDetailPanel extends JPanel{
         setLayout(null);
         setPreferredSize(new Dimension(800, 1000));
         try {
-            img = ImageIO.read(new File("./img/img_Order.png"));
+            img = ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/img_Order.png"));
             resizeImg =  resize(img, 800, 1000);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -319,17 +319,6 @@ public class OrderDetailPanel extends JPanel{
         jpShippingMessage.setBounds(x + 230, y + 808, 427, 35);
 
         g.drawImage(resizeImg, x, y, null);
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.pack();
-        frame.setSize(800, 1000);
-//        frame.setResizable(false);
-        frame.add(new OrderDetailPanel());
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-
     }
 
 }

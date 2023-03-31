@@ -17,11 +17,11 @@ public class ItemStatusPanel extends JPanel {
     String dbTableName;
     private  PreparedStatement pstmt = null;
     private  Connection con = null;
-    ImageIcon imgChange1 = new ImageIcon("./img/img_Change1.jpg");
-    ImageIcon imgChange2 = new ImageIcon("./img/img_Change2.jpg");
-    ImageIcon imgDel1 = new ImageIcon("./img/img_Del1.jpg");
-    ImageIcon imgDel2 = new ImageIcon("./img/img_Del2.jpg");
-    ImageIcon icon = new ImageIcon("./img/img_default.jpg");
+    ImageIcon imgChange1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Change1.jpg"));
+    ImageIcon imgChange2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Change2.jpg"));
+    ImageIcon imgDel1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Del1.jpg"));
+    ImageIcon imgDel2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Del2.jpg"));
+    ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("img/img_default.jpg"));
 
     JSplitPane jspRight;
     JScrollPane scrItemStatus;
@@ -207,7 +207,6 @@ public class ItemStatusPanel extends JPanel {
 
                 if(input == JOptionPane.OK_OPTION){
                     String sql = "DELETE FROM " + dbTableName + " WHERE id = " + dbIdno;
-                    System.out.println(sql);
                     try{
                         Class.forName("com.mysql.cj.jdbc.Driver");
                         con = DriverManager.getConnection("jdbc:mysql://iftest.cn9z6e29xfig.ap-northeast-2.rds.amazonaws.com:3306/","admin","admin1470!");
@@ -261,7 +260,7 @@ public class ItemStatusPanel extends JPanel {
     }
     public void setTexts(String category, String code, String name,String quantity,
                          String market, String location, String lastDate, String nextDate, String image, String idno,int index,String dbtname){
-
+        ImageIcon newIcon;
         dbCategory.setText(category);
         dbItemCode.setText(code);
         dbItemName.setText(name);
@@ -270,11 +269,17 @@ public class ItemStatusPanel extends JPanel {
         dbItemLocation.setText(location);
         dbLastReceivingDate.setText(lastDate);
         dbNextReceivingDate.setText(nextDate);
-        if(image.equals(""))
-            image = "./img/img_default.jpg";
-        else if(!isImage(image))
-            image = "./img/img_default.jpg";
-        ImageIcon newIcon = new ImageIcon(image);
+        if(image.equals("")){
+            image = "img/img_default.jpg";
+            newIcon = new ImageIcon(getClass().getClassLoader().getResource(image));
+        }
+        else if(!isImage(image)){
+            image = "img/img_default.jpg";
+            newIcon = new ImageIcon(getClass().getClassLoader().getResource(image));
+        }
+        else{
+            newIcon = new ImageIcon(image);
+        }
         img = newIcon.getImage();
         updateimg = img.getScaledInstance(250,250,Image.SCALE_SMOOTH);
         ImageIcon updatenewIcon = new ImageIcon(updateimg);
@@ -301,14 +306,5 @@ public class ItemStatusPanel extends JPanel {
             System.out.println(e);
         }
         return result;
-    }
-
-
-    public static void main(String[] args) {
-        ItemStatusPanel p = new ItemStatusPanel();
-        JFrame f = new JFrame();
-        f.setSize(500, 500);
-        f.add(p);
-        f.setVisible(true);
     }
 }

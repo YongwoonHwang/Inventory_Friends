@@ -25,7 +25,7 @@ public class IndividualRegistrationPanel extends JPanel {
     ItemStatusPanel jpItemStatusPanel;
     CalculatorWindow winCalc;
     String market[] = {"11번가", "G마켓", "네이버", "옥션", "위메프", "쿠팡", "티몬"};
-    ImageIcon imgSubmit, imgAttach1, imgAttach2, imgCalc, imgCal, imgAdd1, imgAdd2, imgFile1, imgFile2;
+    ImageIcon imgCalc, imgCal, imgAdd1, imgAdd2, imgFile1, imgFile2;
     JTextField jtfLastReceivingDate, jtfNextReceivingDate, jtfImg;
     JFileChooser imgfilechooser;
     CalendarWindowForChoose winCalendar1, winCalendar2;
@@ -40,16 +40,13 @@ public class IndividualRegistrationPanel extends JPanel {
         dbTableName = userid + "_ItemList";
 
         jpCenter = new JPanel();
-        imgSubmit = new ImageIcon("./img/img_submit.jpg");
-        imgAttach1 = new ImageIcon("./img/img_attach.jpg");
-        imgAttach2 = new ImageIcon("./img/img_attach.jpg");
-        imgCalc = new ImageIcon("./img/img_Calc.jpg");
-        imgCal = new ImageIcon("./img/img_Cal.jpg");
+        imgCalc = new ImageIcon(getClass().getClassLoader().getResource("img/img_Calc.jpg"));
+        imgCal = new ImageIcon(getClass().getClassLoader().getResource("img/img_Cal.jpg"));
 
-        imgAdd1 = new ImageIcon("./img/img_Add1.jpg");
-        imgAdd2 = new ImageIcon("./img/img_Add2.jpg");
-        imgFile1 = new ImageIcon("./img/img_File1.jpg");
-        imgFile2 = new ImageIcon("./img/img_File2.jpg");
+        imgAdd1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Add1.jpg"));
+        imgAdd2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Add2.jpg"));
+        imgFile1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_File1.jpg"));
+        imgFile2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_File2.jpg"));
 
         winCalendar1 = new CalendarWindowForChoose();
         winCalendar2 = new CalendarWindowForChoose();
@@ -368,7 +365,6 @@ public class IndividualRegistrationPanel extends JPanel {
                     pstmt.setString(10, jtfImg.getText());
 
                     int cnt = pstmt.executeUpdate();
-                    System.out.println("SUCCESS");
 
                     jcbCategory.setSelectedIndex(0);
                     htfItemCode.reset();

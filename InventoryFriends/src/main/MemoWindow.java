@@ -42,12 +42,12 @@ public class MemoWindow extends JFrame{
 
         jspMemoWin.setBorder(BorderFactory.createEmptyBorder());
         jtaMemoWin.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        imgDelete1 = new ImageIcon("./img/img_Del1.jpg");
-        imgDelete2 = new ImageIcon("./img/img_Del2.jpg");
-        imgCancel1 = new ImageIcon("./img/img_Cancel1.jpg");
-        imgCancel2 = new ImageIcon("./img/img_Cancel2.jpg");
-        imgSave1 = new ImageIcon("./img/img_Save1.jpg");
-        imgSave2 = new ImageIcon("./img/img_Save2.jpg");
+        imgDelete1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Del1.jpg"));
+        imgDelete2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Del2.jpg"));
+        imgCancel1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Cancel1.jpg"));
+        imgCancel2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Cancel2.jpg"));
+        imgSave1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Save1.jpg"));
+        imgSave2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Save2.jpg"));
 
         btnDelete = new JButton(imgDelete1);
         btnDelete.setBorder(BorderFactory.createEmptyBorder(0, 2, 2, 0));
@@ -92,7 +92,6 @@ public class MemoWindow extends JFrame{
                     dispose();
                 }
                 selectIndex = null;
-//                System.out.println(memoCont);
             }
         });
         btnCancle = new JButton(imgCancel1);
@@ -138,9 +137,7 @@ public class MemoWindow extends JFrame{
 
         try (FileWriter fw = new FileWriter(path, true)){
             fw.write( date + "\r\n" + memoCont + "\r\n" + endMemo +"\r\n");
-            System.out.println("Successfully wrote to the file.");
         } catch (Exception e) {
-            System.out.println("An error occurred.");
             e.printStackTrace();
         }
 
@@ -167,7 +164,6 @@ public class MemoWindow extends JFrame{
 
             //2. 삭제하고자 하는 데이터는 건너뛰기
             line = br.readLine();
-//            System.out.println(line);
             dummy += (line + "\r\n" );
             dummy += (memoCont + "\r\n" + endMemo + "\r\n");
             while(!(line = br.readLine()).equals(endMemo)){
@@ -244,10 +240,5 @@ public class MemoWindow extends JFrame{
         SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
         seleteDate = df.format(date);
         jlDate.setText(seleteDate);
-    }
-    public static void main(String[] args) {
-        MemoWindow f =new MemoWindow();
-        f.setDate(LocalDate.now());
-        f.setVisible(true);
     }
 }

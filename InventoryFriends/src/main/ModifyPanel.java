@@ -25,7 +25,7 @@ public class ModifyPanel extends JPanel{
     JSplitPane jspRight;
     String market[] = {"11번가", "G마켓", "네이버", "옥션", "위메프", "쿠팡", "티몬"};
     CheckableComboBox chkcomMarket;
-    ImageIcon imgSubmit, imgAttach1, imgAttach2, imgCalc, imgCal, imgAdd1, imgAdd2, imgFile1, imgFile2;
+    ImageIcon imgCalc, imgCal, imgAdd1, imgAdd2, imgFile1, imgFile2;
     JTextField jtfLastReceivingDate, jtfNextReceivingDate, jtfImg;
     JFileChooser imgfilechooser;
     CalendarWindowForChoose winCalendar1, winCalendar2;
@@ -41,16 +41,13 @@ public class ModifyPanel extends JPanel{
         setLayout(new BorderLayout());
         jpCenter = new JPanel();
 
-        imgSubmit = new ImageIcon("./img/img_submit.jpg");
-        imgAttach1 = new ImageIcon("./img/img_attach.jpg");
-        imgAttach2 = new ImageIcon("./img/img_attach.jpg");
-        imgCalc = new ImageIcon("./img/img_Calc.jpg");
-        imgCal = new ImageIcon("./img/img_Cal.jpg");
+        imgCalc = new ImageIcon(getClass().getClassLoader().getResource("img/img_Calc.jpg"));
+        imgCal = new ImageIcon(getClass().getClassLoader().getResource("img/img_Cal.jpg"));
 
-        imgAdd1 = new ImageIcon("./img/img_Change1.jpg");
-        imgAdd2 = new ImageIcon("./img/img_Change2.jpg");
-        imgFile1 = new ImageIcon("./img/img_File1.jpg");
-        imgFile2 = new ImageIcon("./img/img_File2.jpg");
+        imgAdd1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Change1.jpg"));
+        imgAdd2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Change2.jpg"));
+        imgFile1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_File1.jpg"));
+        imgFile2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_File2.jpg"));
 
         winCalendar1 = new CalendarWindowForChoose();
         winCalendar2 = new CalendarWindowForChoose();
@@ -322,7 +319,6 @@ public class ModifyPanel extends JPanel{
                 ResultSet result = null;
                 String sql = "UPDATE " + dbTableName + " SET CATEGORY = ?, CODE = ?, PRODUCTNAME =?, QUANTITY = ?, MARKET =?," +
                         " PRODUCTLOCATION = ?, STOCKINGDATE = ?, EDA = ?, IMAGE = ? WHERE id = ?";
-//                System.out.println("모디패널" + dbTableName);
 
                 try{
                     Class.forName("com.mysql.cj.jdbc.Driver");
@@ -371,7 +367,6 @@ public class ModifyPanel extends JPanel{
 
 
                     int cnt = pstmt.executeUpdate();
-//                    System.out.println(cnt);
 
                     if (cnt == 1){
                         boolean chk = false;

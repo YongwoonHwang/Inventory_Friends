@@ -49,8 +49,4 @@ public class CalendarWindowForMemo extends JWindow {
     public Object getDate(){
         return datePanel.getModel().getValue();
     }
-
-    public static void main(String[] args) {
-        new CalendarWindowForMemo();
-    }
 }

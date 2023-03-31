@@ -325,7 +325,6 @@ public class Calculator implements ActionListener, KeyListener {
                 num2 = 0;
                 nInput = "";
             }
-//            System.out.println(nInput);
             if(!(nInput.contains(".") & e.getActionCommand().equals(".")))
                 if(e.getActionCommand().equals(".") & nInput.equals(""))
                     nInput = "0.";
@@ -365,21 +364,6 @@ public class Calculator implements ActionListener, KeyListener {
     }
 
     protected String getResult(){
-//        System.out.println((int) Double.valueOf(label.getText()));
         return String.valueOf(Double.valueOf(label.getText()).intValue());
-    }
-
-    public static void main(String[] args) {
-
-        Calculator calc = new Calculator();
-        JFrame frame = new JFrame("계산기");
-
-        frame.setResizable(false);  // 프레임 크기 사용자 지정
-        frame.setContentPane(calc.getView()); // 프레임에 컴포넌트 삽입
-        frame.setLocation(100, 100); // 프레임의 크기 지정
-        frame.setSize(300, 350);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // X버튼을 누르면 닫히는 설정
-        frame.setVisible(true);
-
     }
 }

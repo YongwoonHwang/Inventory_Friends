@@ -158,7 +158,6 @@ public class ItemListTable extends JTable {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(url, user, passwd);
             stmt = con.createStatement();
-            System.out.println("MySQL 서버 연동 성공");
         } catch (Exception e) {
             System.out.println("MySQL 서버 연동 실패 > " + e);
         }

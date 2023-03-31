@@ -7,9 +7,29 @@
       <option name="url" value="https://repo.maven.apache.org/maven2" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="local-repository" />
+      <option name="name" value="local repository" />
+      <option name="url" value="file://C:\Users\KSY\Desktop\java\test\InventoryFriends/lib" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="local-repository" />
+      <option name="name" value="local repository" />
+      <option name="url" value="file:C:\Users\KSY\Desktop\java\test\InventoryFriends/lib" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="local-repository" />
+      <option name="name" value="local-repository" />
+      <option name="url" value="file://C:\Users\KSY\Desktop\java\test\InventoryFriends\lib" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="QoppaSoftware" />
       <option name="name" value="Qoppa Software" />
       <option name="url" value="http://download.qoppa.com/maven" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="local-repository" />
+      <option name="name" value="local-repository" />
+      <option name="url" value="file:C:\Users\KSY\Desktop\java\test\InventoryFriends/lib" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
@@ -20,6 +40,26 @@
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="local-repository" />
+      <option name="name" value="local repository" />
+      <option name="url" value="file://C:\Users\KSY\Desktop\java\git\Inventory_Friends\InventoryFriends/lib" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="local-repository" />
+      <option name="name" value="local repository" />
+      <option name="url" value="C:\Users\KSY\Desktop\java\test\InventoryFriends/lib" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="local-repository" />
+      <option name="name" value="local-repository" />
+      <option name="url" value="file://C:\Users\KSY\Desktop\java\test\InventoryFriends/lib" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="local-repository" />
+      <option name="name" value="local-repository" />
+      <option name="url" value="file://C:\Users\KSY\Desktop\java\test\InventoryFriends/libs" />
     </remote-repository>
   </component>
 </project>

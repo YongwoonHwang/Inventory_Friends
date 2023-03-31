@@ -59,7 +59,6 @@ public class NaverOrderInfo {
                     Response response = client.newCall(request).execute();
                     ResponseBody resBody = response.body();
                     String jsonText = resBody.string();
-//                System.out.println("4번째 jsonText = " + jsonText);
 
                     if (response.isSuccessful()) {
                         if (resBody != null) {
@@ -71,12 +70,10 @@ public class NaverOrderInfo {
 
                             String originProduct = jsonObj.get("originProduct").toString();
                             JSONObject jsonOriginProduct = (JSONObject) jsonParser.parse(originProduct);
-//                        System.out.println("jsonOriginProduct = " + jsonOriginProduct);
 
                             String images = jsonOriginProduct.get("images").toString();
                             JSONObject jsonImages = (JSONObject) jsonParser.parse(images);
 
-//                        System.out.println("jsonImages = " + jsonImages);
 
                             String representativeImage = jsonImages.get("representativeImage").toString();
                             JSONObject jsonRepresentativeImage = (JSONObject) jsonParser.parse(representativeImage);
@@ -142,8 +139,6 @@ public class NaverOrderInfo {
             ResponseBody resBody = response.body();
             String jsonText = resBody.string();
 
-//            System.out.println(jsonText);
-
             if (response.isSuccessful()) {
                 if (resBody != null) {
                     resBody.close();
@@ -181,8 +176,6 @@ public class NaverOrderInfo {
             Response response = client.newCall(request).execute();
             ResponseBody body = response.body();
             String jsonText = body.string();
-
-//            System.out.println(jsonText);
 
             if (response.isSuccessful()) {
                 if (body != null) {
@@ -445,18 +438,13 @@ public class NaverOrderInfo {
             StringBuilder sb1 = new StringBuilder();
             StringBuilder sb2 = new StringBuilder();
             String sql1 = sb1.append("SELECT EXISTS (select Naver_Client_Id from MarketInformation where user_idx = '" + useridx + "') as success").toString();
-            System.out.println("sql 입력문 = " + sql1);
             ResultSet result = stmt.executeQuery(sql1); //query문 날리기
             while (result.next()) {
                 String flag = result.getString("success");
-                System.out.println("데이터존재유무 값은? = " + flag);
 
                 if (Integer.parseInt(flag) == 0) {
-                    System.out.println("사용자의 마켓정보를 검색하지못했습니다");
                     return null;
                 } else {
-
-                    System.out.println(useridx + "의 사용자테이블 검색 성공");
                     String sql2 = sb2.append("select * from MarketInformation where user_idx = '" + useridx + "'").toString();
                     ResultSet result1 = stmt1.executeQuery(sql2);
                     while (result1.next()) {
@@ -709,7 +697,6 @@ public class NaverOrderInfo {
                         contents.put(arrKey[i].toString(), target.get(arrKey[i]).get(j));
                     }
                     result.put(j, (LinkedHashMap<String, String>) contents.clone());
-//                System.out.println(result);
                 }
             }
             return result;
@@ -771,10 +758,6 @@ public class NaverOrderInfo {
 
         return strDate;
     }
-
-//    public static void main(String[] args) {
-//        new NaverOrderInfo();
-//    }
 
 }
 

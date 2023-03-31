@@ -29,8 +29,4 @@ public class CalculatorWindow extends JFrame {
         textField = htf;
     }
 
-    public static void main(String[] args) {
-        CalculatorWindow winCalc = new CalculatorWindow();
-        winCalc.setVisible(true);
-    }
 }

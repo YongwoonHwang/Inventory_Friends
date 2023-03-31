@@ -63,9 +63,4 @@ public class AlarmWindow extends JWindow {
         alarmWinScroll.repaint();
     }
 
-    public static void main(String[] args) {
-        AlarmWindow alarmWindow = new AlarmWindow();
-        alarmWindow.setVisible(true);
-
-    }
 }

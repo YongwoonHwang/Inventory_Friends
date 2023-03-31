@@ -10,9 +10,4 @@ public class Operator {
         lf.loginFrame = lf;
 
     }
-
-    public static void main(String[] args) {
-        new Operator();
-
-    }
 }

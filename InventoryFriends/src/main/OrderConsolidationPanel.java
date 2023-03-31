@@ -16,13 +16,13 @@ import java.util.ArrayList;
 
 public class OrderConsolidationPanel extends JPanel {
     String market[] = {"", "11번가", "G마켓", "네이버", "옥션", "위메프", "쿠팡", "티몬"};
-    ImageIcon imgSearch1 = new ImageIcon("./img/img_Search1.jpg");
-    ImageIcon imgSearch2 = new ImageIcon("./img/img_Search2.jpg");
-    ImageIcon imgClear1 = new ImageIcon("./img/img_X1.jpg");
-    ImageIcon imgClear2 = new ImageIcon("./img/img_X2.jpg");
-    ImageIcon imgRefresh1 = new ImageIcon("./img/img_Refresh1.jpg");
-    ImageIcon imgRefresh2 = new ImageIcon("./img/img_Refresh2.jpg");
-    ImageIcon imgCal = new ImageIcon("./img/img_Cal.jpg");
+    ImageIcon imgSearch1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Search1.jpg"));
+    ImageIcon imgSearch2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Search2.jpg"));
+    ImageIcon imgClear1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_X1.jpg"));
+    ImageIcon imgClear2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_X2.jpg"));
+    ImageIcon imgRefresh1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Refresh1.jpg"));
+    ImageIcon imgRefresh2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_Refresh2.jpg"));
+    ImageIcon imgCal = new ImageIcon(getClass().getClassLoader().getResource("img/img_Cal.jpg"));
     Timestamp timestamp;
     SimpleDateFormat sdf;
     JLabel refreshTime;

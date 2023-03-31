@@ -24,7 +24,6 @@ public class Database {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(url, user, passwd);
             stmt = con.createStatement();
-            System.out.println("MySQL 서버 연동 성공");
         } catch (Exception e) {
             System.out.println("MySQL 서버 연동 실패 > " + e.toString());
         }
@@ -50,7 +49,6 @@ public class Database {
 
         try {
             String checkingStr = "SELECT password FROM user WHERE BINARY(userID) = '" + id + "'";
-            System.out.println(checkingStr);
             ResultSet result = stmt.executeQuery(checkingStr);
 
 
@@ -60,11 +58,9 @@ public class Database {
                 if(passwordEncoder.matches(_p,result.getString("password"))) {
 
                     flag = true;
-                    System.out.println("로그인 성공");
                 }
                 else {
                     flag = false;
-                    System.out.println("로그인 실패");
                 }
                 count++;
             }

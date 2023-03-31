@@ -18,14 +18,14 @@ public class MenuBtnPanel extends JPanel {
     public MenuBtnPanel(){
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
         setBackground(Color.WHITE);
-        imgIM1 = new ImageIcon("./img/img_IM1.jpg");
-        imgIM2 = new ImageIcon("./img/img_IM2.jpg");
-        imgOC1 = new ImageIcon("./img/img_OC1.jpg");
-        imgOC2 = new ImageIcon("./img/img_OC2.jpg");
-        imgIMopt1_1 = new ImageIcon("./img/img_IMopt1_1.jpg");
-        imgIMopt1_2 = new ImageIcon("./img/img_IMopt1_2.jpg");
-        imgIMopt2_1 = new ImageIcon("./img/img_IMopt2_1.jpg");
-        imgIMopt2_2 = new ImageIcon("./img/img_IMopt2_2.jpg");
+        imgIM1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_IM1.jpg"));
+        imgIM2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_IM2.jpg"));
+        imgOC1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_OC1.jpg"));
+        imgOC2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_OC2.jpg"));
+        imgIMopt1_1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_IMopt1_1.jpg"));
+        imgIMopt1_2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_IMopt1_2.jpg"));
+        imgIMopt2_1 = new ImageIcon(getClass().getClassLoader().getResource("img/img_IMopt2_1.jpg"));
+        imgIMopt2_2 = new ImageIcon(getClass().getClassLoader().getResource("img/img_IMopt2_2.jpg"));
 
         btnInventoryManagement = new JButton(imgIM1);
         btnInventoryManagement.setBorder(BorderFactory.createEmptyBorder(5, 5, 5,5));
