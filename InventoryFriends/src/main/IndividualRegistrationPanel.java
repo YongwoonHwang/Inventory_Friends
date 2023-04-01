@@ -131,7 +131,7 @@ public class IndividualRegistrationPanel extends JPanel {
         gbc.gridy = 3;
         jlItemQuantity = new JLabel("수량 : ");
         panel4_1.add(jlItemQuantity);
-        htfItemQuantity = new HintTextField("수량은 필수 입력 항목입니다.(ex. 10EA)");
+        htfItemQuantity = new HintTextField("수량은 필수 입력 항목입니다.(ex. 10EA!)");
         htfItemQuantity.setColumns(40);
         panel4_2.add(htfItemQuantity);
         btnCalc = new JButton(imgCalc);

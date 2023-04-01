@@ -257,9 +257,7 @@ public class ItemListPanel extends JPanel {
                                             jtpSubTab.setVisible(false);
                                         }
                                     }
-
                                 }
-
 
                             } catch (ClassNotFoundException cnfe) {
                                 System.out.println("DB 드라이버 로딩 실패 :" + cnfe);

@@ -209,7 +209,9 @@ public class MainWindow extends JFrame {
         });
 
         // 재고 목록 탭
-        jtpSubTab.addTab("tab1", new JPanel());
+        jspRight.setDividerSize(0);
+        jspRight.setDividerLocation(jspRight.getLocation().y + jspRight.getSize().width + 1);
+        jtpSubTab.setVisible(false);
 
         // jtp 스타일 지정
         jtpSubTab.setFont(font2);

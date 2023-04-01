@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 
 public class CalculatorWindow extends JFrame {
 
-    static HintTextField textField;
+    HintTextField textField;
     CalculatorWindow(){
         Calculator calc = new Calculator();
         setUndecorated(true);
