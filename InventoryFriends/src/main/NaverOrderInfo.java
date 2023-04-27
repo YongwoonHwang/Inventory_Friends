@@ -19,8 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.swing.*;
 public class NaverOrderInfo {
-    String clientId = ""; /*= "51R5hsaIubpFY6TEIwO7vn";*/
-    String clientSecret = ""; /*= "$2a$04$x.bI3ARXtJmnhu4.DcXsNe";*/
+    String clientId = "";
+    String clientSecret = "";
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SXXX");
     String url = "jdbc:mysql://iftest.cn9z6e29xfig.ap-northeast-2.rds.amazonaws.com/ifdb?characterEncoding=utf8&useUnicode=true&mysqlEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul";
     String user = "admin";
